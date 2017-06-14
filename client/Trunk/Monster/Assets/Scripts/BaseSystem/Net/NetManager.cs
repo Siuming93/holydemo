@@ -25,8 +25,8 @@ public class NetManager : Singleton<NetManager>
     private Thread mSendThread;
 
     private const int BUFFER_SIZE = 1024;
-    private List<string> mProtocolBuffer;
-    private List<string> mSendBuffer; 
+    private List<string> mReceiveBuffer = new List<string>(BUFFER_SIZE);
+    private Queue<string> mSendBuffer = new Queue<string>(BUFFER_SIZE); 
 
     public ConnectState connectState;
 
@@ -36,7 +36,6 @@ public class NetManager : Singleton<NetManager>
         {
             mClient = new TcpClient();
             mClient.BeginConnect(server, port, ConnectCallback, null);
-            mStream = mClient.GetStream();
             connectState = ConnectState.TryConnecting;
         }
         catch (Exception e)
@@ -66,35 +65,53 @@ public class NetManager : Singleton<NetManager>
     #region self action
     private void ReceiveFunc()
     {
-        mProtocolBuffer = new List<string>(BUFFER_SIZE);
         byte[] bytes = new byte[BUFFER_SIZE];
 
         while (mRunningShread)
         {
             int len = mStream.Read(bytes, 0, bytes.Length);
-            if (len > 6)
+            if (len > 4)
             {
-                
+                mReceiveBuffer.Add(bytes.ToString());
             }
         }
     }
 
     private void SendFunc()
     {
+        byte[] bytes = new byte[BUFFER_SIZE];
+
         while (mRunningShread)
         {
-
+            if (mSendBuffer.Count > 0)
+            {
+                string msg = mSendBuffer.Dequeue();
+                int length = msg.Length + 4;
+                for (int i = 0; i < 4; i++)
+                {
+                    bytes[i] = (byte) (length >> (24 - i*8));
+                }
+                for (int i = 0; i < msg.Length; i++)
+                {
+                    bytes[i + 4] = (byte)msg[i];
+                }
+                mStream.Write(bytes, 0, length);
+            }
         }
     }
 
     private void ConnectCallback(object obj)
     {
         connectState = mClient.Connected ? ConnectState.Connected : ConnectState.ConnectingOutTime;
+        if (mClient.Connected)
+        {
+            mStream = mClient.GetStream();
+        }
     }
     #endregion
-    public void SendMessage()
+    public void SendMessage(string msg)
     {
-        
+        mSendBuffer.Enqueue(msg);
     }
 
     public void RegisterMessageHandler(string singture, MessageHandler handler)
