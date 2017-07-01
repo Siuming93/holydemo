@@ -1,3 +1,4 @@
+package Monster.Protocol;
 //MSG_ROLE_LIST_REQUEST_C2S
 message CMsgRoleListRequest
 {

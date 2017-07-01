@@ -8,7 +8,7 @@
 //------------------------------------------------------------------------------
 
 // Generated from: role_message.proto
-namespace role_message
+namespace Monster.Protocol
 {
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CMsgRoleListRequest")]
   public partial class CMsgRoleListRequest : global::ProtoBuf.IExtensible
@@ -77,9 +77,9 @@ namespace role_message
       get { return _result; }
       set { _result = value; }
     }
-    private readonly global::System.Collections.Generic.List<Role> _roles = new global::System.Collections.Generic.List<Role>();
+    private readonly global::System.Collections.Generic.List<Monster.Protocol.Role> _roles = new global::System.Collections.Generic.List<Monster.Protocol.Role>();
     [global::ProtoBuf.ProtoMember(2, Name=@"roles", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public global::System.Collections.Generic.List<Role> roles
+    public global::System.Collections.Generic.List<Monster.Protocol.Role> roles
     {
       get { return _roles; }
     }
@@ -132,9 +132,9 @@ namespace role_message
       get { return _result; }
       set { _result = value; }
     }
-    private Role _role;
+    private Monster.Protocol.Role _role;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"role", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public Role role
+    public Monster.Protocol.Role role
     {
       get { return _role; }
       set { _role = value; }

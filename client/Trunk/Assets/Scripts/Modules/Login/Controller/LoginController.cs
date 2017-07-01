@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using Monster.Net;
 
 public class LoginController : Singleton<LoginController>
 {
@@ -22,6 +23,6 @@ public class LoginController : Singleton<LoginController>
 
     public void SendMessageTest(string id)
     {
-        NetManager.instance.SendMessage(id);
+        //NetManager.instance.SendMessage(id);
     }
 }

@@ -1,28 +1,33 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Monster.Protocol;
 public class MsgIDDefine
 {
 	static Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();
 	static Dictionary<string, int> msgname2msgid = new Dictionary<string, int>();
 	static void Initialize()
 	{
-		msgid2msgname[10001] = "login_message.CMsgAccountLoginRequest";
-		msgname2msgid["login_message.CMsgAccountLoginRequest"] = 10001;
-		msgid2msgname[10002] = "login_message.CMsgAccountLoginResponse";
-		msgname2msgid["login_message.CMsgAccountLoginResponse"] = 10002;
-		msgid2msgname[10003] = "login_message.CMsgAccountRegistRequest";
-		msgname2msgid["login_message.CMsgAccountRegistRequest"] = 10003;
-		msgid2msgname[10004] = "login_message.CMsgAccountRegistResponse";
-		msgname2msgid["login_message.CMsgAccountRegistResponse"] = 10004;
-		msgid2msgname[10101] = "role_message.CMsgRoleListRequest";
-		msgname2msgid["role_message.CMsgRoleListRequest"] = 10101;
-		msgid2msgname[10102] = "role_message.CMsgRoleListResponse";
-		msgname2msgid["role_message.CMsgRoleListResponse"] = 10102;
-		msgid2msgname[10103] = "role_message.CMsgRoleCreateRequest";
-		msgname2msgid["role_message.CMsgRoleCreateRequest"] = 10103;
-		msgid2msgname[10104] = "role_message.CMsgRoleCreateResponse";
-		msgname2msgid["role_message.CMsgRoleCreateResponse"] = 10104;
+		msgid2msgname[10001] = "CMsgAccountLoginRequest";
+		msgname2msgid["CMsgAccountLoginRequest"] = 10001;
+		msgid2msgname[10002] = "CMsgAccountLoginResponse";
+		msgname2msgid["CMsgAccountLoginResponse"] = 10002;
+		msgid2msgname[10003] = "CMsgAccountRegistRequest";
+		msgname2msgid["CMsgAccountRegistRequest"] = 10003;
+		msgid2msgname[10004] = "CMsgAccountRegistResponse";
+		msgname2msgid["CMsgAccountRegistResponse"] = 10004;
+		msgid2msgname[10101] = "CMsgRoleListRequest";
+		msgname2msgid["CMsgRoleListRequest"] = 10101;
+		msgid2msgname[10102] = "CMsgRoleListResponse";
+		msgname2msgid["CMsgRoleListResponse"] = 10102;
+		msgid2msgname[10103] = "CMsgRoleCreateRequest";
+		msgname2msgid["CMsgRoleCreateRequest"] = 10103;
+		msgid2msgname[10104] = "CMsgRoleCreateResponse";
+		msgname2msgid["CMsgRoleCreateResponse"] = 10104;
+		msgid2msgname[10201] = "CsHelloWorld";
+		msgname2msgid["CsHelloWorld"] = 10201;
+		msgid2msgname[10202] = "ScHelloWorld";
+		msgname2msgid["ScHelloWorld"] = 10202;
 	}
 	static string GetMsgNameByID(int msgid)
 	{
@@ -33,7 +38,7 @@ public class MsgIDDefine
 		}
 		return "";
 	}
-	static int GetMsgIDByName(string msgname)
+	public static int GetMsgIDByName(string msgname)
 	{
 		int msgid = 0;
 		if (msgname2msgid.TryGetValue(msgname,out msgid))

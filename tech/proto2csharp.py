@@ -3,12 +3,13 @@ import os
 
 msg_dir = "./msg/proto/"
 msgid_conf = "./msg/msgid.conf"
+msg_namespace = "Monster.Protocol"
 
 target_dir = "../../../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Protocol/"
 
+
 def compile_proto(proto_dir,target_dir):
 	files = os.listdir(proto_dir)
-	print(proto_dir)
 	for f in files:
 		if not f.endswith('.proto'):
 			continue
@@ -27,11 +28,13 @@ class MsgInfo(object):
 	msgid = ""
 	msgname = ""
 	comment = ""
-	
+
+
 def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("using System;");
 	fs.writelines("using System.Collections.Generic;");
 	fs.writelines("using System.Text;");
+	fs.writelines("using "+msg_namespace+";");
 	fs.writelines("public class MsgIDDefine");
 	fs.writelines("{");
 	fs.writelines("\tstatic Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();");
@@ -71,6 +74,7 @@ def ParseMsgIDDef(fs,msgidList):
 	fs.writelines("using System;");
 	fs.writelines("using System.Collections.Generic;");
 	fs.writelines("using System.Text;");
+	fs.writelines("using "+msg_namespace+";");
 	fs.writelines("public class MsgIDDef");
 	fs.writelines("{");
 
@@ -114,6 +118,7 @@ def ParseMsgIDDefineDic(fs,msgidList):
 	fs.writelines("using System;");
 	fs.writelines("using System.Collections.Generic;");
 	fs.writelines("using System.Text;");
+	fs.writelines("using "+msg_namespace+";");
 	fs.writelines("public class MsgIDDefineDic");
 	fs.writelines("{");
 
