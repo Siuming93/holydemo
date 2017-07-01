@@ -1,23 +1,22 @@
 import sys
 import os
 
-msg_dir = "./msg/proto"
+msg_dir = "./msg/proto/"
 msgid_conf = "./msg/msgid.conf"
 
-target_dir = "../../../client/Trunk/Assets/Scripts/Common/Protocol/"
+target_dir = "../../../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Protocol/"
 
 def compile_proto(proto_dir,target_dir):
 	files = os.listdir(proto_dir)
+	print(proto_dir)
 	for f in files:
 		if not f.endswith('.proto'):
 			continue
 		target_file = f.replace(".proto",".cs")
-		print(target_dir)
-		os.system(".\ProtoGen\protogen.exe -w:" + proto_dir + " -i:" + f + " -o:" + target_dir + target_file)
-		
+		os.system(".\\tools\\protogen.exe -w:" + proto_dir + " -i:" + f + " -o:" + target_dir + target_file)
 
-compile_proto(msg_dir,target_dir)
 
+compile_proto(msg_dir, target_dir)
 
 class MsgInfo(object):
 	def __init__(self,msgid,msgname,comment):
@@ -160,9 +159,9 @@ class WrapFile:
 	
 l=parse_msgfile(msgid_conf)
 
-targetMsgIDPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/MsgIDDefineDic.cs";
-targetCSPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/MsgIDDefine.cs";
-targetCSPath2 = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/MsgIDDef.cs";
+targetMsgIDPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDefineDic.cs";
+targetCSPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDefine.cs";
+targetCSPath2 = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDef.cs";
 
 f = WrapFile(open(targetCSPath,"w+"))
 ParseMsgIDDefine(f,l)

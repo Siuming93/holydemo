@@ -9,18 +9,20 @@ def compile_proto(proto_dir):
 	for f in files:
 		print(f)
 		if f.endswith('.proto'):
-			print(f)
 			target_file = f.replace(".proto",".pb")
-			os.system(".\\tools\\protoc.exe -o ../proto/"+target_file+" ./"+f)
+			os.system(".\\tools\\protoc.exe -o../server/proto/"+target_file+" ./msg/proto/"+f)
 
 compile_proto(msg_dir)
 
-def ParseMsgIDDefineDic(fs,msgidList):
+def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("local message = {}");
 	fs.writelines("");
 
 	for _msgDef in msgidList:
-		fs.writelines("message.%s \t= %s; %s"%( _msgDef.msgname.upper().replace(".","_"), _msgDef.msgid,_msgDef.comment));
+		msgname = _msgDef.msgname
+		for i in range(60-len(msgname)):
+			msgname += " "
+		fs.writelines("message.%s \t= %s; %s"%( msgname.upper().replace(".","_"), _msgDef.msgid,_msgDef.comment));
 
 	fs.writelines("");
 	fs.writelines("return message");
