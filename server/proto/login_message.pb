@@ -1,6 +1,6 @@
 
-‘
-login_message.proto"<
+­
+msg/proto/login_message.protoMonster.Protocol"<
 CMsgAccountLoginRequest
 account (	
 password (	"=

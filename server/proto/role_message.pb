@@ -1,6 +1,6 @@
 
-Ò
-role_message.proto"(
+Ü
+msg/proto/role_message.proto"(
 CMsgRoleListRequest
 	accountid (	"E
 Role
