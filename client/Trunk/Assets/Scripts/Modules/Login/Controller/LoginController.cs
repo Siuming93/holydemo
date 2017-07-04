@@ -17,8 +17,8 @@ public class LoginController : Singleton<LoginController>
         //Debug.Log(byteString);
         //var newRequest = CMsgAccountLoginRequest.ParseFrom(byteString);
         //Debug.Log(string.Format("id:{0} ip:{1}", newRequest.Account, newRequest.Password));
-        NetManager.instance.TryConnect(ipAdress, 8888);
-        NetManager.instance.StartRun();
+        NetManager.Instance.TryConnect(ipAdress, 8888);
+        NetManager.Instance.StartRun();
     }
 
     public void SendMessageTest(string id)

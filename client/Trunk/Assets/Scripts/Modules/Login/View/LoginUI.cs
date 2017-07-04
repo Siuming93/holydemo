@@ -19,7 +19,7 @@ public class LoginUI : MonoBehaviour
 
     public void OnLoginBtnClick()
     {
-        if (NetManager.instance.connectState != NetManager.ConnectState.Connected)
+        if (NetManager.Instance.connectState != ConnectState.Connected)
         {
             LoginController.instance.Login(acountInputField.text, ipAddressInputField.text);
         }

@@ -39,14 +39,15 @@ namespace Monster.Net
         private Thread mSendThread;
 
         private const int BUFFER_SIZE = 1024;
-        private List<string> mReceiveBuffer;
+        private Queue<Protocol> mReceiveBuffer;
         private Queue<Protocol> mSendBuffer;
 
         private NetDispatcher mDispatcher;
 
+
         private NetManager()
         {
-            mReceiveBuffer = new List<string>(BUFFER_SIZE);
+            mReceiveBuffer = new Queue<Protocol>(BUFFER_SIZE);
             mSendBuffer = new Queue<Protocol>(BUFFER_SIZE);
             mDispatcher = new NetDispatcher();
         }
@@ -91,9 +92,15 @@ namespace Monster.Net
             while (mRunningShread)
             {
                 int len = mStream.Read(bytes, 0, bytes.Length);
-                if (len > 4)
+                if (len > 6)
                 {
-                    mReceiveBuffer.Add(bytes.ToString());
+
+                    int protoLen = bytes[0] << 8 + bytes[1];
+                    int msgNo = bytes[2] << 24 + bytes[3] << 16 + bytes[4] << 8 + bytes[5];
+                    MemoryStream stream = new MemoryStream();
+                    stream.Write(bytes, 6, len - 6);
+                    Protocol proto = new Protocol() { msgNo = msgNo, stream = stream};
+                    mReceiveBuffer.Enqueue(proto);
                 }
             }
         }
@@ -110,11 +117,13 @@ namespace Monster.Net
                     int len = (int)proto.stream.Length;
                     if (len > 0)
                     {
-                        proto.stream.Read(bytes, 4, len);
-                        bytes[0] = (byte)(proto.msgNo << 24);
-                        bytes[1] = (byte)(proto.msgNo << 16);
-                        bytes[2] = (byte)(proto.msgNo << 8);
-                        bytes[3] = (byte)(proto.msgNo);
+                        bytes[0] = (byte)(len >> 8);
+                        bytes[1] = (byte)(len);
+                        proto.stream.Read(bytes, 6, len);
+                        bytes[2] = (byte)(proto.msgNo >> 24);
+                        bytes[3] = (byte)(proto.msgNo >> 16);
+                        bytes[4] = (byte)(proto.msgNo >> 8);
+                        bytes[5] = (byte)(proto.msgNo);
                         mStream.Write(bytes, 0, len + 4);
                     }
                 }
@@ -138,9 +147,22 @@ namespace Monster.Net
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
         }
 
-        public void RegisterMessageHandler(string singture, MessageHandler handler)
+        public void RegisterMessageHandler(int msgNo, MessageHandler handler)
         {
+            mDispatcher.RegisterMessageHandler(msgNo, handler);
+        }
 
+        public void UnRegistreMessageHandler(int msgNo)
+        {
+            mDispatcher.UnRegisterMessageHandler(msgNo);
+        }
+
+        public void Dispatch()
+        {
+            while(mReceiveBuffer.Count > 0)
+            {
+                mDispatcher.Dispatch(mReceiveBuffer.Dequeue());
+            }
         }
     }
 }
