@@ -70,8 +70,10 @@ namespace Monster.Net
         {
             connectState = ConnectState.NonConnect;
             mRunningShread = false;
-            mClient.Close();
-            mStream.Close();
+            if (mClient != null)
+                mClient.Close();
+            if (mStream != null)
+                mStream.Close();
         }
 
         public void StartRun()
@@ -99,7 +101,7 @@ namespace Monster.Net
                     int msgNo = bytes[2] << 24 + bytes[3] << 16 + bytes[4] << 8 + bytes[5];
                     MemoryStream stream = new MemoryStream();
                     stream.Write(bytes, 6, len - 6);
-                    Protocol proto = new Protocol() { msgNo = msgNo, stream = stream};
+                    Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
                     mReceiveBuffer.Enqueue(proto);
                 }
             }
@@ -159,7 +161,7 @@ namespace Monster.Net
 
         public void Dispatch()
         {
-            while(mReceiveBuffer.Count > 0)
+            while (mReceiveBuffer.Count > 0)
             {
                 mDispatcher.Dispatch(mReceiveBuffer.Dequeue());
             }

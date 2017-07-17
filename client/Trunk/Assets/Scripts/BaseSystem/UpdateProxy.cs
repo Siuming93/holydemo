@@ -2,6 +2,11 @@
 using Monster.Net;
 public class UpdateProxy : MonoBehaviour {
 
+    void Awake()
+    {
+        DontDestroyOnLoad(this);
+    }
+
 	// Use this for initialization
 	void Start () {
 	
