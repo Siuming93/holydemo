@@ -45,7 +45,7 @@ end
 
 skynet.start(function()
 	print("----start watchdog----")
-	skynet.dispacth("lua", function(session, source, cmd, subcmd, ...)
+	skynet.dispatch("lua", function(session, source, cmd, subcmd, ...)
 		print("---watchdog cmd ", cmd)
 		if cmd == "socket" then
 			print("---watchdog subcmd", subcmd)
