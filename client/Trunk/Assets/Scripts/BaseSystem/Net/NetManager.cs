@@ -18,10 +18,11 @@ namespace Monster.Net
 
     public enum ConnectState
     {
+        NonConnect = 0,
         TryConnecting,
-        NonConnect,
         Connected,
         ConnectingOutTime,
+        ConnectedFailed,
     }
 
     public class NetManager
@@ -134,7 +135,7 @@ namespace Monster.Net
 
         private void ConnectCallback(object obj)
         {
-            connectState = mClient.Connected ? ConnectState.Connected : ConnectState.ConnectingOutTime;
+            connectState = mClient.Connected ? ConnectState.Connected : ConnectState.ConnectedFailed;
             if (mClient.Connected)
             {
                 mStream = mClient.GetStream();

@@ -46,7 +46,7 @@ public class UIManager
     /// <param name="child"></param>
     public void AddChild(Transform child)
     {
-        child.parent = mActiveLayer;
+        child.SetParent(mActiveLayer);
         child.localScale = Vector3.one;
         (child as RectTransform).sizeDelta = Vector2.zero;
         (child as RectTransform).localPosition = Vector2.zero;

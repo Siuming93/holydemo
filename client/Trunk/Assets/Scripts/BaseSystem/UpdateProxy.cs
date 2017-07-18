@@ -17,4 +17,9 @@ public class UpdateProxy : MonoBehaviour {
     {
         NetManager.Instance.Dispatch();
 	}
+
+    void OnDestroy()
+    {
+        NetManager.Instance.Close();
+    }
 }
