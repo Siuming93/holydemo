@@ -10,7 +10,8 @@ local gate
 function SOCKET.open(fd, addr)
 	skynet.error("New client from : ".. addr)
 	agent[fd] = skynet.newservice("agent")
-	skynet.call(agent[fd], "lua", "start", gage, fd, proto)
+	print("got new server")
+	skynet.call(agent[fd], "lua", "start", gate, fd, proto)
 end
 
 local function close_agent( fd )
