@@ -5,7 +5,7 @@ build
 
 cd skynet
 
-./skynet ../config/loginserver.cfg
+./skynet ../config/helloWorldConfig
 
 # about skynet
 
