@@ -30,28 +30,28 @@ namespace Monster.Net
     {
         private static NetManager _instance = new NetManager();
         public static NetManager Instance { get { return _instance; } }
-
         public ConnectState connectState;
 
         private TcpClient mClient;
         private NetworkStream mStream;
-
         private bool mRunningShread;
         private Thread mReciveThread;
         private Thread mSendThread;
-
         private const int BUFFER_SIZE = 1024;
         private Queue<Protocol> mReceiveBuffer;
         private Queue<Protocol> mSendBuffer;
 
         private NetDispatcher mDispatcher;
 
-
         private NetManager()
         {
             mReceiveBuffer = new Queue<Protocol>(BUFFER_SIZE);
             mSendBuffer = new Queue<Protocol>(BUFFER_SIZE);
             mDispatcher = new NetDispatcher();
+        }
+        public void Init()
+        {
+            MsgIDDefine.Initialize();
         }
         public void TryConnect(string server, int port)
         {
@@ -74,7 +74,9 @@ namespace Monster.Net
             connectState = ConnectState.NonConnect;
             mRunningShread = false;
             if (mClient != null)
+            {
                 mClient.Close();
+            }
             if (mStream != null)
                 mStream.Close();
         }
@@ -120,13 +122,13 @@ namespace Monster.Net
                     int len = (int)proto.stream.Length;
                     if (len > 0)
                     {
-                        bytes[0] = (byte)(len >> 8);
-                        bytes[1] = (byte)(len);
-                        proto.stream.Read(bytes, 6, len);
-                        bytes[2] = (byte)(proto.msgNo >> 24);
-                        bytes[3] = (byte)(proto.msgNo >> 16);
-                        bytes[4] = (byte)(proto.msgNo >> 8);
-                        bytes[5] = (byte)(proto.msgNo);
+                        //bytes[0] = (byte)(len >> 8);
+                        //bytes[1] = (byte)(len);
+                        //proto.stream.Read(bytes, 6, len);
+                        bytes[0] = (byte)(proto.msgNo >> 24);
+                        bytes[1] = (byte)(proto.msgNo >> 16);
+                        bytes[2] = (byte)(proto.msgNo >> 8);
+                        bytes[3] = (byte)(proto.msgNo);
                         mStream.Write(bytes, 0, len + 4);
                     }
                 }
