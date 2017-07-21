@@ -19,12 +19,14 @@ public class UIManager
     private Transform mUIRoot;
     private Transform mUnVisabledLayer;
     private Transform mActiveLayer;
+    private Transform mUnActiveLayer;
 
     public UIManager(Transform uiRoot)
     {
         mUIRoot = uiRoot;
         GameObject.DontDestroyOnLoad(mUIRoot);
         mActiveLayer = mUIRoot.FindChild("ActiveLayer");
+        mUnActiveLayer = mUIRoot.FindChild("UnActiveLayer");
         mInstance = this;
     }
 
@@ -36,7 +38,7 @@ public class UIManager
         int count = mActiveLayer.childCount;
         for (int i = 0; i < count; i++)
         {
-            
+            RemoveChild(mActiveLayer.GetChild(i));
         }
     }
 
@@ -50,5 +52,10 @@ public class UIManager
         child.localScale = Vector3.one;
         (child as RectTransform).sizeDelta = Vector2.zero;
         (child as RectTransform).localPosition = Vector2.zero;
+    }
+
+    public void RemoveChild(Transform child)
+    {
+        child.SetParent(mUnActiveLayer);
     }
 }

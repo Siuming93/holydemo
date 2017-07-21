@@ -23,6 +23,7 @@ namespace Monster.Net
         Connected,
         ConnectingOutTime,
         ConnectedFailed,
+        ConnectedBreak,
     }
 
     public class NetManager
@@ -52,13 +53,15 @@ namespace Monster.Net
             mSendBuffer = new Queue<Protocol>(BUFFER_SIZE);
             mDispatcher = new NetDispatcher();
         }
-
         public void TryConnect(string server, int port)
         {
             try
             {
                 mClient = new TcpClient();
                 mClient.BeginConnect(server, port, ConnectCallback, null);
+                mClient.ReceiveTimeout = 30000;
+                mClient.SendTimeout = 30000;
+                mClient.NoDelay = true;
                 connectState = ConnectState.TryConnecting;
             }
             catch (Exception e)
@@ -66,7 +69,6 @@ namespace Monster.Net
                 Debug.Log(e.ToString());
             }
         }
-
         public void Close()
         {
             connectState = ConnectState.NonConnect;
@@ -76,7 +78,6 @@ namespace Monster.Net
             if (mStream != null)
                 mStream.Close();
         }
-
         public void StartRun()
         {
             mRunningShread = true;
@@ -107,7 +108,6 @@ namespace Monster.Net
                 }
             }
         }
-
         private void SendFunc()
         {
             byte[] bytes = new byte[BUFFER_SIZE];
@@ -132,7 +132,6 @@ namespace Monster.Net
                 }
             }
         }
-
         private void ConnectCallback(object obj)
         {
             connectState = mClient.Connected ? ConnectState.Connected : ConnectState.ConnectedFailed;
@@ -140,6 +139,11 @@ namespace Monster.Net
             {
                 mStream = mClient.GetStream();
             }
+        }
+
+        private bool IsSocketConnected(Socket socket)
+        {
+            return !(socket.Poll(1, SelectMode.SelectRead) && socket.Available == 0);
         }
         #endregion
         public void SendMessage(global::ProtoBuf.IExtensible msg)
@@ -149,23 +153,52 @@ namespace Monster.Net
             Serializer.NonGeneric.Serialize(stream, msg);
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
         }
-
         public void RegisterMessageHandler(int msgNo, MessageHandler handler)
         {
             mDispatcher.RegisterMessageHandler(msgNo, handler);
         }
-
         public void UnRegistreMessageHandler(int msgNo)
         {
             mDispatcher.UnRegisterMessageHandler(msgNo);
         }
-
         public void Dispatch()
         {
             while (mReceiveBuffer.Count > 0)
             {
                 mDispatcher.Dispatch(mReceiveBuffer.Dequeue());
             }
+        }
+
+        private bool mLastConneted;
+        public void Update()
+        {
+            //链接未成功之前不需要监测
+            if (mClient == null || mStream == null)
+                return;
+            //监测链接状态变化
+            bool isConnected = IsSocketConnected(mClient.Client);
+            if (mLastConneted != isConnected)
+            {
+                switch (connectState)
+                {
+                    case ConnectState.NonConnect:
+                        break;
+                    case ConnectState.TryConnecting:
+                        break;
+                    case ConnectState.Connected:
+                        if(!isConnected)
+                            connectState = ConnectState.ConnectedBreak;
+                        break;
+                    case ConnectState.ConnectingOutTime:
+                        break;
+                    case ConnectState.ConnectedFailed:
+                        break;
+                    default:
+                        throw new ArgumentOutOfRangeException();
+                }
+                mLastConneted = isConnected;
+            }
+            Dispatch();
         }
     }
 }

@@ -24,7 +24,6 @@ public class PreloadManager : MonoBehaviour
         Object origin = ResourcesFacade.Instance.Load<GameObject>("Prefab/UI/Preload/PreloadPanel");
         GameObject preloadView = Instantiate(origin) as GameObject;
         UIManager.Intance.AddChild(preloadView.transform);
-
         yield return step++;
 
         yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);

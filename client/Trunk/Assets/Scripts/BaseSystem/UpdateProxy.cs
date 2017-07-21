@@ -15,7 +15,7 @@ public class UpdateProxy : MonoBehaviour {
 	// Update is called once per frame
 	void Update ()
     {
-        NetManager.Instance.Dispatch();
+        NetManager.Instance.Update();
 	}
 
     void OnDestroy()

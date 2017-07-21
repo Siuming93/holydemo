@@ -63,6 +63,9 @@ public class LoginUI : MonoBehaviour
                 case ConnectState.ConnectedFailed:
                     stateText.text = "连接失败!!";
                     break;
+                case ConnectState.ConnectedBreak:
+                    stateText.text = "链接已经断开!!";
+                    break;
             }
             yield return wait;
         }
