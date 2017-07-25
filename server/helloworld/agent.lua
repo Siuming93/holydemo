@@ -21,24 +21,29 @@ skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
 	unpack = function (msg, sz)
-		return skynet.tostring(msg, sz)
+		print("msgtype:",type(msg))
+		print("msgsize:",sz)
+		return msg
 	end,
 	dispatch = function(_, _, msg)
 		print("------------client dispacth-----------")
-		print("msg = ", msg[0])
+		print("msgtype:",type(msg))
+		--print("msglen ", string.len(msg))
+		--print("msgbyte ", string.byte(msg))
 		
 		data = msgpack.unpack(msg)
 		module = math.floor(data.msgno / 100)	
 		opcode = data.msgno%100
 		print("msgno = ", data.msgno)
+		print("msg = ", data.msg)
 		local ok, result
 		if msgid[module] then
-			ok, result = pcall(skynet.call, msgid[module], "lua", "dispatch", opcode, data.msg)
-			if ok then
-				send_response(result)
-			else
+			--ok, result = pcall(skynet.call, msgid[module], "lua", "dispatch", opcode, data.msg)
+			--if ok then
+			--	send_response(result)
+			--else
 				print("role error")
-			end
+			--end
 		else
 			print("server receive error msg")
 		end

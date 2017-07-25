@@ -54,6 +54,8 @@ function gateserver.start(handler)
 
 	local function dispatch_msg(fd, msg, sz)
 		if connection[fd] then
+			print("msg  :", msg)
+			print("msgSize  :",sz)
 			handler.message(fd, msg, sz)
 		else
 			skynet.error(string.format("Drop message from fd (%d) : %s", fd, netpack.tostring(msg,sz)))
