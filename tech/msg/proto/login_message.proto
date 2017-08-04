@@ -11,7 +11,7 @@ message CMsgAccountLoginRequest
 message CMsgAccountLoginResponse
 {
 	required int32 result 				= 1;
-	required int64 accountid			= 2;
+	required int32 accountid			= 2;
 }
 
 //MSG_ACCOUNT_REGIST_REQUEST_C2S
@@ -25,6 +25,6 @@ message CMsgAccountRegistRequest
 message CMsgAccountRegistResponse
 {
 	required int32 result 				= 1;
-	required int64 accountid			= 2;
+	required int32 accountid			= 2;
 }
 
