@@ -2,11 +2,11 @@
 package Monster.Protocol;
 // Test a very simple message.
 message CsHelloWorld {
-  required int32 id = 1;
+  required int64 id = 1;
   required string str = 2;
 }
 
 message ScHelloWorld {
-  required int32 id = 1;
+  required int64 id = 1;
   required string str = 2;
 }
