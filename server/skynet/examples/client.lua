@@ -16,7 +16,8 @@ local fd = assert(socket.connect("127.0.0.1", 8888))
 
 local function send_package(fd, pack)
 	local package = string.pack(">s2", pack)
-	socket.send(fd, package)
+	print("package:",package)
+	socket.send(fd, "000000001")
 end
 
 local function unpack_package(text)
@@ -53,6 +54,7 @@ local session = 0
 local function send_request(name, args)
 	session = session + 1
 	local str = request(name, args, session)
+	print("requestName:", name," str:",str," session:",session)
 	send_package(fd, str)
 	print("Request:", session)
 end
@@ -98,10 +100,10 @@ local function dispatch_package()
 	end
 end
 
-send_request("handshake")
-send_request("set", { what = "hello", value = "world" })
+--send_request("handshake")
+--send_request("set", { what = "hello", value = "world" })
 while true do
-	dispatch_package()
+	--dispatch_package()
 	local cmd = socket.readstdin()
 	if cmd then
 		if cmd == "quit" then

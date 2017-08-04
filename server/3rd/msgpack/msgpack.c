@@ -15,7 +15,6 @@ static int _unpack(lua_State *L)
 	size_t size;
 	
 	uint8_t * buffer= (uint8_t *)malloc(4);
-	luaL_error(L, "msg size: %d", 5);
 
 	data = luaL_checklstring(L, 1, &size);
 	
