@@ -21,10 +21,13 @@ public class LoginController : Singleton<LoginController>
         NetManager.Instance.Close();
         NetManager.Instance.TryConnect(ipAdress, 8888);
         NetManager.Instance.StartRun();
+
+        PlayerPrefs.SetString("last_ip", ipAdress);
+        PlayerPrefs.Save();
     }
 
     public void SendMessageTest(string id)
     {
-        NetManager.Instance.SendMessage(new CsHelloWorld() {id = 0, str = "str"});
+        NetManager.Instance.SendMessage(new CMsgAccountLoginRequest() {account = id});
     }
 }

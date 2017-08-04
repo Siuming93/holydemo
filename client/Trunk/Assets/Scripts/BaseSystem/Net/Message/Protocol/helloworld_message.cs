@@ -15,9 +15,9 @@ namespace Monster.Protocol
   {
     public CsHelloWorld() {}
     
-    private int _id;
+    private long _id;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int id
+    public long id
     {
       get { return _id; }
       set { _id = value; }
@@ -39,9 +39,9 @@ namespace Monster.Protocol
   {
     public ScHelloWorld() {}
     
-    private int _id;
+    private long _id;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int id
+    public long id
     {
       get { return _id; }
       set { _id = value; }

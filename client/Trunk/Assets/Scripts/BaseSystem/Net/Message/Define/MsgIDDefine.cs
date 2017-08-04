@@ -6,7 +6,7 @@ public class MsgIDDefine
 {
 	static Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();
 	static Dictionary<string, int> msgname2msgid = new Dictionary<string, int>();
-    public static void Initialize()
+	public static void Initialize()
 	{
 		msgid2msgname[10001] = "CMsgAccountLoginRequest";
 		msgname2msgid["CMsgAccountLoginRequest"] = 10001;
@@ -38,7 +38,7 @@ public class MsgIDDefine
 		}
 		return "";
 	}
-	public static int GetMsgIDByName(string msgname)
+    public static int GetMsgIDByName(string msgname)
 	{
 		int msgid = 0;
 		if (msgname2msgid.TryGetValue(msgname,out msgid))

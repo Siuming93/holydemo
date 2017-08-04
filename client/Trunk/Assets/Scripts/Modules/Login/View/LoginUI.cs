@@ -13,6 +13,10 @@ public class LoginUI : MonoBehaviour
     void Start()
     {
         loginButton.onClick.AddListener(OnLoginBtnClick);
+        if (PlayerPrefs.HasKey("last_ip"))
+        {
+            ipAddressInputField.text = PlayerPrefs.GetString("last_ip");
+        }
         StartCoroutine(ChcekState());
     }
 

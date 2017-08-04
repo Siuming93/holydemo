@@ -46,9 +46,9 @@ namespace Monster.Protocol
       get { return _result; }
       set { _result = value; }
     }
-    private long _accountid;
+    private int _accountid;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"accountid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public long accountid
+    public int accountid
     {
       get { return _accountid; }
       set { _accountid = value; }
@@ -94,9 +94,9 @@ namespace Monster.Protocol
       get { return _result; }
       set { _result = value; }
     }
-    private long _accountid;
+    private int _accountid;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"accountid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public long accountid
+    public int accountid
     {
       get { return _accountid; }
       set { _accountid = value; }

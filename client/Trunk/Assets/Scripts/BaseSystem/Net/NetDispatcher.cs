@@ -8,7 +8,7 @@ namespace Monster.Net
 
     internal class NetDispatcher
     {
-        private Dictionary<int, MessageHandler> mHandlerMap;
+        private Dictionary<int, MessageHandler> mHandlerMap = new Dictionary<int, MessageHandler>();
         public void RegisterMessageHandler(int msgNo, MessageHandler handler)
         {
             if(!mHandlerMap.ContainsKey(msgNo))
@@ -27,9 +27,12 @@ namespace Monster.Net
 
         public void Dispatch(Protocol proto)
         {
-            if(mHandlerMap.ContainsKey(proto.msgNo))
+            proto.stream.Position = 0;
+            object msg = Serializer.NonGeneric.Deserialize(MsgIDDef.Instance().GetMsgType(proto.msgNo), proto.stream);
+            Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
+
+            if (mHandlerMap.ContainsKey(proto.msgNo))
             {
-                object msg = Serializer.NonGeneric.Deserialize(MsgIDDef.Instance().GetMsgType(proto.msgNo), proto.stream);
                 mHandlerMap[proto.msgNo](msg);
             }
         }

@@ -97,12 +97,12 @@ namespace Monster.Net
 
             while (mRunningShread)
             {
+                mStream.ReadTimeout = 3000;
                 int len = mStream.Read(bytes, 0, bytes.Length);
                 if (len > 6)
                 {
-
-                    int protoLen = bytes[0] << 8 + bytes[1];
-                    int msgNo = bytes[2] << 24 + bytes[3] << 16 + bytes[4] << 8 + bytes[5];
+                    int protoLen = (bytes[0] << 8) + (bytes[1]);
+                    int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
                     MemoryStream stream = new MemoryStream();
                     stream.Write(bytes, 6, len - 6);
                     Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
@@ -119,17 +119,18 @@ namespace Monster.Net
                 if (mSendBuffer.Count > 0)
                 {
                     Protocol proto = mSendBuffer.Dequeue();
-                    int len = (int)proto.stream.Length;
-                    if (len > 0)
+                    int len = (int)proto.stream.Length + 4;
+                    if (len > 4)
                     {
-                        //bytes[0] = (byte)(len >> 8);
-                        //bytes[1] = (byte)(len);
-                        //proto.stream.Read(bytes, 6, len);
-                        bytes[0] = (byte)(proto.msgNo >> 24);
-                        bytes[1] = (byte)(proto.msgNo >> 16);
-                        bytes[2] = (byte)(proto.msgNo >> 8);
-                        bytes[3] = (byte)(proto.msgNo);
-                        mStream.Write(bytes, 0, len + 4);
+                        bytes[0] = (byte)(len >> 8);
+                        bytes[1] = (byte)(len);
+                        bytes[2] = (byte)(proto.msgNo >> 24);
+                        bytes[3] = (byte)(proto.msgNo >> 16);
+                        bytes[4] = (byte)(proto.msgNo >> 8);
+                        bytes[5] = (byte)(proto.msgNo);
+                        proto.stream.Read(bytes, 6, len);
+
+                        mStream.Write(bytes, 0, len + 2);
                     }
                 }
             }
@@ -153,6 +154,7 @@ namespace Monster.Net
             var no = MsgIDDefine.GetMsgIDByName(msg.GetType().Name);
             var stream = new MemoryStream();
             Serializer.NonGeneric.Serialize(stream, msg);
+            stream.Position = 0;
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
         }
         public void RegisterMessageHandler(int msgNo, MessageHandler handler)
