@@ -3,9 +3,9 @@
 "msg/proto/helloworld_message.protoMonster.Protocol"'
 CsHelloWorld
 
-id (
+id (
 str (	"'
 ScHelloWorld
 
-id (
+id (
 str (	
