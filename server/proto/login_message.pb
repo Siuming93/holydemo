@@ -6,10 +6,10 @@
 password (	"=
 CMsgAccountLoginResponse
 result (
-	accountid ("=
+	accountid ("=
 CMsgAccountRegistRequest
 account (	
 password (	">
 CMsgAccountRegistResponse
 result (
-	accountid (
+	accountid (
