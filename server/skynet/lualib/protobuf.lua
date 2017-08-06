@@ -11,6 +11,7 @@ local print = print
 local io = io
 local tinsert = table.insert
 local rawget = rawget
+local rawset = rawset
 
 local M = {}
 
@@ -212,14 +213,7 @@ local encode_type_cache = {}
 
 local function encode_message(CObj, message_type, t)
 	local type = encode_type_cache[message_type]
-	print(".........CObj",CObj)
-	print(".........message_type",message_type)
-	print(".........t",t)
-	print(".........type",type)
 	for k,v in pairs(t) do
-		print(".........k",k)
-		print(".........v",v)
-		print(".........type[k]",type[k])
 		local func = type[k]
 		func(CObj, k , v)
 	end
@@ -272,7 +266,7 @@ function _writer:int_repeated(k,v)
 	end
 end
 
-_writer[1] = function(msg) print("__writer ......1!!!!!") return _writer.int end
+_writer[1] = function(msg) return _writer.int end
 _writer[2] = function(msg) return _writer.real end
 _writer[3] = function(msg) return _writer.bool end
 _writer[4] = function(msg) return _writer.string end
@@ -311,14 +305,7 @@ local _encode_type_meta = {}
 
 function _encode_type_meta:__index(key)
 	local t, msg = c._env_type(P, self._CType, key)
-	print(".........__index:key ",key)
-	print(".........__index:t ",t)
-	print(".........__index:P ",P)
-	print(".........__index:self._CType ",self._CType)
-	
 	local func = assert(_writer[t],key)(msg)
-	print(".........__index:func ",func)	
-	print(".........__index:msg ",msg)	
 	self[key] = func
 	return func
 end
@@ -326,8 +313,6 @@ end
 setmetatable(encode_type_cache , {
 	__index = function(self, key)
 		local v = setmetatable({ _CType = key } , _encode_type_meta)
-		print(".........metatable:v ",v)
-		print(".........metatable:key ",key)
 		self[key] = v
 		return v
 	end
@@ -443,7 +428,18 @@ local function default_table(typename)
 		return v
 	end
 
-	v = { __index = assert(decode_message(typename , "")) }
+	local default_inst = assert(decode_message(typename , ""))
+	v = { 
+		__index = function(tb, key)
+			local ret = default_inst[key]
+			if 'table' ~= type(ret) then
+				return ret
+			end 
+			ret = setmetatable({}, { __index = ret })
+			rawset(tb, key, ret)
+			return ret
+		end
+	}
 
 	default_cache[typename]  = v
 	return v
@@ -510,7 +506,7 @@ function M.register_file(filename)
 	f:close()
 end
 
-function enum_id(enum_type, enum_name)
+function M.enum_id(enum_type, enum_name)
 	return c._env_enum_id(P, enum_type, enum_name)
 end
 
