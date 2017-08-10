@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-namespace Monster.SceneManager
+namespace Monster.BaseSystem.SceneManager
 {
     public abstract class BaseSceneManager
     {

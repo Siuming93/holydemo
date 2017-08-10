@@ -53,10 +53,11 @@ namespace Monster.Net
         {
             MsgIDDefine.Initialize();
         }
-        public void TryConnect(string server, int port)
+        public void TryConnect(string server)
         {
             try
             {
+                int port = 8888;
                 mClient = new TcpClient();
                 mClient.BeginConnect(server, port, ConnectCallback, null);
                 mClient.ReceiveTimeout = 30000;
@@ -95,9 +96,8 @@ namespace Monster.Net
         {
             byte[] bytes = new byte[BUFFER_SIZE];
 
-            while (mRunningShread)
+            while (IsSocketConnected(mClient.Client))
             {
-                mStream.ReadTimeout = 3000;
                 int len = mStream.Read(bytes, 0, bytes.Length);
                 if (len > 6)
                 {
@@ -109,6 +109,8 @@ namespace Monster.Net
                     mReceiveBuffer.Enqueue(proto);
                 }
             }
+
+            Debug.LogError("接收  结  结束了~~");
         }
         private void SendFunc()
         {
@@ -141,6 +143,7 @@ namespace Monster.Net
             if (mClient.Connected)
             {
                 mStream = mClient.GetStream();
+                StartRun();
             }
         }
 

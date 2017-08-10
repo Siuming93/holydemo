@@ -2,6 +2,8 @@
 using System.Collections;
 using Monster.Net;
 using Monster.Protocol;
+using System;
+using BaseSystem;
 
 public class LoginController : Singleton<LoginController>
 {
@@ -10,17 +12,15 @@ public class LoginController : Singleton<LoginController>
         
     }
 
+    private void RegisterProto()
+    {
+        NetManager.Instance.RegisterMessageHandler(MsgIDDefineDic.CMSGACCOUNTLOGINRESPONSE, OnGetLoginResponse);
+    }
+
     public void Login(string id, string ipAdress)
     {
-        //CMsgAccountLoginRequest.DefaultInstance.ToBuilder().Account = id;
-        //CMsgAccountLoginRequest.DefaultInstance.ToBuilder().Password = id;
-        //var byteString = CMsgAccountLoginRequest.DefaultInstance.ToByteString();
-        //Debug.Log(byteString);
-        //var newRequest = CMsgAccountLoginRequest.ParseFrom(byteString);
-        //Debug.Log(string.Format("id:{0} ip:{1}", newRequest.Account, newRequest.Password));
         NetManager.Instance.Close();
-        NetManager.Instance.TryConnect(ipAdress, 8888);
-        NetManager.Instance.StartRun();
+        NetManager.Instance.TryConnect(ipAdress);
 
         PlayerPrefs.SetString("last_ip", ipAdress);
         PlayerPrefs.Save();
@@ -29,5 +29,10 @@ public class LoginController : Singleton<LoginController>
     public void SendMessageTest(string id)
     {
         NetManager.Instance.SendMessage(new CMsgAccountLoginRequest() {account = id});
+    }
+
+    private void OnGetLoginResponse(object msg)
+    {
+        //SceneSwitcher.Instance.LoadScene(sceneName)
     }
 }

@@ -3,7 +3,7 @@ using System.Collections;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Monster.SceneManager
+namespace Monster.BaseSystem.SceneManager
 {
     class LoginSceneManager : BaseSceneManager
     {
