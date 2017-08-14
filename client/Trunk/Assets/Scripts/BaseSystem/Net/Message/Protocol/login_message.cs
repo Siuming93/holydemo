@@ -10,10 +10,10 @@
 // Generated from: login_message.proto
 namespace Monster.Protocol
 {
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CMsgAccountLoginRequest")]
-  public partial class CMsgAccountLoginRequest : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsLogin")]
+  public partial class CsLogin : global::ProtoBuf.IExtensible
   {
-    public CMsgAccountLoginRequest() {}
+    public CsLogin() {}
     
     private string _account;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"account", DataFormat = global::ProtoBuf.DataFormat.Default)]
@@ -22,70 +22,15 @@ namespace Monster.Protocol
       get { return _account; }
       set { _account = value; }
     }
-    private string _password;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"password", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public string password
-    {
-      get { return _password; }
-      set { _password = value; }
-    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CMsgAccountLoginResponse")]
-  public partial class CMsgAccountLoginResponse : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScLogin")]
+  public partial class ScLogin : global::ProtoBuf.IExtensible
   {
-    public CMsgAccountLoginResponse() {}
-    
-    private int _result;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"result", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int result
-    {
-      get { return _result; }
-      set { _result = value; }
-    }
-    private int _accountid;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"accountid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int accountid
-    {
-      get { return _accountid; }
-      set { _accountid = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CMsgAccountRegistRequest")]
-  public partial class CMsgAccountRegistRequest : global::ProtoBuf.IExtensible
-  {
-    public CMsgAccountRegistRequest() {}
-    
-    private string _account;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"account", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public string account
-    {
-      get { return _account; }
-      set { _account = value; }
-    }
-    private string _password;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"password", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public string password
-    {
-      get { return _password; }
-      set { _password = value; }
-    }
-    private global::ProtoBuf.IExtension extensionObject;
-    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
-      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
-  }
-  
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CMsgAccountRegistResponse")]
-  public partial class CMsgAccountRegistResponse : global::ProtoBuf.IExtensible
-  {
-    public CMsgAccountRegistResponse() {}
+    public ScLogin() {}
     
     private int _result;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"result", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]

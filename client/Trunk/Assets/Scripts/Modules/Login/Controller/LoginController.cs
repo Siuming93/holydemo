@@ -14,7 +14,7 @@ public class LoginController : Singleton<LoginController>
 
     private void RegisterProto()
     {
-        NetManager.Instance.RegisterMessageHandler(MsgIDDefineDic.CMSGACCOUNTLOGINRESPONSE, OnGetLoginResponse);
+        NetManager.Instance.RegisterMessageHandler(MsgIDDefineDic.ScLogin, OnGetLoginResponse);
     }
 
     public void Login(string id, string ipAdress)
@@ -28,7 +28,7 @@ public class LoginController : Singleton<LoginController>
 
     public void SendMessageTest(string id)
     {
-        NetManager.Instance.SendMessage(new CMsgAccountLoginRequest() {account = id});
+        NetManager.Instance.SendMessage(new CsLogin() {account = id});
     }
 
     private void OnGetLoginResponse(object msg)

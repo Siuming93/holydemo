@@ -16,16 +16,12 @@ public class MsgIDDef
 	}
 	private MsgIDDef()
 	{
-		sc_msg_dic.Add(10001,typeof(CMsgAccountLoginRequest));
-		sc_msg_dic.Add(10002,typeof(CMsgAccountLoginResponse));
-		sc_msg_dic.Add(10003,typeof(CMsgAccountRegistRequest));
-		sc_msg_dic.Add(10004,typeof(CMsgAccountRegistResponse));
-		sc_msg_dic.Add(10101,typeof(CMsgRoleListRequest));
-		sc_msg_dic.Add(10102,typeof(CMsgRoleListResponse));
-		sc_msg_dic.Add(10103,typeof(CMsgRoleCreateRequest));
-		sc_msg_dic.Add(10104,typeof(CMsgRoleCreateResponse));
+		sc_msg_dic.Add(10001,typeof(CsLogin));
+		sc_msg_dic.Add(10002,typeof(ScLogin));
 		sc_msg_dic.Add(10201,typeof(CsHelloWorld));
 		sc_msg_dic.Add(10202,typeof(ScHelloWorld));
+		sc_msg_dic.Add(10301,typeof(CsTalk));
+		sc_msg_dic.Add(10302,typeof(ScTalk));
 	}
 	public Type GetMsgType(int msgID)
 	{
