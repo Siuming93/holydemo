@@ -16,7 +16,7 @@ CMD.dispatch = function(opcode, msg)
 	local ok, result = pcall(skynet.call, "dbservice", "lua", "query", sql)	
 
 	if ok then
-		if #result == 0 then
+		if result == 0 then
 			createplayer(accountId)
 		end
 	end
@@ -24,7 +24,6 @@ CMD.dispatch = function(opcode, msg)
 	tb.accountid = accountId
 
 	local msgbody =  protobuf.encode("Monster.Protocol.CMsgAccountRegistResponse", tb)
-	print(" resp ok :", message.CMSGACCOUNTLOGINRESPONSE)
 	return msgpack.pack(message.CMSGACCOUNTLOGINRESPONSE, msgbody)
 end
 
