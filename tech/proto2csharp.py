@@ -39,14 +39,14 @@ def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("{");
 	fs.writelines("\tstatic Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();");
 	fs.writelines("\tstatic Dictionary<string, int> msgname2msgid = new Dictionary<string, int>();");
-	fs.writelines("\tstatic void Initialize()");
+	fs.writelines("\tpublic static void Initialize()");
 	fs.writelines("\t{");
 
 	for _msgDef  in msgidList:
 		fs.writelines("\t\tmsgid2msgname[%s] = \"%s\";" % (_msgDef.msgid, _msgDef.msgname));
 		fs.writelines("\t\tmsgname2msgid[\"%s\"] = %s;" % (_msgDef.msgname, _msgDef.msgid));
 	fs.writelines("\t}");
-	fs.writelines("\tstatic string GetMsgNameByID(int msgid)");
+	fs.writelines("\tpublic static string GetMsgNameByID(int msgid)");
 	fs.writelines("\t{");
 	fs.writelines("\t\tstring msgname = null;");
 	fs.writelines("\t\tif (msgid2msgname.TryGetValue(msgid,out msgname))");
@@ -56,7 +56,7 @@ def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("\t\treturn \"\";");
 	fs.writelines("\t}");
 
-	fs.writelines("\tstatic int GetMsgIDByName(string msgname)");
+	fs.writelines("\tpublic static int GetMsgIDByName(string msgname)");
 	fs.writelines("\t{");
 	fs.writelines("\t\tint msgid = 0;");
 	fs.writelines("\t\tif (msgname2msgid.TryGetValue(msgname,out msgid))");
@@ -123,7 +123,7 @@ def ParseMsgIDDefineDic(fs,msgidList):
 	fs.writelines("{");
 
 	for _msgDef in msgidList:
-		fs.writelines("\tpublic const int %s = %s; %s"%( _msgDef.msgname.upper().replace(".","_"), _msgDef.msgid,_msgDef.comment));
+		fs.writelines("\tpublic const int %s = %s; %s"%( _msgDef.msgname.replace(".","_"), _msgDef.msgid,_msgDef.comment));
 
 	fs.writelines("}");
 	fs.flush();

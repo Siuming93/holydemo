@@ -1,0 +1,15 @@
+package Monster.Protocol;
+
+message CsTalk
+{
+	required int32 id				= 1;
+	required string content			= 2;
+}
+
+
+message ScTalk
+{
+	required int32 id 				= 1;
+	required string content			= 2;
+	required string form			= 3;
+}
