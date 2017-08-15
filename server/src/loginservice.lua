@@ -7,7 +7,7 @@ require "skynet.manager"
 local CMD = {}
 local protobuf = {}
 
-CMD.dispatch = function(opcode, msg)
+CMD.dispatch = function(opcode, msg, fd)
 	local data = protobuf.decode("Monster.Protocol.CsLogin", msg)
 	local accountId = data.account
 	print("-------------------------------------------------loginId:",accountId)
@@ -22,7 +22,7 @@ CMD.dispatch = function(opcode, msg)
 	end
 	local tb = {}
 	tb.accountid = accountId
-
+	skynet.call("talkservice", "lua", "register", fd, accountId)
 	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
 	return msgpack.pack(message.SCLOGIN, msgbody)
 end
