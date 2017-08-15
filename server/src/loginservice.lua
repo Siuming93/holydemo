@@ -8,7 +8,7 @@ local CMD = {}
 local protobuf = {}
 
 CMD.dispatch = function(opcode, msg)
-	local data = protobuf.decode("Monster.Protocol.CMsgAccountLoginRequest", msg)
+	local data = protobuf.decode("Monster.Protocol.CsLogin", msg)
 	local accountId = data.account
 	print("-------------------------------------------------loginId:",accountId)
 	
@@ -23,8 +23,8 @@ CMD.dispatch = function(opcode, msg)
 	local tb = {}
 	tb.accountid = accountId
 
-	local msgbody =  protobuf.encode("Monster.Protocol.CMsgAccountRegistResponse", tb)
-	return msgpack.pack(message.CMSGACCOUNTLOGINRESPONSE, msgbody)
+	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
+	return msgpack.pack(message.SCLOGIN, msgbody)
 end
 
 
@@ -47,13 +47,6 @@ skynet.start(function(...)
 	protobuf = require "protobuf"
 	protobuf.register_file "../proto/login_message.pb"
 
-	local tb = {}
-	tb.account = "55"
-	protobuf.encode("Monster.Protocol.CMsgAccountLoginRequest",tb)
-	
-	local ltb = {}
-	ltb.account = 1
-	protobuf.encode("Monster.Protocol.CMsgAccountRegistResponse",{result = 12,accountid = 55})
 
 	skynet.register "loginservice"
 
