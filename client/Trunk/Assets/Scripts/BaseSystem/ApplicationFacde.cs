@@ -1,23 +1,35 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using PureMVC.Patterns.Facade;
-using PureMVC.Interfaces;
+﻿using PureMVC.Patterns.Facade;
+using PureMVC.Patterns.Mediator;
+using PureMVC.Patterns.Observer;
 
 namespace Monster.BaseSystem
 {
-    public static class ApplicationFacade
+    public class ApplicationFacade : Facade
     {
-        public static IFacade  Instance;
-        static ApplicationFacade()
+        private static ApplicationFacade mInstance;
+        public static ApplicationFacade Instance
         {
-            Instance = Facade.GetInstance(GetFacade);
+            get
+            {
+                if (mInstance == null)
+                    mInstance = new ApplicationFacade();
+                return mInstance;
+            }
         }
 
-        private static IFacade GetFacade()
+        private ApplicationFacade()
         {
-            return new Facade();
+
+        }
+
+        public void RegisterNotificaiton(string notificaitonName, Mediator mediator)
+        {
+            view.RegisterObserver(notificaitonName, new Observer(mediator.HandleNotification, mediator));
+        }
+
+        public void ReMoveNotificatiion(string notificationName, Mediator mediator)
+        {
+            view.RemoveObserver(notificationName, mediator);
         }
     }
 }
