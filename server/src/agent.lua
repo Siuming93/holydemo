@@ -30,7 +30,7 @@ skynet.register_protocol {
 		opcode = data.msgno%100
 		local ok, result
 		if msgId[module] then
-			ok, result = pcall(skynet.call, msgId[module], "lua", "dispatch", opcode, data.msg)
+			ok, result = pcall(skynet.call, msgId[module], "lua", "dispatch", opcode, data.msg, client_fd)
 			if ok then
 				send_response(result)
 			else
@@ -50,6 +50,7 @@ end
 
 function CMD.disconnect()
 	print("----a client disconnect")
+	skynet.call("talk")
 	skynet.exit()
 end
 
