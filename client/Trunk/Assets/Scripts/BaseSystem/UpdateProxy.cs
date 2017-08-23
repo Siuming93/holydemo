@@ -1,9 +1,11 @@
 ﻿using UnityEngine;
 using Monster.Net;
-public class UpdateProxy : MonoBehaviour {
-
+public class UpdateProxy : MonoBehaviour
+{
+    public static UpdateProxy Instance;
     void Awake()
     {
+        Instance = this;
         DontDestroyOnLoad(this);
     }
 
