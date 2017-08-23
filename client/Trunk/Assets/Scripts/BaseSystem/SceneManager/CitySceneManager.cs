@@ -3,11 +3,14 @@ using System.Collections.Generic;
 using System.Collections;
 using Monster.BaseSystem;
 using PureMVC.Interfaces;
+using UnityEngine;
 
 namespace Monster.BaseSystem.SceneManager
 {
     class CitySceneManager : BaseSceneManager
     {
+        public new const string SCENE_NAME = "City";
+
         private List<IMediator> _mediatorList;
         private List<IProxy> _proxyList;
         public override IEnumerator AfterLeaveScene(object data)
@@ -34,6 +37,10 @@ namespace Monster.BaseSystem.SceneManager
             };
             _mediatorList = new List<IMediator>() {
             };
+
+            GameObject chatView = GameObject.Instantiate(ResourcesFacade.Instance.Load<GameObject>("Prefab/UI/Chat/TalkCanvas"));
+            UIManager.Intance.AddChild(chatView.transform);
+            new ChatMediator(chatView);
 
             RegisterProxy(_proxyList);
             RegisterMediator(_mediatorList);

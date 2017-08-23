@@ -4,12 +4,15 @@ using Monster.Net;
 using Monster.Protocol;
 using System;
 using BaseSystem;
+using Monster.BaseSystem.SceneManager;
 
 public class LoginController : Singleton<LoginController>
 {
+    private string _lastIp;
+
     public LoginController()
     {
-        
+        RegisterProto();
     }
 
     private void RegisterProto()
@@ -21,9 +24,8 @@ public class LoginController : Singleton<LoginController>
     {
         NetManager.Instance.Close();
         NetManager.Instance.TryConnect(ipAdress);
-
-        PlayerPrefs.SetString("last_ip", ipAdress);
-        PlayerPrefs.Save();
+        _lastIp = ipAdress;
+        NetManager.Instance.SendMessage(new CsLogin() { account = id });
     }
 
     public void SendMessageTest(string id)
@@ -31,8 +33,10 @@ public class LoginController : Singleton<LoginController>
         NetManager.Instance.SendMessage(new CsLogin() {account = id});
     }
 
-    private void OnGetLoginResponse(object msg)
+    public void OnGetLoginResponse(object msg)
     {
-        //SceneSwitcher.Instance.LoadScene(sceneName)
+        PlayerPrefs.SetString("last_ip", _lastIp);
+        PlayerPrefs.Save();
+        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(CitySceneManager.SCENE_NAME));
     }
 }

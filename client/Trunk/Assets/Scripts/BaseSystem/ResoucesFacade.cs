@@ -14,9 +14,9 @@ public class ResourcesFacade
         return Load(path, typeof(Object));
     }
 
-    public Object Load<T>(string path)
+    public T Load<T>(string path) where T : Object
     {
-        return Load(path, typeof(T));
+        return Resources.Load<T>(path);
     }
 
     public Object Load(string path, Type systemTypeInstance)

@@ -9,6 +9,7 @@ namespace Monster.BaseSystem.SceneManager
     {
         public new const string SCENE_NAME = "Login";
 
+        private GameObject _loginView;
         public override IEnumerator BeforeEnterScene(object data)
         {
             return null;;
@@ -17,13 +18,14 @@ namespace Monster.BaseSystem.SceneManager
         public override IEnumerator OnEnterScene(object data)
         {
             Object origin = ResourcesFacade.Instance.Load<GameObject>("Prefab/UI/Login/LoginView");
-            GameObject view = GameObject.Instantiate(origin) as GameObject;
-            UIManager.Intance.AddChild(view.transform);
+            _loginView = GameObject.Instantiate(origin) as GameObject;
+            UIManager.Intance.AddChild(_loginView.transform);
             return null; ;
         }
 
         public override IEnumerator BeforeLeaveScene(object data)
         {
+            UIManager.Intance.RemoveChild(_loginView.transform);
             return null; ;
         }
 

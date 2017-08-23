@@ -23,6 +23,7 @@ namespace BaseSystem
             _managerMap = new Dictionary<string, BaseSceneManager>();
 
             _managerMap.Add(LoginSceneManager.SCENE_NAME, new LoginSceneManager());
+            _managerMap.Add(CitySceneManager.SCENE_NAME, new CitySceneManager());
         }
 
         public IEnumerator LoadScene(string sceneName)
@@ -45,6 +46,7 @@ namespace BaseSystem
                 {
                     yield return operation.progress;
                 }
+                mCurSceneName = sceneName;
                 yield return manager.OnEnterScene(null);
             }
             else
