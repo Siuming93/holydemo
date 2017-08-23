@@ -12,7 +12,7 @@ using UnityEngine;
 using XLua;
 
 //配置的详细介绍请看Doc下《XLua的配置.doc》
-public static class XLuaGenConfig
+public static class ExampleGenConfig
 {
     //lua中要使用到C#库的配置，比如C#标准库，或者Unity API，第三方库等。
     [LuaCallCSharp]
