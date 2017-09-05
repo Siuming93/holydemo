@@ -10,8 +10,8 @@ using System.Text.RegularExpressions;
 using UnityEngine.AssetBundles.GraphTool;
 using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
 
-[CustomNode("Custom/Load Dependence", 1000)]
-public class LoadDependenceNode : Node
+[CustomNode("Custom/Group By Root DependenceNode", 1000)]
+public class GroupByRootDependenceNode : Node
 {
 
 	[SerializeField] private SerializableMultiTargetString m_myValue;
@@ -41,7 +41,7 @@ public class LoadDependenceNode : Node
 	}
 
 	public override Node Clone(Model.NodeData newData) {
-        var newNode = new LoadDependenceNode();
+        var newNode = new GroupByRootDependenceNode();
 		newNode.m_myValue = new SerializableMultiTargetString(m_myValue);
 		newData.AddDefaultInputPoint();
 		newData.AddDefaultOutputPoint();
@@ -69,6 +69,19 @@ public class LoadDependenceNode : Node
 					onValueChanged();
 				}
 			});
+
+			// Draw tab contents
+			using (disabledScope) {
+				var val = m_myValue[editor.CurrentEditingGroup];
+
+				var newValue = EditorGUILayout.TextField("My Value:", val);
+				if (newValue != val) {
+					using(new RecordUndoScope("My Value Changed", node, true)){
+						m_myValue[editor.CurrentEditingGroup] = newValue;
+						onValueChanged();
+					}
+				}
+			}
 		}
 	}
 
@@ -81,7 +94,6 @@ public class LoadDependenceNode : Node
 		IEnumerable<Model.ConnectionData> connectionsToOutput, 
 		PerformGraph.Output Output) 
 	{
-        Debug.Log("Prepare");
 		// Pass incoming assets straight to Output
 		if(Output != null) {
 			var destination = (connectionsToOutput == null || !connectionsToOutput.Any())? 
@@ -89,8 +101,7 @@ public class LoadDependenceNode : Node
 
 			if(incoming != null) {
 				foreach(var ag in incoming) {
-                    ;
-                    Output(destination, LoadDependence(ag.assetGroups));
+					Output(destination, ag.assetGroups);
 				}
 			} else {
 				// Overwrite output with empty Dictionary when no there is incoming asset
@@ -99,44 +110,35 @@ public class LoadDependenceNode : Node
 		}
 	}
 
-    private Dictionary<string, List<AssetReference>> LoadDependence(Dictionary<string, List<AssetReference>> assetGroups)
+    private new Dictionary<string, List<AssetReference>> Group(Dictionary<string, List<AssetReference>> assetGroups)
     {
         var output = new Dictionary<string, List<AssetReference>>();
-        output["root"] = new List<AssetReference>(assetGroups["0"]);
-        var map = new Dictionary<string, AssetReference>();
-        var rootSet = new HashSet<string>();
-        foreach (var refs in output.Values)
+        var rootList = assetGroups["root"];
+        var depList = assetGroups["dep"];
+        var depMap = new Dictionary<AssetReference, AssetArouneList>();
+
+        foreach (var reference in depList)
         {
-            foreach (var refence in refs)
-            {
-                if(!rootSet.Contains(refence.path))
-                {
-                    rootSet.Add(refence.path);
-                }
-            }
+            depMap[reference] = new AssetArouneList();
         }
-        foreach (var refs in output.Values)
-        {
-            foreach (var refence in refs)
-            {
-                foreach (var path in AssetDatabase.GetDependencies(refence.path))
-                {
-                    var type = AssetDatabase.GetMainAssetTypeAtPath(path);
-                    if (!map.ContainsKey(path) && !rootSet.Contains(path))
-                    {
-                        map[path] = AssetReference.CreateReference(path, type);
-                    }
-                }
-            }
-        }
-        output["dep"] = map.Values.ToList();
+
+
+
         return output;
     }
 
-    /**
+    private class  AssetArouneList
+    {
+        public List<AssetReference>  depenceOnMe = new List<AssetReference>();
+        public List<AssetReference>  depence = new List<AssetReference>(); 
+    }
+
+
+
+	/**
 	 * Build is called when Unity builds assets with AssetBundle Graph. 
-	 */
-    public override void Build (BuildTarget target, 
+	 */ 
+	public override void Build (BuildTarget target, 
 		Model.NodeData nodeData, 
 		IEnumerable<PerformGraph.AssetGroups> incoming, 
 		IEnumerable<Model.ConnectionData> connectionsToOutput, 

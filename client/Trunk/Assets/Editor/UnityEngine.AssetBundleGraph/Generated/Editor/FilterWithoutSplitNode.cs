@@ -10,22 +10,27 @@ using System.Text.RegularExpressions;
 using UnityEngine.AssetBundles.GraphTool;
 using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
 
-[CustomNode("Custom/MyNode", 1000)]
-public class MyNode : Node {
+[CustomNode("Custom/Filter Without Split", 1000)]
+public class FilterWithoutSplitNode : Node
+{
 
 	[SerializeField] private SerializableMultiTargetString m_myValue;
 
-	public override string ActiveStyle {
-		get {
-			return "node 8 on";
-		}
-	}
+    public override string ActiveStyle
+    {
+        get
+        {
+            return "node 8 on";
+        }
+    }
 
-	public override string InactiveStyle {
-		get {
-			return "node 8";
-		}
-	}
+    public override string InactiveStyle
+    {
+        get
+        {
+            return "node 8";
+        }
+    }
 
 	public override string Category {
 		get {
@@ -40,7 +45,7 @@ public class MyNode : Node {
 	}
 
 	public override Node Clone(Model.NodeData newData) {
-		var newNode = new MyNode();
+        var newNode = new FilterWithoutSplitNode();
 		newNode.m_myValue = new SerializableMultiTargetString(m_myValue);
 		newData.AddDefaultInputPoint();
 		newData.AddDefaultOutputPoint();
@@ -83,7 +88,11 @@ public class MyNode : Node {
 			}
 		}
 	}
-
+    private static HashSet<Type> mShouldNotBuild = new HashSet<Type>()
+    {
+        typeof(Shader),
+        typeof(MonoScript),
+    }; 
 	/**
 	 * Prepare is called whenever graph needs update. 
 	 */ 
@@ -99,8 +108,9 @@ public class MyNode : Node {
 				null : connectionsToOutput.First();
 
 			if(incoming != null) {
-				foreach(var ag in incoming) {
-					Output(destination, ag.assetGroups);
+				foreach(var ag in incoming)
+				{
+                    Output(destination, Fliter(ag.assetGroups));
 				}
 			} else {
 				// Overwrite output with empty Dictionary when no there is incoming asset
@@ -108,6 +118,37 @@ public class MyNode : Node {
 			}
 		}
 	}
+
+    private Dictionary<string, List<AssetReference>> Fliter(Dictionary<string, List<AssetReference>> assetGroups)
+    {
+        var output = new Dictionary<string, List<AssetReference>>();
+        foreach (var key in assetGroups.Keys)
+        {
+            output.Add(key, new List<AssetReference>(assetGroups[key]));
+        }
+        List<AssetReference> toRemove = new List<AssetReference>();
+        foreach (var list in output.Values)
+        {
+            foreach (var reference in list)
+            {
+                if (mShouldNotBuild.Contains(TypeUtility.GetTypeOfAsset(reference.path)))
+                {
+                    toRemove.Add(reference);
+                }
+            }
+        }
+        foreach (var list in output.Values)
+        {
+            foreach (var reference in toRemove)
+            {
+                if (list.Contains(reference))
+                {
+                    list.Remove(reference);
+                }
+            }
+        }
+        return output;
+    }
 
 	/**
 	 * Build is called when Unity builds assets with AssetBundle Graph. 
