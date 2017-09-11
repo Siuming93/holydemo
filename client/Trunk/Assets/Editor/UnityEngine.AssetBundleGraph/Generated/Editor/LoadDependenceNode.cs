@@ -81,7 +81,6 @@ public class LoadDependenceNode : Node
 		IEnumerable<Model.ConnectionData> connectionsToOutput, 
 		PerformGraph.Output Output) 
 	{
-        Debug.Log("Prepare");
 		// Pass incoming assets straight to Output
 		if(Output != null) {
 			var destination = (connectionsToOutput == null || !connectionsToOutput.Any())? 
@@ -124,7 +123,9 @@ public class LoadDependenceNode : Node
                     var type = AssetDatabase.GetMainAssetTypeAtPath(path);
                     if (!map.ContainsKey(path) && !rootSet.Contains(path))
                     {
-                        map[path] = AssetReference.CreateReference(path, type);
+                        var refernce = AssetReference.CreateReference(path, type);
+                        if (TypeUtility.IsLoadingAsset(refernce))
+                            map[path] = refernce;
                     }
                 }
             }
