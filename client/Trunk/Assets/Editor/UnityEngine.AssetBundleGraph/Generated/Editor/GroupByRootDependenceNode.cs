@@ -227,8 +227,8 @@ public class GroupByRootDependenceNode : Node
         {
             var nodePath = rootQueue.Dequeue();
             var node = nodeMap[nodePath];
-            var groupKey = node.reference.fileNameAndExtension;
-            output[groupKey] = new List<AssetReference>() { nodeMap[nodePath].reference };
+            var groupName = node.reference.fileName;
+            output[groupName] = new List<AssetReference>() { nodeMap[nodePath].reference };
             var depQueue = new Queue<string>(node.depence);
             while (depQueue.Count >0)
             {
@@ -236,7 +236,7 @@ public class GroupByRootDependenceNode : Node
                 var depNode = nodeMap[depNodePath];
                 if (depNode.depenceOnMe.Count == 1)
                 {
-                    output[node.reference.fileNameAndExtension].Add(depNode.reference);
+                    output[groupName].Add(depNode.reference);
                     node.depence.Remove(depNodePath);
                     foreach (var dep2Path in depNode.depence)
                     {
@@ -249,7 +249,7 @@ public class GroupByRootDependenceNode : Node
                 }
                 else if (depNode.depenceOnMe.Count > 1)
                 {
-                    if (!rootQueue.Contains(depNodePath) && !output.ContainsKey(depNode.reference.fileNameAndExtension))
+                    if (!rootQueue.Contains(depNodePath) && !output.ContainsKey(depNode.reference.fileName))
                         rootQueue.Enqueue(depNodePath);
                 }
             }

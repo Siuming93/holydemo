@@ -1,0 +1,38 @@
+ManifestFileVersion: 0
+CRC: 892424545
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 2fa052467d492e929f3365046488d5f0
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 3ce1c17e84bc325e68fe3803004bd668
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 1679637790, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: fe9251ab70971f849a66cb9a7bce123f, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/Resources/Prefab/UI/Chat/ChatItem.prefab
+Dependencies: []
