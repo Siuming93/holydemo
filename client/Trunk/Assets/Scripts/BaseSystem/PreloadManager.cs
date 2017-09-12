@@ -1,5 +1,6 @@
 ﻿using System.Collections;
 using Monster.BaseSystem;
+using Monster.BaseSystem.CoroutineTask;
 using Monster.BaseSystem.SceneManager;
 using Monster.Net;
 using UnityEngine;
@@ -7,6 +8,7 @@ using UnityEngine;
 public class PreloadManager : MonoBehaviour
 {
     private Transform _uiRoot;
+    private PreLoadTask task;
 
     void Awake()
     {
@@ -20,23 +22,7 @@ public class PreloadManager : MonoBehaviour
 
     IEnumerator PreLoad()
     {
-        int step = 0;
-        new UIManager(GameObject.Find("Canvas").transform);
-        Object origin = ResourcesFacade.Instance.Load<GameObject>("Prefab/UI/Preload/PreloadPanel");
-        GameObject preloadView = Instantiate(origin) as GameObject;
-        UIManager.Intance.AddChild(preloadView.transform);
-        yield return step++;
-
-        NetManager.Instance.Init();
-        yield return step++;
-
-        yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
-        Destroy(preloadView);
-        yield return step++;
-    }
-
-    void LoadNextScene()
-    {
-
+        task = new PreLoadTask();
+        yield return task.Run();
     }
 }

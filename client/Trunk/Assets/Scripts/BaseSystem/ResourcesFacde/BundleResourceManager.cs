@@ -38,6 +38,7 @@ namespace Monster.BaseSystem
         }
         public void UnLoadAsset(Object assetToUnload)
         {
+            Object.Destroy(assetToUnload);
             Resources.UnloadAsset(assetToUnload);
         }
         public AsyncOperation UnLoadUnusedAssets()
@@ -49,7 +50,8 @@ namespace Monster.BaseSystem
         private Object DoLoad(string path, Type type)
         {
             var assetBundle = AssetBundle.LoadFromFile(GetUri(path));
-            return assetBundle.LoadAsset(GetName(path));
+            var name = GetName(path);
+            return assetBundle.LoadAsset(name);
         }
         private T DoLoad<T>(string path) where T : Object
         {
@@ -64,7 +66,7 @@ namespace Monster.BaseSystem
         private string GetName(string path)
         {
             var arr = path.Split('/');
-            return arr[arr.Length - 1] + ".assetbundle";
+            return (arr[arr.Length - 1]);
         }
         private AsyncOperation DoLoadAsync(string path)
         {
