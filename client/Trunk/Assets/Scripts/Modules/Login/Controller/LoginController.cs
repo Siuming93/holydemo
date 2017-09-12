@@ -1,9 +1,7 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using Monster.BaseSystem;
+using UnityEngine;
 using Monster.Net;
 using Monster.Protocol;
-using System;
-using BaseSystem;
 using Monster.BaseSystem.SceneManager;
 
 public class LoginController : Singleton<LoginController>

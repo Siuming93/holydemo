@@ -1,4 +1,4 @@
-using UnityEngine;
+﻿using UnityEngine;
 using UnityEditor;
 
 using System;
@@ -101,7 +101,7 @@ public class GroupByRootDependenceNode : Node
 
 			if(incoming != null) {
 				foreach(var ag in incoming) {
-					Output(destination, ag.assetGroups);
+					Output(destination, Group(ag.assetGroups));
 				}
 			} else {
 				// Overwrite output with empty Dictionary when no there is incoming asset
@@ -110,27 +110,177 @@ public class GroupByRootDependenceNode : Node
 		}
 	}
 
+    private Dictionary<string , AssetReference>  mRootMap =  new Dictionary<string, AssetReference>();
+
     private new Dictionary<string, List<AssetReference>> Group(Dictionary<string, List<AssetReference>> assetGroups)
     {
         var output = new Dictionary<string, List<AssetReference>>();
-        var rootList = assetGroups["root"];
-        var depList = assetGroups["dep"];
-        var depMap = new Dictionary<AssetReference, AssetArouneList>();
 
-        foreach (var reference in depList)
+        //准备
+        var allMap = new Dictionary<string, AssetReference>();
+        mRootMap.Clear();
+        var rootList = assetGroups["root"];
+        foreach (var reference in rootList)
         {
-            depMap[reference] = new AssetArouneList();
+            var path = reference.path;
+            mRootMap.Add(path, reference);
+            allMap.Add(path, reference);
         }
 
+        List<AssetReference> depList = null;
+        if (assetGroups.ContainsKey("dep"))
+        {
+            depList = assetGroups["dep"];
+        }
 
+        for (int i = 0, count = depList.Count; i < count; i++)
+        {
+            var reference = depList[i];
+            var path = reference.path;
+            allMap.Add(path, reference);
 
+        }
+
+        //计算依赖
+        var nodeMap = new Dictionary<string, AssetRefrenceNode>();
+        foreach (var reference in allMap.Values)
+        {
+            var path = reference.path;
+            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, groupName = reference.fileName};
+        }
+        foreach (var reference in allMap.Values)
+        {
+            var path = reference.path;
+            var curNode = nodeMap[path];
+
+            foreach (var depPath in AssetDatabase.GetDependencies(path))
+            {
+                if (allMap.ContainsKey(depPath) && path != depPath)
+                {
+                    curNode.depence.Add(depPath);
+                    nodeMap[depPath].depenceOnMe.Add(path);
+                }
+            }
+        }
+
+        //合并依赖 清除同层之间的依赖 把同层之间被依赖的结点下移 两层结构 a->b,a->c,b->c 下移c 为:a->b->c 三层结构
+        /*
+         *          a                      a
+         *         /  \                   /
+         *        b -> c       ==>       b
+         *                              /
+         *                             c
+         */
+        var rootQueue = new Queue<string>();
+        List<string> toRemove = new List<string>();
+        HashSet<string> depMap = new HashSet<string>();
+        foreach (var reference in rootList)
+        {
+            rootQueue.Enqueue(reference.path);
+        }
+        while (rootQueue.Count > 0)
+        {
+            var nodePath = rootQueue.Dequeue();
+            var node = nodeMap[nodePath];
+            toRemove.Clear();
+            depMap.Clear();
+            foreach (var depPath in node.depence)
+            {
+                depMap.Add(depPath);
+            }
+            foreach (var depPath in node.depence)
+            {
+                var depNode = nodeMap[depPath];
+                foreach (var depenceOnMepath in depNode.depenceOnMe)
+                {
+                    if (depMap.Contains(depenceOnMepath))
+                        toRemove.Add(depPath);
+                }
+            }
+
+            foreach (var depPath in toRemove)
+            {
+                node.depence.Remove(depPath);
+                var depNode = nodeMap[depPath];
+                depNode.depenceOnMe.Remove(nodePath);
+            }
+            foreach (var depPath in node.depence)
+            {
+                if (!rootQueue.Contains(depPath))
+                    rootQueue.Enqueue(depPath);
+            }
+        }
+
+        //打组 向上合并, a->b->c
+        /*                                          
+         *          a        e                  (a,b) (e,f ) --> d          
+         *           \      /                   / |  \        _-^   
+         *  root:     b    f       ==>         c  h   L_____-`        ==>     group:   (a,b,c,h) -> (d) <- (e,f)
+         *          / | \ /                          
+         *         c  h  d                   
+         */
+        HashSet<string> hasSearchSet = new HashSet<string>();
+        foreach (var reference in rootList)
+        {
+            rootQueue.Enqueue(reference.path);
+        }
+        while (rootQueue.Count >0)
+        {
+            var nodePath = rootQueue.Dequeue();
+            var node = nodeMap[nodePath];
+            hasSearchSet.Add(nodePath);
+            var depQueue = new Queue<string>(node.depence);
+            while (depQueue.Count >0)
+            {
+                var depNodePath = depQueue.Dequeue();
+                var depNode = nodeMap[depNodePath];
+                if (depNode.depenceOnMe.Count == 1)
+                {
+                    node.depence.Remove(depNodePath);
+                    nodeMap.Remove(depNodePath);
+                    node.incluedDepReference.Add(depNodePath);
+                    foreach (var dep2Path in depNode.depence)
+                    {
+                        node.depence.Add(dep2Path);
+                        depQueue.Enqueue(dep2Path);
+                        var dep2Node = nodeMap[dep2Path];
+                        dep2Node.depenceOnMe.Remove(depNodePath);
+                        dep2Node.depenceOnMe.Add(nodePath);
+                    }
+                }
+                else if (depNode.depenceOnMe.Count > 1)
+                {
+                    if (!rootQueue.Contains(depNodePath) && !hasSearchSet.Contains(depNodePath))
+                        rootQueue.Enqueue(depNodePath);
+                }
+            }
+        }
+        foreach (var node in nodeMap.Values)
+        {
+            var reference = allMap[node.path];
+            var groupName = node.groupName;
+            var list = new List<AssetReference>() { reference };
+            foreach (var includeDepPath in node.incluedDepReference)
+            {
+                list.Add(allMap[includeDepPath]);
+            }
+            output[groupName] = list;
+        }
         return output;
     }
 
-    private class  AssetArouneList
+    [Serializable]
+    private class  AssetRefrenceNode
     {
-        public List<AssetReference>  depenceOnMe = new List<AssetReference>();
-        public List<AssetReference>  depence = new List<AssetReference>(); 
+        public List<string> depenceOnMe = new List<string>();
+        public List<string> depence = new List<string>();
+        public string path;
+        public string groupName;
+        public List<string> incluedDepReference = new List<string>();
+        public override string ToString()
+        {
+            return path.ToString();
+        }
     }
 
 

@@ -1,0 +1,16 @@
+ManifestFileVersion: 0
+CRC: 3622368581
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: chatitem.assetbundle
+      Dependencies: {}
+    Info_1:
+      Name: loginview.assetbundle
+      Dependencies: {}
+    Info_2:
+      Name: preloadpanel.assetbundle
+      Dependencies: {}
+    Info_3:
+      Name: talkcanvas.assetbundle
+      Dependencies: {}

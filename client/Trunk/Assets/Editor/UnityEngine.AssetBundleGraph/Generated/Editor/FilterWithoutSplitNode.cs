@@ -10,156 +10,68 @@ using System.Text.RegularExpressions;
 using UnityEngine.AssetBundles.GraphTool;
 using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
 
-[CustomNode("Custom/Filter Without Split", 1000)]
-public class FilterWithoutSplitNode : Node
+[CustomNode("Custom/Filter Out Type", 1000)]
+public class FilterByType : IFilter
 {
+    [SerializeField] private HashSet<string> m_fliterKeyType;
 
-	[SerializeField] private SerializableMultiTargetString m_myValue;
-
-    public override string ActiveStyle
+    public string Label
     {
-        get
-        {
-            return "node 8 on";
-        }
+        get { return "Filter Out"; }
     }
 
-    public override string InactiveStyle
+    public FilterByType()
     {
-        get
-        {
-            return "node 8";
-        }
+        m_fliterKeyType = new HashSet<string>();
     }
 
-	public override string Category {
-		get {
-			return "Custom";
-		}
-	}
-
-	public override void Initialize(Model.NodeData data) {
-		m_myValue = new SerializableMultiTargetString();
-		data.AddDefaultInputPoint();
-		data.AddDefaultOutputPoint();
-	}
-
-	public override Node Clone(Model.NodeData newData) {
-        var newNode = new FilterWithoutSplitNode();
-		newNode.m_myValue = new SerializableMultiTargetString(m_myValue);
-		newData.AddDefaultInputPoint();
-		newData.AddDefaultOutputPoint();
-		return newNode;
-	}
-
-	public override void OnInspectorGUI(NodeGUI node, AssetReferenceStreamManager streamManager, NodeGUIEditor editor, Action onValueChanged) {
-
-		EditorGUILayout.HelpBox("My Custom Node: Implement your own Inspector.", MessageType.Info);
-		editor.UpdateNodeName(node);
-
-		GUILayout.Space(10f);
-
-		//Show target configuration tab
-		editor.DrawPlatformSelector(node);
-		using (new EditorGUILayout.VerticalScope(GUI.skin.box)) {
-			// Draw Platform selector tab. 
-			var disabledScope = editor.DrawOverrideTargetToggle(node, m_myValue.ContainsValueOf(editor.CurrentEditingGroup), (bool b) => {
-				using(new RecordUndoScope("Remove Target Platform Settings", node, true)) {
-					if(b) {
-						m_myValue[editor.CurrentEditingGroup] = m_myValue.DefaultValue;
-					} else {
-						m_myValue.Remove(editor.CurrentEditingGroup);
-					}
-					onValueChanged();
-				}
-			});
-
-			// Draw tab contents
-			using (disabledScope) {
-				var val = m_myValue[editor.CurrentEditingGroup];
-
-				var newValue = EditorGUILayout.TextField("My Value:", val);
-				if (newValue != val) {
-					using(new RecordUndoScope("My Value Changed", node, true)){
-						m_myValue[editor.CurrentEditingGroup] = newValue;
-						onValueChanged();
-					}
-				}
-			}
-		}
-	}
-    private static HashSet<Type> mShouldNotBuild = new HashSet<Type>()
+    public bool FilterAsset(AssetReference a)
     {
-        typeof(Shader),
-        typeof(MonoScript),
-    }; 
-	/**
-	 * Prepare is called whenever graph needs update. 
-	 */ 
-	public override void Prepare (BuildTarget target, 
-		Model.NodeData node, 
-		IEnumerable<PerformGraph.AssetGroups> incoming, 
-		IEnumerable<Model.ConnectionData> connectionsToOutput, 
-		PerformGraph.Output Output) 
-	{
-		// Pass incoming assets straight to Output
-		if(Output != null) {
-			var destination = (connectionsToOutput == null || !connectionsToOutput.Any())? 
-				null : connectionsToOutput.First();
+        var assumedType = a.filterType;
+        var match = assumedType != null && !m_fliterKeyType.Contains(assumedType.ToString());
+        return match;
+    }
 
-			if(incoming != null) {
-				foreach(var ag in incoming)
-				{
-                    Output(destination, Fliter(ag.assetGroups));
-				}
-			} else {
-				// Overwrite output with empty Dictionary when no there is incoming asset
-				Output(destination, new Dictionary<string, List<AssetReference>>());
-			}
-		}
-	}
-
-    private Dictionary<string, List<AssetReference>> Fliter(Dictionary<string, List<AssetReference>> assetGroups)
+    public void OnInspectorGUI(Action onValueChanged)
     {
-        var output = new Dictionary<string, List<AssetReference>>();
-        foreach (var key in assetGroups.Keys)
+        GUIStyle s = new GUIStyle((GUIStyle)"label");
+
+        using (new EditorGUILayout.HorizontalScope())
         {
-            output.Add(key, new List<AssetReference>(assetGroups[key]));
-        }
-        List<AssetReference> toRemove = new List<AssetReference>();
-        foreach (var list in output.Values)
-        {
-            foreach (var reference in list)
+            EditorGUILayout.LabelField("Not Included:", s, GUILayout.Width(120));
+            if (GUILayout.Button(m_fliterKeyType.Count == 0 ? "None" : "Mixed...", "Popup"))
             {
-                if (mShouldNotBuild.Contains(TypeUtility.GetTypeOfAsset(reference.path)))
-                {
-                    toRemove.Add(reference);
-                }
+                NodeGUI.ShowFliterKeyTypeMenu(
+                    "None", m_fliterKeyType.Count == 0, m_fliterKeyType,
+                    (string selectedTypeStr) => {
+
+                        if (selectedTypeStr == "None")
+                        {
+                            m_fliterKeyType.Clear();
+                            onValueChanged();
+                            return;
+                        }
+
+                        if (selectedTypeStr == Model.Settings.DEFAULT_FILTER_KEYTYPE)
+                        {
+                            m_fliterKeyType.Clear();
+                            m_fliterKeyType = new HashSet<string>(TypeUtility.KeyTypes);
+                            onValueChanged();
+                            return;
+                        }
+
+                        if (m_fliterKeyType.Contains(selectedTypeStr))
+                        {
+                            m_fliterKeyType.Remove(selectedTypeStr);
+                        }
+                        else
+                        {
+                            m_fliterKeyType.Add(selectedTypeStr);
+                        }
+                        onValueChanged();
+                    }
+                );
             }
         }
-        foreach (var list in output.Values)
-        {
-            foreach (var reference in toRemove)
-            {
-                if (list.Contains(reference))
-                {
-                    list.Remove(reference);
-                }
-            }
-        }
-        return output;
     }
-
-	/**
-	 * Build is called when Unity builds assets with AssetBundle Graph. 
-	 */ 
-	public override void Build (BuildTarget target, 
-		Model.NodeData nodeData, 
-		IEnumerable<PerformGraph.AssetGroups> incoming, 
-		IEnumerable<Model.ConnectionData> connectionsToOutput, 
-		PerformGraph.Output outputFunc,
-		Action<Model.NodeData, string, float> progressFunc)
-	{
-		// Do nothing
-	}
 }

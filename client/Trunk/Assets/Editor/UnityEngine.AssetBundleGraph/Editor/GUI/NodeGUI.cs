@@ -542,6 +542,33 @@ namespace UnityEngine.AssetBundles.GraphTool {
 			menu.ShowAsContext();
 		}
 
+	    public static void ShowFliterKeyTypeMenu(string head, bool headSelect, HashSet<string> selectedHash, Action<string> Selected)
+	    {
+            var menu = new GenericMenu();
+
+            menu.AddItem(new GUIContent(head),
+                headSelect,
+                    () => {
+                        Selected(head);
+                    });
+
+            menu.AddSeparator(string.Empty);
+
+            for (var i = 0; i < TypeUtility.KeyTypes.Count; i++)
+            {
+                var type = TypeUtility.KeyTypes[i];
+
+                menu.AddItem(
+                    new GUIContent(type),
+                    selectedHash.Contains(type),
+                    () => {
+                        Selected(type);
+                    }
+                );
+            }
+            menu.ShowAsContext();
+        }
+
 		public static void ShowFilterKeyTypeMenu (string current, Action<string> Selected) {
 			var menu = new GenericMenu();
 

@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using Monster.BaseSystem;
+using UnityEngine;
 using XLua;
 
 public class ChatPanelMediator : AbstractMediator

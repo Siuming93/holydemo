@@ -1,20 +1,23 @@
-﻿namespace Monster.CoroutineTask
-{
-    public abstract class BaseCoroutineTask
-    {
-        /// <summary>
-        /// 是否已完成
-        /// </summary>
-        public abstract bool isDone { get; }
+﻿using System;
+using System.Collections;
+using System.Threading;
 
+namespace Monster.BaseSystem.CoroutineTask
+{
+    public abstract class BaseCoroutineTask : ICoroutineResult, IDisposable
+    {
         /// <summary>
         /// 进度
         /// </summary>
-        public abstract float progress { get; }
-
+        public virtual float Progress { get; protected set; }
         /// <summary>
         /// 描述
         /// </summary>
-        public abstract string description { get; }
+        public virtual string Description { get; protected set; }
+
+        public abstract IEnumerator Run();
+        public abstract void Dispose();
+        public virtual bool IsCompleted { get; protected set; }
+        public virtual object AsyncState { get; protected set; }
     }
 }

@@ -4,7 +4,7 @@ using Monster.BaseSystem.SceneManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
-namespace BaseSystem
+namespace Monster.BaseSystem
 {
     public class SceneSwitcher
     {
