@@ -146,7 +146,7 @@ public class GroupByRootDependenceNode : Node
         foreach (var reference in allMap.Values)
         {
             var path = reference.path;
-            nodeMap[path] = new AssetRefrenceNode() {reference = reference};
+            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, groupName = reference.fileName};
         }
         foreach (var reference in allMap.Values)
         {
@@ -215,10 +215,11 @@ public class GroupByRootDependenceNode : Node
         /*                                          
          *          a        e                  (a,b) (e,f ) --> d          
          *           \      /                   / |  \        _-^   
-         *  root:     b    f       ==>         c  h   L_____-`        ===>     group:   (a,b,c,h) -> (d) <- (e,f)
+         *  root:     b    f       ==>         c  h   L_____-`        ==>     group:   (a,b,c,h) -> (d) <- (e,f)
          *          / | \ /                          
          *         c  h  d                   
          */
+        HashSet<string> hasSearchSet = new HashSet<string>();
         foreach (var reference in rootList)
         {
             rootQueue.Enqueue(reference.path);
@@ -227,8 +228,7 @@ public class GroupByRootDependenceNode : Node
         {
             var nodePath = rootQueue.Dequeue();
             var node = nodeMap[nodePath];
-            var groupName = node.reference.fileName;
-            output[groupName] = new List<AssetReference>() { nodeMap[nodePath].reference };
+            hasSearchSet.Add(nodePath);
             var depQueue = new Queue<string>(node.depence);
             while (depQueue.Count >0)
             {
@@ -236,8 +236,9 @@ public class GroupByRootDependenceNode : Node
                 var depNode = nodeMap[depNodePath];
                 if (depNode.depenceOnMe.Count == 1)
                 {
-                    output[groupName].Add(depNode.reference);
                     node.depence.Remove(depNodePath);
+                    nodeMap.Remove(depNodePath);
+                    node.incluedDepReference.Add(depNodePath);
                     foreach (var dep2Path in depNode.depence)
                     {
                         node.depence.Add(dep2Path);
@@ -249,23 +250,36 @@ public class GroupByRootDependenceNode : Node
                 }
                 else if (depNode.depenceOnMe.Count > 1)
                 {
-                    if (!rootQueue.Contains(depNodePath) && !output.ContainsKey(depNode.reference.fileName))
+                    if (!rootQueue.Contains(depNodePath) && !hasSearchSet.Contains(depNodePath))
                         rootQueue.Enqueue(depNodePath);
                 }
             }
         }
-
+        foreach (var node in nodeMap.Values)
+        {
+            var reference = allMap[node.path];
+            var groupName = node.groupName;
+            var list = new List<AssetReference>() { reference };
+            foreach (var includeDepPath in node.incluedDepReference)
+            {
+                list.Add(allMap[includeDepPath]);
+            }
+            output[groupName] = list;
+        }
         return output;
     }
 
+    [Serializable]
     private class  AssetRefrenceNode
     {
         public List<string> depenceOnMe = new List<string>();
         public List<string> depence = new List<string>();
-        public AssetReference reference;
+        public string path;
+        public string groupName;
+        public List<string> incluedDepReference = new List<string>();
         public override string ToString()
         {
-            return reference.ToString();
+            return path.ToString();
         }
     }
 
