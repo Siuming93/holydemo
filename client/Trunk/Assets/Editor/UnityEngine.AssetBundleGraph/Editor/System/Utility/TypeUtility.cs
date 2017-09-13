@@ -154,7 +154,7 @@ namespace UnityEngine.AssetBundles.GraphTool {
 		 * Get type of asset from give path.
 		 */
 		public static Type GetTypeOfAsset (string assetPath) {
-			if (assetPath.EndsWith(Model.Settings.UNITY_METAFILE_EXTENSION)) {
+			if (assetPath.EndsWith(".meta")) {
 				return typeof(string);
 			}
 

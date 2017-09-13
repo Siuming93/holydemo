@@ -1,6 +1,5 @@
 ﻿using Monster.BaseSystem;
 using UnityEngine;
-using XLua;
 
 public class ChatPanelMediator : AbstractMediator
 {
@@ -14,13 +13,11 @@ public class ChatPanelMediator : AbstractMediator
         CreateView();
     }
 
-    [Hotfix]
     private void RegisterNotifications()
     {
         
     }
 
-    [Hotfix]
     private void CreateView()
     {
         _view = Object.Instantiate(ResourcesFacade.Instance.Load<GameObject>(PANEL_PATH));

@@ -1,6 +1,9 @@
 ﻿
 using System.Collections;
+using System.Collections.Generic;
 using System.IO;
+using LitJson;
+using SimpleJson;
 using UnityEngine;
 
 namespace Monster.BaseSystem.CoroutineTask
@@ -30,18 +33,23 @@ namespace Monster.BaseSystem.CoroutineTask
         private void DownLoadBundles()
         {
             var targetPath = Application.streamingAssetsPath;
-            foreach (var name in FindAllBundleNames())
+            var map = FindAllBundleNames();
+            AssetBundleConfig.map = map;
+            foreach (var name in map.Values)
             {
-                File.Copy(BUNDLE_REMOTE_PATH + "/" + name, targetPath + "/" + name, true);
+                File.Copy(BUNDLE_REMOTE_PATH + "/" + name.groupName, targetPath + "/" + name.groupName, true);
             }
         }
 
         private static string BUNDLE_REMOTE_PATH = Application.dataPath.Replace("Assets", "") + "Bundles";
-        private string[] FindAllBundleNames()
+        private Dictionary<string, AssetRefrenceNode> FindAllBundleNames()
         {
-            var mainBudles = AssetBundle.LoadFromFile(BUNDLE_REMOTE_PATH + "/Bundles");
-            return null;
+            var reader = new StreamReader(File.OpenRead(GameConfig.BundleConfigPath));
+            var config = reader.ReadToEnd();
+            reader.Dispose();
+            var map = JsonMapper.ToObject<Dictionary<string, AssetRefrenceNode>>(config);
+            return map as Dictionary<string, AssetRefrenceNode>;
         }
-#endregion
+        #endregion
     }
 }

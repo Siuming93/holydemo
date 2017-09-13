@@ -1,13 +1,20 @@
 ﻿using System;
+using System.Collections.Generic;
 using Monster.BaseSystem;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
 namespace Monster.BaseSystem
 {
-    class BundleResourceManager : IResourceManager
+    public class BundleResourceManager : IResourceManager
     {
         #region interface 
+
+        public void Init(object data)
+        {
+            InitHintMap();
+        }
+
         public Object Load(string path)
         {
             return DoLoad(path, typeof(Object));
@@ -45,13 +52,22 @@ namespace Monster.BaseSystem
         {
             return Resources.UnloadUnusedAssets();
         }
-#endregion
+        #endregion
 
         private Object DoLoad(string path, Type type)
         {
-            var assetBundle = AssetBundle.LoadFromFile(GetUri(path));
-            var name = GetName(path);
-            return assetBundle.LoadAsset(name);
+            var id = GetID(path);
+            AssetBundleHint hint;
+            if (hintMap.TryGetValue(id, out hint))
+            {
+
+                return hint.bundle.LoadAsset(hint.bundlePath);
+            }
+            else
+            {
+                Debug.LogError("没有Asset资源");
+                return null;
+            }
         }
         private T DoLoad<T>(string path) where T : Object
         {
@@ -63,7 +79,7 @@ namespace Monster.BaseSystem
             return GameConfig.BUNDLE_PATH + "/" + arr[arr.Length - 1] + ".assetbundle";
         }
 
-        private string GetName(string path)
+        private string GetID(string path)
         {
             var arr = path.Split('/');
             return (arr[arr.Length - 1]);
@@ -72,5 +88,41 @@ namespace Monster.BaseSystem
         {
             return AssetBundle.LoadFromFileAsync(GetUri(path));
         }
+
+        #region  Reference Countor
+
+        private Dictionary<string, AssetBundleHint> hintMap;
+        private Dictionary<long, AssetBundleHint> objMap;
+
+        private void InitHintMap()
+        {
+            hintMap = new Dictionary<string, AssetBundleHint>();
+            foreach (var path in AssetBundleConfig.map.Keys)
+            {
+                var node = AssetBundleConfig.map[path];
+                var pathNoExtension = GetPathNoExtension(path);
+                hintMap[pathNoExtension] = new AssetBundleHint() { bundlePath = node.groupName, assetName = node.groupName};
+            }
+        }
+
+        private string GetPathNoExtension(string path)
+        {
+            int index = path.LastIndexOf('.');
+            if (index > 0 && index < path.Length)
+            {
+                return path.Substring(0, path.Length - index);
+            }
+            return path;
+        }
+        private class AssetBundleHint
+        {
+            public AssetBundle bundle;
+            public string assetName;
+            public int refCount;
+            public string bundlePath;
+        }
+        #endregion
     }
+
+
 }

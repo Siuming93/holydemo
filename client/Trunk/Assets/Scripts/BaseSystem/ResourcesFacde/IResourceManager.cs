@@ -6,6 +6,7 @@ namespace Monster.BaseSystem
 {
     public interface IResourceManager
     {
+        void Init(object data);
         Object Load(string path);
         Object Load(string path, Type type);
         T Load<T>(string path) where T : Object;

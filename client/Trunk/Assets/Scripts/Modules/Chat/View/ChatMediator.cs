@@ -2,9 +2,7 @@
 using Monster.Net;
 using UnityEngine;
 using UnityEngine.UI;
-using XLua;
 
-[Hotfix]
 class ChatMediator :AbstractMediator
 {
     public new const string NAME = "ChatMediator";

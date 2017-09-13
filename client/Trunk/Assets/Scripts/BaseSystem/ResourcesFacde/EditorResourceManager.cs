@@ -6,6 +6,10 @@ namespace Monster.BaseSystem
 {
     public class EditorResourceManager : IResourceManager
     {
+        public void Init(object data)
+        {
+        }
+
         public Object Load(string path)
         {
             return DoLoad(path, typeof(Object));

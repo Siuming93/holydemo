@@ -5,8 +5,8 @@ using System;
 using System.Linq;
 using System.IO;
 using System.Collections.Generic;
-using System.Text.RegularExpressions;
-
+using LitJson;
+using Monster.BaseSystem;
 using UnityEngine.AssetBundles.GraphTool;
 using Model=UnityEngine.AssetBundles.GraphTool.DataModel.Version2;
 
@@ -146,7 +146,7 @@ public class GroupByRootDependenceNode : Node
         foreach (var reference in allMap.Values)
         {
             var path = reference.path;
-            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, groupName = reference.fileName};
+            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, groupName = reference.fileName.ToLower() + ".assetbundle"} ;
         }
         foreach (var reference in allMap.Values)
         {
@@ -266,24 +266,17 @@ public class GroupByRootDependenceNode : Node
             }
             output[groupName] = list;
         }
+        var content = JsonMapper.ToJson(nodeMap);
+        if (File.Exists(GameConfig.BundleConfigPath))
+        {
+            File.Delete(GameConfig.BundleConfigPath);
+        }
+        using (var writer = File.CreateText(GameConfig.BundleConfigPath))
+        {
+            writer.Write(content);
+        }
         return output;
     }
-
-    [Serializable]
-    private class  AssetRefrenceNode
-    {
-        public List<string> depenceOnMe = new List<string>();
-        public List<string> depence = new List<string>();
-        public string path;
-        public string groupName;
-        public List<string> incluedDepReference = new List<string>();
-        public override string ToString()
-        {
-            return path.ToString();
-        }
-    }
-
-
 
 	/**
 	 * Build is called when Unity builds assets with AssetBundle Graph. 
