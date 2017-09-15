@@ -37,7 +37,8 @@ namespace Monster.BaseSystem.CoroutineTask
             AssetBundleConfig.map = map;
             foreach (var name in map.Values)
             {
-                File.Copy(BUNDLE_REMOTE_PATH + "/" + name.groupName, targetPath + "/" + name.groupName, true);
+                var bundleName = name.assetName + ".assetbundle";
+                File.Copy(BUNDLE_REMOTE_PATH + "/" + bundleName, targetPath + "/" + bundleName, true);
             }
         }
 

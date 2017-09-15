@@ -146,7 +146,7 @@ public class GroupByRootDependenceNode : Node
         foreach (var reference in allMap.Values)
         {
             var path = reference.path;
-            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, groupName = reference.fileName.ToLower() + ".assetbundle"} ;
+            nodeMap[path] = new AssetRefrenceNode() {path = reference.path, assetName = reference.fileName} ;
         }
         foreach (var reference in allMap.Values)
         {
@@ -258,7 +258,7 @@ public class GroupByRootDependenceNode : Node
         foreach (var node in nodeMap.Values)
         {
             var reference = allMap[node.path];
-            var groupName = node.groupName;
+            var groupName = node.assetName + ".assetbundle";
             var list = new List<AssetReference>() { reference };
             foreach (var includeDepPath in node.incluedDepReference)
             {

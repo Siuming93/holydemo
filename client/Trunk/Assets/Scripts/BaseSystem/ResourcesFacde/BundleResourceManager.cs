@@ -60,8 +60,11 @@ namespace Monster.BaseSystem
             AssetBundleHint hint;
             if (hintMap.TryGetValue(id, out hint))
             {
-
-                return hint.bundle.LoadAsset(hint.bundlePath);
+                if (hint.bundle == null)
+                {
+                    hint.bundle = AssetBundle.LoadFromFile(hint.bundlePath);
+                }
+                return hint.bundle.LoadAsset(hint.assetName);
             }
             else
             {
@@ -81,8 +84,7 @@ namespace Monster.BaseSystem
 
         private string GetID(string path)
         {
-            var arr = path.Split('/');
-            return (arr[arr.Length - 1]);
+            return "Assets/Resources/" + path;
         }
         private AsyncOperation DoLoadAsync(string path)
         {
@@ -101,7 +103,11 @@ namespace Monster.BaseSystem
             {
                 var node = AssetBundleConfig.map[path];
                 var pathNoExtension = GetPathNoExtension(path);
-                hintMap[pathNoExtension] = new AssetBundleHint() { bundlePath = node.groupName, assetName = node.groupName};
+                hintMap[pathNoExtension] = new AssetBundleHint()
+                {
+                    bundlePath = Application.streamingAssetsPath + "/" + node.assetName + ".assetbundle",
+                    assetName = node.assetName
+                };
             }
         }
 
@@ -110,7 +116,7 @@ namespace Monster.BaseSystem
             int index = path.LastIndexOf('.');
             if (index > 0 && index < path.Length)
             {
-                return path.Substring(0, path.Length - index);
+                return path.Substring(0, index);
             }
             return path;
         }

@@ -16,7 +16,7 @@ namespace Monster.BaseSystem
         public List<string> depenceOnMe = new List<string>();
         public List<string> depence = new List<string>();
         public string path;
-        public string groupName;
+        public string assetName;
         public List<string> incluedDepReference = new List<string>();
     }
 
