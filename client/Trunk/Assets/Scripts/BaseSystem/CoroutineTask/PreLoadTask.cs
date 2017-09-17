@@ -35,7 +35,7 @@ namespace Monster.BaseSystem.CoroutineTask
             UIManager.Intance.AddChild(preloadView.transform);
             yield return step++;
 
-            yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
+            //yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
             ResourcesFacade.Instance.UnLoadAsset(preloadView);
             yield return step++;
         }

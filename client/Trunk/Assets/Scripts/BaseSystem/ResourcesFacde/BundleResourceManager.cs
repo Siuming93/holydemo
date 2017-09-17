@@ -45,8 +45,16 @@ namespace Monster.BaseSystem
         }
         public void UnLoadAsset(Object assetToUnload)
         {
-            Object.Destroy(assetToUnload);
-            Resources.UnloadAsset(assetToUnload);
+            AssetBundleHint hint;
+            if (loadedAssetMap.TryGetValue(assetToUnload.GetInstanceID(), out hint))
+            {
+                HintReduceRefCount(hint);
+            }
+            else
+            {
+                Object.Destroy(assetToUnload);                     
+            }
+            UnLoadUnusedAssets();
         }
         public AsyncOperation UnLoadUnusedAssets()
         {
@@ -60,16 +68,47 @@ namespace Monster.BaseSystem
             AssetBundleHint hint;
             if (hintMap.TryGetValue(id, out hint))
             {
-                if (hint.bundle == null)
-                {
-                    hint.bundle = AssetBundle.LoadFromFile(hint.bundlePath);
-                }
-                return hint.bundle.LoadAsset(hint.assetName);
+                HintLoadAssetBundle(hint);
+                var asset = hint.bundle.LoadAsset(hint.assetName);
+                loadedAssetMap.Add(asset.GetInstanceID(), hint);
+                return asset;
             }
             else
             {
                 Debug.LogError("没有Asset资源");
                 return null;
+            }
+        }
+
+        private void HintLoadAssetBundle(AssetBundleHint hint)
+        {
+            if (!hintSet.Contains(hint))
+            {
+                foreach (var depHint in hint.dependenceList)
+                {
+                    HintLoadAssetBundle(depHint);
+                }
+                hint.bundle = AssetBundle.LoadFromFile(hint.bundlePath);
+                hintSet.Add(hint);
+            }
+
+            hint.refCount += 1;
+
+        }
+
+        private void HintReduceRefCount(AssetBundleHint hint)
+        {
+            foreach (var depHint in hint.dependenceList)
+            {
+                HintReduceRefCount(depHint);
+            }
+
+            hint.refCount --;
+            if (hint.refCount == 0)
+            {
+                hint.bundle.Unload(true);
+                //GameObject.Destroy(hint.bundle);
+                hint.bundle = null;
             }
         }
         private T DoLoad<T>(string path) where T : Object
@@ -94,11 +133,14 @@ namespace Monster.BaseSystem
         #region  Reference Countor
 
         private Dictionary<string, AssetBundleHint> hintMap;
-        private Dictionary<long, AssetBundleHint> objMap;
+        private Dictionary<long, AssetBundleHint> loadedAssetMap;
+        private HashSet<AssetBundleHint> hintSet;
 
         private void InitHintMap()
         {
+            hintSet = new HashSet<AssetBundleHint>();
             hintMap = new Dictionary<string, AssetBundleHint>();
+            loadedAssetMap= new Dictionary<long, AssetBundleHint>();
             foreach (var path in AssetBundleConfig.map.Keys)
             {
                 var node = AssetBundleConfig.map[path];
@@ -108,6 +150,17 @@ namespace Monster.BaseSystem
                     bundlePath = Application.streamingAssetsPath + "/" + node.assetName + ".assetbundle",
                     assetName = node.assetName
                 };
+            }
+
+            foreach (var path in AssetBundleConfig.map.Keys)
+            {
+                var node = AssetBundleConfig.map[path];
+                var pathNoExtension = GetPathNoExtension(path);
+                var hint = hintMap[pathNoExtension];
+                foreach (var depPath in node.depence)
+                {
+                    hint.dependenceList.Add(hintMap[GetPathNoExtension(depPath)]);
+                }
             }
         }
 
@@ -126,6 +179,7 @@ namespace Monster.BaseSystem
             public string assetName;
             public int refCount;
             public string bundlePath;
+            public List<AssetBundleHint> dependenceList = new List<AssetBundleHint>();
         }
         #endregion
     }

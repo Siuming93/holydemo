@@ -12,5 +12,7 @@ namespace Monster.BaseSystem
         public static string REMOTE_PATH = Application.dataPath.Replace("Assets", "") + "Bundles";
 
         public static string BundleConfigPath = GameConfig.REMOTE_PATH + "/assetbundleConfig.bytes";
+
+        public static string BundleLocalPath = Application.streamingAssetsPath;
     }
 }
