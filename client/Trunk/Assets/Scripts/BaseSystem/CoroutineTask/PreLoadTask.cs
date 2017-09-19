@@ -32,11 +32,12 @@ namespace Monster.BaseSystem.CoroutineTask
 
             new UIManager(GameObject.Find("Canvas").transform);
             GameObject preloadView = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/Preload/PreloadPanel");
+            GameObject newObj = Object.Instantiate(preloadView);
             UIManager.Intance.AddChild(preloadView.transform);
             yield return step++;
 
             //yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
-            ResourcesFacade.Instance.UnLoadAsset(preloadView);
+            //ResourcesFacade.Instance.UnLoadAsset(preloadView);
             yield return step++;
         }
 

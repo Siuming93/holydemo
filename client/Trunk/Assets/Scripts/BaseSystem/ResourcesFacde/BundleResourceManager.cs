@@ -21,7 +21,7 @@ namespace Monster.BaseSystem
         }
         public GameObject LoadPrefab(string path)
         {
-            return DoLoad(path, typeof(GameObject)) as GameObject;
+            return Object.Instantiate(DoLoad(path, typeof(GameObject))) as GameObject;
         }
         public Object Load(string path, Type systemTypeInstance)
         {

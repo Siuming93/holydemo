@@ -45,12 +45,16 @@ namespace Monster.BaseSystem.CoroutineTask
         private static string BUNDLE_REMOTE_PATH = Application.dataPath.Replace("Assets", "") + "Bundles";
         private Dictionary<string, AssetRefrenceNode> FindAllBundleNames()
         {
+#if !UNITY_EDITOR
+            return new Dictionary<string, AssetRefrenceNode>();
+
+#endif
             var reader = new StreamReader(File.OpenRead(GameConfig.BundleConfigPath));
             var config = reader.ReadToEnd();
             reader.Dispose();
             var map = JsonMapper.ToObject<Dictionary<string, AssetRefrenceNode>>(config);
             return map as Dictionary<string, AssetRefrenceNode>;
         }
-        #endregion
+#endregion
     }
 }
