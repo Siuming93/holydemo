@@ -1,8 +1,12 @@
-﻿using UnityEngine;
+﻿using System;
+using Monster.BaseSystem;
+using UnityEngine;
 using Monster.Net;
 public class UpdateProxy : MonoBehaviour
 {
     public static UpdateProxy Instance;
+
+    public Action UpdateEvent;
     void Awake()
     {
         Instance = this;
@@ -15,9 +19,14 @@ public class UpdateProxy : MonoBehaviour
 	}
 	
 	// Update is called once per frame
-	void Update ()
+	void LateUpdate ()
     {
         NetManager.Instance.Update();
+
+	    if (UpdateEvent != null)
+	    {
+	        UpdateEvent.Invoke();
+	    }
 	}
 
     void OnDestroy()

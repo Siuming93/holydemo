@@ -1,5 +1,5 @@
 ﻿#define BUNDLE_MODEL
-using Monster.BaseSystem.Resource;
+using Monster.BaseSystem.ResourceManager;
 
 namespace Monster.BaseSystem
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using Monster.BaseSystem.Resource;
+using Monster.BaseSystem.ResourceManager;
 using UnityEngine;
 
 namespace Assets.Editor.AssetBundleBuilder

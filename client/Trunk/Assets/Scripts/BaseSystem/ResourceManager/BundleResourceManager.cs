@@ -6,43 +6,72 @@ using Object = UnityEngine.Object;
 
 namespace Monster.BaseSystem.ResourceManager
 {
-    public class BundleResourceManager : IResourceManager
+    public class BundleResourceManager : BaseResourceManager
     {
-        #region interface 
-        public void Init(object data)
+        public override void Init(object data)
         {
+            base.Init(data);
             HintInit();
         }
 
-        public Object Load(string path)
+        protected override GameObject DoLoadPrefab(string path)
         {
-            return DoLoad(path, typeof(Object));
+            return DoLoad(path, typeof(GameObject), true) as GameObject;
         }
-        public GameObject LoadPrefab(string path)
+
+        protected Object DoLoad(string path, Type type, bool instantiate)
         {
-            return DoLoad(path, typeof(GameObject), true) as GameObject;;
+            AssetBundleHint hint = HintGet(path);
+            if (hint != null)
+            {
+                return HintLoadMainAsset(hint, instantiate);
+            }
+            else
+            {
+                Debug.LogError("没有Asset资源");
+                return null;
+            }
         }
-        public Object Load(string path, Type systemTypeInstance)
+
+        protected override Object DoLoad(string path, Type type)
         {
-            return DoLoad(path, systemTypeInstance) as Object;
+            return DoLoad(path, type, false);
+
         }
-        public T Load<T>(string path) where T : Object
+
+        protected override T DoLoad<T>(string path)
         {
-            return DoLoad<T>(path);
+            return DoLoad(path, typeof(T)) as T;
         }
-        public IAsyncRequest LoadAsync(string path)
+
+        protected override IAsyncRequest DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
         {
-            return DoLoadAsync(path);
+            return DoLoadAsync(path, callBack);
         }
-        public IAsyncRequest LoadAsync<T>(string path) where T : Object
+
+        protected IAsyncRequest DoLoadAsync(string path, ResourceAsyncCallBack callback)
         {
-            return DoLoadAsync(path);
+            AssetBundleHint hint = HintGet(path);
+            if (hint != null)
+            {
+                /// return HintLoadMainAsset(hint, instantiate);
+            }
+            else
+            {
+                Debug.LogError("没有Asset资源");
+                return null;
+            }
+
+            return null;
+            ///AssetBundle.LoadFromFileAsync("");
         }
-        public IAsyncRequest LoadAsync(string path, Type systemTypeInstance)
+
+        protected override IAsyncRequest DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
         {
-            return DoLoadAsync(path);
+            throw new NotImplementedException();
         }
-        public void UnLoadAsset(Object assetToUnload)
+
+        protected override void DoUnLoadAsset(Object assetToUnload)
         {
             AssetBundleHint hint;
             int assetInstacneId = assetToUnload.GetInstanceID();
@@ -61,47 +90,7 @@ namespace Monster.BaseSystem.ResourceManager
                 //Object.Destroy(assetToUnload);                     
             }
         }
-        public AsyncOperation UnLoadUnusedAssets()
-        {
-            return Resources.UnloadUnusedAssets();
-        }
-        #endregion
 
-        #region DoLoad Funcs
-        private Object DoLoad(string path, Type type, bool instantiate = false)
-        {
-            AssetBundleHint hint = HintGet(path);
-            if (hint != null)
-            {
-                return HintLoadMainAsset(hint, instantiate);
-            }
-            else
-            {
-                Debug.LogError("没有Asset资源");
-                return null;
-            }
-        }
-        private T DoLoad<T>(string path) where T : Object
-        {
-            return DoLoad(path, typeof(T)) as T;
-        }
-        private IAsyncRequest DoLoadAsync(string path, AsyncCallback callback = null)
-        {
-            AssetBundleHint hint = HintGet(path);
-            if (hint != null)
-            {
-               /// return HintLoadMainAsset(hint, instantiate);
-            }
-            else
-            {
-                Debug.LogError("没有Asset资源");
-                return null;
-            }
-
-            return null;
-             ///AssetBundle.LoadFromFileAsync("");
-        }
-        #endregion
 
         #region  Reference Countor
 
@@ -180,7 +169,7 @@ namespace Monster.BaseSystem.ResourceManager
         {
             var operation = AssetBundle.LoadFromFileAsync(hint.bundlePath);
             var request = new AsyncOperationRequest(operation);
-            asyncCallbacks.Add(request, callback);
+            AddAsyncCallback(request, callback);
             return request;
         }
 
@@ -197,7 +186,7 @@ namespace Monster.BaseSystem.ResourceManager
         private IAsyncRequest HintLoadMainAssetAsync(AssetBundleHint hint)
         {
             var request = hint.bundle.LoadAllAssetsAsync();
-            return new AsyncBundleRequest(request);
+            return new AsyncBundleRequest(){hint = hint, request = request};
         }
         private void HintRecyle(AssetBundleHint hint)
         {
@@ -228,31 +217,9 @@ namespace Monster.BaseSystem.ResourceManager
 
             hint.refCount++;
         }
-
-        private class AssetBundleHint
-        {
-            public AssetBundle bundle;
-            public string assetName;
-            public int refCount;
-            public string bundlePath;
-            public Object mainAsset;
-            public List<AssetBundleHint> dependenceList = new List<AssetBundleHint>();
-        }
         #endregion
 
-        #region base
 
-        IAsyncRequest IResourceManager.UnLoadUnusedAssets()
-        {
-            throw new NotImplementedException();
-        }
-
-        private Dictionary<IAsyncRequest, ResourceAsyncCallBack> asyncCallbacks;
-        public void AddAscyncCallback(IAsyncRequest asyncRequest, ResourceAsyncCallBack callback)
-        {
-            //AssetBundle.
-        }
-        #endregion
     }
 
 

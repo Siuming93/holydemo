@@ -4,7 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using LitJson;
-using Monster.BaseSystem.Resource;
+using Monster.BaseSystem.ResourceManager;
 using UnityEditor;
 
 namespace Assets.Editor.AssetBundleBuilder

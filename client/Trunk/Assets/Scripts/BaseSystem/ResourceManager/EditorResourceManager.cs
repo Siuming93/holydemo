@@ -4,46 +4,8 @@ using Object = UnityEngine.Object;
 
 namespace Monster.BaseSystem.ResourceManager
 {
-    public class EditorResourceManager : IResourceManager
+    public class EditorResourceManager : BaseResourceManager
     {
-        public void Init(object data)
-        {
-        }
-
-        public Object Load(string path)
-        {
-            return DoLoad(path, typeof(Object));
-        }
-
-        public GameObject LoadPrefab(string path)
-        {
-            return DoLoad(path, typeof(GameObject)) as GameObject;
-        }
-
-        public Object Load(string path, Type systemTypeInstance)
-        {
-            return DoLoad(path, systemTypeInstance) as Object;
-        }
-
-        public T Load<T>(string path) where T : Object
-        {
-            return DoLoad<T>(path);
-        }
-
-        public IAsyncRequest LoadAsync(string path)
-        {
-            return LoadAsync(path, typeof(Object));
-        }
-
-        public IAsyncRequest LoadAsync<T>(string path) where T : Object
-        {
-            return LoadAsync(path, typeof(T));
-        }
-
-        public IAsyncRequest LoadAsync(string path, Type systemTypeInstance)
-        {
-            return new AsyncOperationRequest() { operation = Resources.LoadAsync(path, systemTypeInstance) };
-        }
 
         public void UnLoadAsset(Object assetToUnload)
         {
@@ -51,20 +13,37 @@ namespace Monster.BaseSystem.ResourceManager
             Resources.UnloadAsset(assetToUnload);
         }
 
-        public IAsyncRequest UnLoadUnusedAssets()
+
+        protected override GameObject DoLoadPrefab(string path)
         {
-            //todo
-            return new AsyncOperationRequest() {operation = Resources.UnloadUnusedAssets()};
+            throw new NotImplementedException();
         }
 
-        private Object DoLoad(string path, Type type)
+        protected override Object DoLoad(string path, Type type)
         {
-            return Resources.Load(path, type);
+            throw new NotImplementedException();
         }
 
-        private T DoLoad<T>(string path) where T : Object
+
+        protected override IAsyncRequest DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
         {
-            return Resources.Load<T>(path);
+            throw new NotImplementedException();
+        }
+
+        protected override T DoLoad<T>(string path)
+        {
+            throw new NotImplementedException();
+        }
+
+
+        protected override IAsyncRequest DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
+        {
+            throw new NotImplementedException();
+        }
+
+        protected override void DoUnLoadAsset(Object assetToUnload)
+        {
+            throw new NotImplementedException();
         }
     }
 }

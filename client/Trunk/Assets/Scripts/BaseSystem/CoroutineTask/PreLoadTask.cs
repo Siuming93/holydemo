@@ -25,6 +25,7 @@ namespace Monster.BaseSystem.CoroutineTask
             yield return step++;
 
             ResourcesFacade.Instance.Init(null);
+            UpdateProxy.Instance.UpdateEvent += ResourcesFacade.Instance.Trik;
             yield return step++;
 
             NetManager.Instance.Init();
