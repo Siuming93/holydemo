@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Monster.BaseSystem
+namespace Monster.BaseSystem.ResourceManager
 {
     public class EditorResourceManager : IResourceManager
     {
@@ -30,19 +30,19 @@ namespace Monster.BaseSystem
             return DoLoad<T>(path);
         }
 
-        public AsyncOperation LoadAsync(string path)
+        public IAsyncRequest LoadAsync(string path)
         {
             return LoadAsync(path, typeof(Object));
         }
 
-        public AsyncOperation LoadAsync<T>(string path) where T : Object
+        public IAsyncRequest LoadAsync<T>(string path) where T : Object
         {
             return LoadAsync(path, typeof(T));
         }
 
-        public AsyncOperation LoadAsync(string path, Type systemTypeInstance)
+        public IAsyncRequest LoadAsync(string path, Type systemTypeInstance)
         {
-            return Resources.LoadAsync(path, systemTypeInstance);
+            return new AsyncOperationRequest() { operation = Resources.LoadAsync(path, systemTypeInstance) };
         }
 
         public void UnLoadAsset(Object assetToUnload)
@@ -51,10 +51,10 @@ namespace Monster.BaseSystem
             Resources.UnloadAsset(assetToUnload);
         }
 
-        public AsyncOperation UnLoadUnusedAssets()
+        public IAsyncRequest UnLoadUnusedAssets()
         {
             //todo
-            return Resources.UnloadUnusedAssets();
+            return new AsyncOperationRequest() {operation = Resources.UnloadUnusedAssets()};
         }
 
         private Object DoLoad(string path, Type type)

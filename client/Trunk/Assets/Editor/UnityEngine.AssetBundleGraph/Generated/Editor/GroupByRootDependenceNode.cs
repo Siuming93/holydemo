@@ -278,10 +278,19 @@ public class GroupByRootDependenceNode : Node
         return output;
     }
 
-	/**
+    public class AssetRefrenceNode
+    {
+        public List<string> depenceOnMe = new List<string>();
+        public List<string> depence = new List<string>();
+        public string path;
+        public string assetName;
+        public List<string> incluedDepReference = new List<string>();
+    }
+
+    /**
 	 * Build is called when Unity builds assets with AssetBundle Graph. 
-	 */ 
-	public override void Build (BuildTarget target, 
+	 */
+    public override void Build (BuildTarget target, 
 		Model.NodeData nodeData, 
 		IEnumerable<PerformGraph.AssetGroups> incoming, 
 		IEnumerable<Model.ConnectionData> connectionsToOutput, 

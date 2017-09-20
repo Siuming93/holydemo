@@ -2,7 +2,7 @@
 using UnityEngine;
 using Object = UnityEngine.Object;
 
-namespace Monster.BaseSystem
+namespace Monster.BaseSystem.ResourceManager
 {
     public interface IResourceManager
     {
@@ -16,10 +16,10 @@ namespace Monster.BaseSystem
         /// <param name="path"></param>
         /// <returns>已经实例化的GameObject</returns>
         GameObject LoadPrefab(string path);
-        AsyncOperation LoadAsync(string path);
-        AsyncOperation LoadAsync<T>(string path) where T : Object;
-        AsyncOperation LoadAsync(string path, Type systemTypeInstance);
+        IAsyncRequest LoadAsync(string path);
+        IAsyncRequest LoadAsync<T>(string path) where T : Object;
+        IAsyncRequest LoadAsync(string path, Type systemTypeInstance);
         void UnLoadAsset(Object assetToUnload);
-        AsyncOperation UnLoadUnusedAssets();
+        IAsyncRequest UnLoadUnusedAssets();
     }
 }

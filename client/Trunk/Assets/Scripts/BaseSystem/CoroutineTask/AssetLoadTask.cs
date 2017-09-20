@@ -3,7 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.IO;
 using LitJson;
-using SimpleJson;
+using Monster.BaseSystem.Resource;
 using UnityEngine;
 
 namespace Monster.BaseSystem.CoroutineTask
@@ -35,25 +35,24 @@ namespace Monster.BaseSystem.CoroutineTask
             var targetPath = Application.streamingAssetsPath;
             var map = FindAllBundleNames();
             AssetBundleConfig.map = map;
-            foreach (var name in map.Values)
+            foreach (var name in map.Keys)
             {
-                var bundleName = name.assetName + ".assetbundle";
-                File.Copy(BUNDLE_REMOTE_PATH + "/" + bundleName, targetPath + "/" + bundleName, true);
+                var bundleName = BundleTool.GetBundleFileName(name);
+                File.Copy(BundleConfig.BUNDLE_REMOTE_PATH + "/" + bundleName, targetPath + "/" + bundleName, true);
             }
         }
 
-        private static string BUNDLE_REMOTE_PATH = Application.dataPath.Replace("Assets", "") + "Bundles";
-        private Dictionary<string, AssetRefrenceNode> FindAllBundleNames()
+        private Dictionary<string, AssetBundleInfoNode> FindAllBundleNames()
         {
 #if !UNITY_EDITOR
             return new Dictionary<string, AssetRefrenceNode>();
 
 #endif
-            var reader = new StreamReader(File.OpenRead(GameConfig.BundleConfigPath));
+            var reader = new StreamReader(File.OpenRead(BundleConfig.BUNDLE_REMOTE_PATH + "/" + BundleConfig.CONFIG_FILE_NAME));
             var config = reader.ReadToEnd();
             reader.Dispose();
-            var map = JsonMapper.ToObject<Dictionary<string, AssetRefrenceNode>>(config);
-            return map as Dictionary<string, AssetRefrenceNode>;
+            var map = JsonMapper.ToObject<Dictionary<string, AssetBundleInfoNode>>(config);
+            return map;
         }
 #endregion
     }

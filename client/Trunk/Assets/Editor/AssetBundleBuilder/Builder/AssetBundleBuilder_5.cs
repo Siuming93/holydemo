@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Text;
-using Assets.Editor.AssetBundleBuilder.GraphTool;
+using LitJson;
+using Monster.BaseSystem.Resource;
 using UnityEditor;
 
 namespace Assets.Editor.AssetBundleBuilder
@@ -22,6 +22,9 @@ namespace Assets.Editor.AssetBundleBuilder
             //Convert
             var bundleBuildList = ConvertToBundleBulidList(nodeList);
 
+            //WriteInfo
+            ExplortAssetBundleConfig(nodeList, config.ExportPath);
+
             //Build 
             DoBuild(config.ExportPath, bundleBuildList.ToArray(), config.options, config.target);
         }
@@ -36,6 +39,9 @@ namespace Assets.Editor.AssetBundleBuilder
 
             //Convert
             var bundleBuildList = ConvertToBundleBulidList(nodeList);
+
+            //WriteInfo
+            ExplortAssetBundleConfig(nodeList, config.ExportPath);
 
             EditorUtil.ClearLog();
 
@@ -253,6 +259,34 @@ namespace Assets.Editor.AssetBundleBuilder
             //Directory.CreateDirectory(ouputPath);
 
             BuildPipeline.BuildAssetBundles(ouputPath, builds, assetBundleOptions, targetPlatform);
+        }
+
+        private void ExplortAssetBundleConfig(List<AssetRefrenceNode> list, string exportPath)
+        {
+            Dictionary<string, AssetBundleInfoNode> map = new Dictionary<string, AssetBundleInfoNode>();
+            foreach (var assetRefrenceNode in list)
+            {
+                var bundleNode = new AssetBundleInfoNode();
+                var name = Utility.GetFileNameWithOutExtension(assetRefrenceNode.AssetPath);
+                bundleNode.assetName = name;
+                foreach (var depPath in assetRefrenceNode.depence)
+                {
+                    var depName = Utility.GetFileNameWithOutExtension(depPath);
+                    bundleNode.depenceList.Add(depName);
+                }
+                map.Add(name, bundleNode);
+            }
+
+            var json = JsonMapper.ToJson(map);
+            var configPath = exportPath + "/" + BundleConfig.CONFIG_FILE_NAME;
+            if (File.Exists(configPath))
+            {
+                File.Delete(configPath);
+            }
+            using (var writer = File.CreateText(configPath))
+            {
+                writer.Write(json);
+            }
         }
     }
 }

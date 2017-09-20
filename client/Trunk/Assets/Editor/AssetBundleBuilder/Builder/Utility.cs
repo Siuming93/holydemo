@@ -1,9 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
+using Monster.BaseSystem.Resource;
 using UnityEngine;
 
-namespace Assets.Editor.AssetBundleBuilder.GraphTool
+namespace Assets.Editor.AssetBundleBuilder
 {
     class Utility
     {
@@ -38,7 +39,12 @@ namespace Assets.Editor.AssetBundleBuilder.GraphTool
 
         public static string GetBundleNames(string path)
         {
-            return Path.GetFileNameWithoutExtension(path) + ".bytes";
+            return Path.GetFileNameWithoutExtension(path) + BundleConfig.FILE_EXTENSION;
+        }
+
+        public static string GetFileNameWithOutExtension(string path)
+        {
+            return Path.GetFileNameWithoutExtension(path);
         }
 
         public static string GetExtension(string path)
