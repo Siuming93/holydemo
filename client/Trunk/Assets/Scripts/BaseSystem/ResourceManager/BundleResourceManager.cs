@@ -106,14 +106,14 @@ namespace Monster.BaseSystem.ResourceManager
                     assetList.Add(hint);
                 }
             }
-            sb.Append(string.Format("BundleResourceInfo bundleCount{0} assetCount{1} instantiateCOunt{2}", bundleList.Count, assetList.Count, loadedAssetHintMap.Count));
+            sb.Append(string.Format("BundleResourceInfo bundleCount:{0} assetCount:{1} instantiateCOunt:{2}", bundleList.Count, assetList.Count, loadedAssetHintMap.Count));
             sb.AppendLine("Bunldes:");
             foreach (var hint in bundleList)
             {
                 sb.AppendLine(String.Format("name:{0} refCount:{1}", hint.assetName, hint.refCount));
             }
             sb.AppendLine("Assets:");
-            foreach (var hint in bundleList)
+            foreach (var hint in assetList)
             {
                 sb.AppendLine(String.Format("name:{0} refCount:{1}", hint.assetName, hint.refCount));
             }
@@ -214,10 +214,6 @@ namespace Monster.BaseSystem.ResourceManager
         #region async
         private void HintLoadAssetBundleAsync(AssetBundleHint hint, ResourceAsyncCallBack callback)
         {
-            if (hint.bundle != null)
-            {
-                HintLoadMainAssetAsync(hint, callback);
-            }
             var mainRequest = new AsyncBundleCreateMainRequest();
             var createRequest = HintCreateBundleAsync(hint);
             mainRequest.callback = callback;
@@ -250,7 +246,7 @@ namespace Monster.BaseSystem.ResourceManager
             var mainCreateRequest = request as AsyncBundleCreateMainRequest;
             DealAsyncBundleCreateRequest(mainCreateRequest.mainRequest);
 
-            HintLoadMainAssetAsync(mainCreateRequest.mainRequest.hint, mainCreateRequest.callback);
+            DoHintLoadMainAssetAsync(mainCreateRequest.mainRequest.hint, mainCreateRequest.callback);
         }
 
         private void DealAsyncBundleCreateRequest(AsyncBundleCreateRequest request)
@@ -270,11 +266,18 @@ namespace Monster.BaseSystem.ResourceManager
 
         private void HintLoadMainAssetAsync(AssetBundleHint hint, ResourceAsyncCallBack callBack)
         {
+            //预定
+            HintIncreaseRefCount(hint);
             if (hint.bundle == null)
             {
                 HintLoadAssetBundleAsync(hint, callBack);
                 return;
             }
+            DoHintLoadMainAssetAsync(hint, callBack);
+        }
+
+        private void DoHintLoadMainAssetAsync(AssetBundleHint hint, ResourceAsyncCallBack callBack)
+        {
             if (hint.mainAsset != null)
             {
                 HintInvokeCallback(hint, callBack);
@@ -303,8 +306,6 @@ namespace Monster.BaseSystem.ResourceManager
 
         private void HintInvokeCallback(AssetBundleHint hint, ResourceAsyncCallBack callback)
         {
-            HintIncreaseRefCount(hint);
-
             var resourceRequest = new AsyncResourceRequest();
             resourceRequest.isDone = true;
             resourceRequest.asset = hint.mainAsset;
