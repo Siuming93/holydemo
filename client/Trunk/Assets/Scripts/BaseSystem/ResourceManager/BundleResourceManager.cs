@@ -106,16 +106,16 @@ namespace Monster.BaseSystem.ResourceManager
                     assetList.Add(hint);
                 }
             }
-            sb.Append(string.Format("BundleResourceInfo bundleCount:{0} assetCount:{1} instantiateCOunt:{2}", bundleList.Count, assetList.Count, loadedAssetHintMap.Count));
-            sb.AppendLine("Bunldes:");
+            sb.AppendLine(string.Format("BundleResourceInfo bundleCount:{0} assetCount:{1} instantiateCOunt:{2}", bundleList.Count, assetList.Count, loadedAssetHintMap.Count));
+            sb.AppendLine("\nHintHasBunlde:");
             foreach (var hint in bundleList)
             {
-                sb.AppendLine(String.Format("name:{0} refCount:{1}", hint.assetName, hint.refCount));
+                sb.AppendLine(String.Format("bundlename:{0} \trefCount:{1}", hint.assetName, hint.refCount));
             }
-            sb.AppendLine("Assets:");
+            sb.AppendLine("\nHintHasAsset:");
             foreach (var hint in assetList)
             {
-                sb.AppendLine(String.Format("name:{0} refCount:{1}", hint.assetName, hint.refCount));
+                sb.AppendLine(String.Format("bundlename:{0} \trefCount:{1}", hint.assetName, hint.refCount));
             }
 
             Debug.Log(sb);
