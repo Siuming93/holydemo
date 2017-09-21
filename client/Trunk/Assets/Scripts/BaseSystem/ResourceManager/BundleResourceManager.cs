@@ -253,9 +253,14 @@ namespace Monster.BaseSystem.ResourceManager
         {
             var createRequest = request;
             var hint = createRequest.hint;
+            var assetbundle = createRequest.createRequest.assetBundle;
             if (hint.bundle == null)
             {
-                hint.bundle = createRequest.createRequest.assetBundle;
+                hint.bundle = assetbundle;
+            }
+            else
+            {
+                assetbundle.Unload(true);
             }
             int depCount = createRequest.dependenceRequestList.Count;
             for (int i = 0; i < depCount; i++)
@@ -307,6 +312,8 @@ namespace Monster.BaseSystem.ResourceManager
         private void HintInvokeCallback(AssetBundleHint hint, ResourceAsyncCallBack callback)
         {
             var resourceRequest = new AsyncResourceRequest();
+            var asset = hint.mainAsset;
+            loadedAssetHintMap.Add(asset.GetInstanceID(), hint);
             resourceRequest.isDone = true;
             resourceRequest.asset = hint.mainAsset;
 
