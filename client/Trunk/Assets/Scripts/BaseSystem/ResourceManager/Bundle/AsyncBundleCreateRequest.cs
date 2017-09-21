@@ -3,7 +3,7 @@ using UnityEngine;
 
 namespace Monster.BaseSystem.ResourceManager
 {
-     class AsyncBundleCreatRequest: IAsyncRequest
+     class AsyncBundleCreateRequest: IAsyncResourceRequest
      {
          public string id { get; set; }
 
@@ -23,7 +23,7 @@ namespace Monster.BaseSystem.ResourceManager
 
          public AssetBundleCreateRequest createRequest;
          public AssetBundleHint hint;
-         public List<AsyncBundleCreatRequest> dependenceRequestList = new List<AsyncBundleCreatRequest>();
+         public List<AsyncBundleCreateRequest> dependenceRequestList = new List<AsyncBundleCreateRequest>();
 
      }
 }

@@ -19,11 +19,11 @@ namespace Monster.BaseSystem.ResourceManager
         Object Load(string path);
         Object Load(string path, Type type);
         T Load<T>(string path) where T : Object;
-        IAsyncRequest LoadAsync(string path, ResourceAsyncCallBack callBack);
-        IAsyncRequest LoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object;
-        IAsyncRequest LoadAsync(string path, Type systemTypeInstance, ResourceAsyncCallBack callBack);
+        void LoadAsync(string path, ResourceAsyncCallBack callBack);
+        void LoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object;
+        void LoadAsync(string path, Type systemTypeInstance, ResourceAsyncCallBack callBack);
         void UnLoadAsset(Object assetToUnload);
-        IAsyncRequest UnLoadUnusedAssets();
+        IAsyncResourceRequest UnLoadUnusedAssets();
 
       
     }

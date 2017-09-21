@@ -7,14 +7,14 @@ namespace Monster.BaseSystem.ResourceManager
 {
     public abstract class BaseResourceManager:IResourceManager
     {
-        private List<IAsyncRequest> _doneARList;
-        private Dictionary<IAsyncRequest, ResourceAsyncCallBack> _asyncCallBacks;
+        private List<IAsyncResourceRequest> _doneARList;
+        private Dictionary<IAsyncResourceRequest, ResourceAsyncCallBack> _asyncCallBacks;
         
         #region Interface
         public virtual void Init(object data)
         {
-            _doneARList = new List<IAsyncRequest>();
-            _asyncCallBacks = new Dictionary<IAsyncRequest, ResourceAsyncCallBack>();
+            _doneARList = new List<IAsyncResourceRequest>();
+            _asyncCallBacks = new Dictionary<IAsyncResourceRequest, ResourceAsyncCallBack>();
         }
 
         GameObject IResourceManager.LoadPrefab(string path)
@@ -24,17 +24,17 @@ namespace Monster.BaseSystem.ResourceManager
 
         public Object Load(string path)
         {
-            return DoLoad(path, typeof(Object));
+            return DoLoad(path, typeof (Object), false);
         }
 
         public GameObject LoadPrefab(string path)
         {
-            return DoLoadPrefab(path);
+            return DoLoad(path, typeof(GameObject), true) as GameObject;
         }
 
         public Object Load(string path, Type systemTypeInstance)
         {
-            return DoLoad(path, systemTypeInstance) as Object;
+            return DoLoad(path, systemTypeInstance, false) as Object;
         }
 
         public T Load<T>(string path) where T : Object
@@ -42,18 +42,18 @@ namespace Monster.BaseSystem.ResourceManager
             return DoLoad<T>(path);
         }
 
-        public IAsyncRequest LoadAsync(string path, ResourceAsyncCallBack callBack)
+        public void LoadAsync(string path, ResourceAsyncCallBack callBack)
         {
-            return DoLoadAsync(path, typeof(Object), callBack);
+             DoLoadAsync(path, typeof(Object), callBack);
         }
 
-        public IAsyncRequest LoadAsync(string path, Type systemTypeInstance, ResourceAsyncCallBack callBack)
+        public void LoadAsync(string path, Type systemTypeInstance, ResourceAsyncCallBack callBack)
         {
-            return DoLoadAsync(path, systemTypeInstance, callBack);
+             DoLoadAsync(path, systemTypeInstance, callBack);
         }
-        public IAsyncRequest LoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object
+        public void LoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object
         {
-            return DoLoadAsync<T>(path, callBack);
+             DoLoadAsync<T>(path, callBack);
         }
 
         public void UnLoadAsset(UnityEngine.Object assetToUnload)
@@ -61,7 +61,7 @@ namespace Monster.BaseSystem.ResourceManager
             DoUnLoadAsset(assetToUnload);
         }
 
-        public IAsyncRequest UnLoadUnusedAssets()
+        public IAsyncResourceRequest UnLoadUnusedAssets()
         {
             return new AsyncOperationRequest(Resources.UnloadUnusedAssets());
         }
@@ -72,10 +72,11 @@ namespace Monster.BaseSystem.ResourceManager
         }
         #endregion
 
-#region self funcs
+        #region self funcs
 
         private void DoTrik()
         {
+            _doneARList.Clear();
             var itor = _asyncCallBacks.GetEnumerator();
             while (itor.MoveNext())
             {
@@ -90,27 +91,25 @@ namespace Monster.BaseSystem.ResourceManager
             {
                 var ar = _doneARList[i];
                 var callback = _asyncCallBacks[ar];
+                _asyncCallBacks.Remove(ar);
                 if (callback != null)
                 {
                     callback.Invoke(ar);
                 }
-                _asyncCallBacks.Remove(ar);
             }
         }
-#endregion
-        protected void AddAsyncCallback(IAsyncRequest request, ResourceAsyncCallBack callback)
+        #endregion
+        protected void AddAsyncCallback(IAsyncResourceRequest resourceRequest, ResourceAsyncCallBack callback)
         {
-            _asyncCallBacks.Add(request, callback);
+            _asyncCallBacks.Add(resourceRequest, callback);
         }
 
-        protected abstract GameObject DoLoadPrefab(string path);
-
-        protected abstract Object DoLoad(string path, Type type);
-        protected abstract IAsyncRequest DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack);
+        protected abstract Object DoLoad(string path, Type type, bool instantiate);
+        protected abstract void DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack);
 
 
         protected abstract T DoLoad<T>(string path) where T : Object;
-        protected abstract IAsyncRequest DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object;
+        protected abstract void DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack) where T : Object;
 
         protected abstract void DoUnLoadAsset(Object assetToUnload);
     }

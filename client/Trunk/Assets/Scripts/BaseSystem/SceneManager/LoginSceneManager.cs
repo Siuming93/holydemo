@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections;
+using Monster.BaseSystem.ResourceManager;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -17,10 +18,15 @@ namespace Monster.BaseSystem.SceneManager
 
         public override IEnumerator OnEnterScene(object data)
         {
-            Object origin = ResourcesFacade.Instance.Load<GameObject>("Prefab/UI/Login/LoginView");
+            ResourcesFacade.Instance.LoadAsync<GameObject>("Prefab/UI/Login/LoginView", OnLoginViewLoadComplete);
+            return null; ;
+        }
+
+        private void OnLoginViewLoadComplete(ResourceManager.IAsyncResourceRequest resourceRequest)
+        {
+            var origin = (resourceRequest as AsyncResourceRequest).asset;
             _loginView = GameObject.Instantiate(origin) as GameObject;
             UIManager.Intance.AddChild(_loginView.transform);
-            return null; ;
         }
 
         public override IEnumerator BeforeLeaveScene(object data)

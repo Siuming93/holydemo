@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using UnityEngine;
 using Object = UnityEngine.Object;
 
@@ -6,44 +7,61 @@ namespace Monster.BaseSystem.ResourceManager
 {
     public class EditorResourceManager : BaseResourceManager
     {
+        private HashSet<Object> _objSet; 
 
-        public void UnLoadAsset(Object assetToUnload)
+        public override void Init(object data)
         {
-            //todo
-            Resources.UnloadAsset(assetToUnload);
+            base.Init(data);
+            _objSet = new HashSet<Object>();
+        }
+
+        protected override Object DoLoad(string path, Type type, bool instantiate)
+        {
+            var asset =  Resources.Load(path, type);
+            var obj = instantiate ? Object.Instantiate(asset) : asset;
+            if (instantiate)
+            {
+                _objSet.Add(obj);
+            }
+            return obj;
         }
 
 
-        protected override GameObject DoLoadPrefab(string path)
+        protected override void DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
         {
-            throw new NotImplementedException();
+            var operation = Resources.LoadAsync(path, type);
+            var resourceRequest = new AsyncOperationRequest(operation) {state = callBack};
+            AddAsyncCallback(resourceRequest, OnLoadAsyncComplete);
         }
 
-        protected override Object DoLoad(string path, Type type)
+        private void OnLoadAsyncComplete(IAsyncResourceRequest request)
         {
-            throw new NotImplementedException();
-        }
-
-
-        protected override IAsyncRequest DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
-        {
-            throw new NotImplementedException();
+            var operationRequest = request as AsyncOperationRequest;
+            var asset = (operationRequest.operation as ResourceRequest).asset;
+            var callback = operationRequest.state as ResourceAsyncCallBack;
+            callback(new AsyncResourceRequest() {asset = asset});
         }
 
         protected override T DoLoad<T>(string path)
         {
-            throw new NotImplementedException();
+            return DoLoad(path,typeof(T), false) as T;
         }
 
 
-        protected override IAsyncRequest DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
+        protected override void DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
         {
-            throw new NotImplementedException();
+            DoLoadAsync(path, typeof(T), callBack);
         }
 
         protected override void DoUnLoadAsset(Object assetToUnload)
         {
-            throw new NotImplementedException();
+            if (_objSet.Contains(assetToUnload))
+            {
+                _objSet.Remove(assetToUnload);
+                Object.Destroy(assetToUnload);
+                return;
+            }
+            Resources.UnloadAsset(assetToUnload);
         }
     }
 }

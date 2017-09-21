@@ -14,12 +14,7 @@ namespace Monster.BaseSystem.ResourceManager
             HintInit();
         }
 
-        protected override GameObject DoLoadPrefab(string path)
-        {
-            return DoLoad(path, typeof(GameObject), true) as GameObject;
-        }
-
-        protected Object DoLoad(string path, Type type, bool instantiate)
+        protected override Object DoLoad(string path, Type type, bool instantiate)
         {
             AssetBundleHint hint = HintGet(path);
             if (hint != null)
@@ -33,42 +28,34 @@ namespace Monster.BaseSystem.ResourceManager
             }
         }
 
-        protected override Object DoLoad(string path, Type type)
-        {
-            return DoLoad(path, type, false);
-
-        }
-
         protected override T DoLoad<T>(string path)
         {
-            return DoLoad(path, typeof(T)) as T;
+            return DoLoad(path, typeof(T), false) as T;
         }
 
-        protected override IAsyncRequest DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
+        protected override void DoLoadAsync(string path, Type type, ResourceAsyncCallBack callBack)
         {
-            return DoLoadAsync(path, callBack);
+            DoLoadAsync(path, callBack);
         }
 
-        protected IAsyncRequest DoLoadAsync(string path, ResourceAsyncCallBack callback)
+        protected void DoLoadAsync(string path, ResourceAsyncCallBack callback)
         {
             AssetBundleHint hint = HintGet(path);
             if (hint != null)
             {
-                /// return HintLoadMainAsset(hint, instantiate);
+                HintLoadMainAssetAsync(hint, callback);
             }
             else
             {
                 Debug.LogError("没有Asset资源");
-                return null;
+                callback(new AsyncResourceRequest());
             }
 
-            return null;
-            ///AssetBundle.LoadFromFileAsync("");
         }
 
-        protected override IAsyncRequest DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
+        protected override void DoLoadAsync<T>(string path, ResourceAsyncCallBack callBack)
         {
-            throw new NotImplementedException();
+            DoLoadAsync(path, callBack);
         }
 
         protected override void DoUnLoadAsset(Object assetToUnload)
@@ -90,7 +77,6 @@ namespace Monster.BaseSystem.ResourceManager
                 //Object.Destroy(assetToUnload);                     
             }
         }
-
 
         #region  Reference Countor
 
@@ -153,41 +139,6 @@ namespace Monster.BaseSystem.ResourceManager
             }
             hint.bundle = hint.bundle ?? AssetBundle.LoadFromFile(hint.bundlePath);
         }
-
-        private List<IAsyncRequest> asyncRequests;
-        private IAsyncRequest HintLoadMainAssetAsync(AssetBundleHint hint, ResourceAsyncCallBack callback)
-        {
-            if (hint.bundle == null)
-            {
-                return HintLoadAssetBundleAsync(hint, callback);
-            }
-            return HintLoadMainAssetAsync(hint);
-        }
-
-        private Dictionary<IAsyncRequest, AssetBundleHint> asyncOpertaionMap;
-        private IAsyncRequest HintLoadAssetBundleAsync(AssetBundleHint hint, ResourceAsyncCallBack callback)
-        {
-            var operation = AssetBundle.LoadFromFileAsync(hint.bundlePath);
-            var request = new AsyncOperationRequest(operation);
-            AddAsyncCallback(request, callback);
-            return request;
-        }
-
-        private void OnAssetBundleLoadAsyncComplete(AssetBundleCreateRequest request, AssetBundleHint hint, ResourceAsyncCallBack callBack)
-        {
-            if (request.isDone)
-            {
-                hint.bundle = request.assetBundle;
-            }
-
-            var assetLoadRequest = HintLoadMainAssetAsync(hint);
-        }
-
-        private IAsyncRequest HintLoadMainAssetAsync(AssetBundleHint hint)
-        {
-            var request = hint.bundle.LoadAllAssetsAsync();
-            return new AsyncBundleRequest(){hint = hint, request = request};
-        }
         private void HintRecyle(AssetBundleHint hint)
         {
             hint.mainAsset = null;
@@ -217,6 +168,107 @@ namespace Monster.BaseSystem.ResourceManager
 
             hint.refCount++;
         }
+        #region async
+        private void HintLoadAssetBundleAsync(AssetBundleHint hint, ResourceAsyncCallBack callback)
+        {
+            if (hint.bundle != null)
+            {
+                HintLoadMainAssetAsync(hint, callback);
+            }
+            var mainRequest = new AsyncBundleCreateMainRequest();
+            var createRequest = HintCreateBundleAsync(hint);
+            mainRequest.callback = callback;
+            mainRequest.mainRequest = createRequest;
+
+            AddAsyncCallback(mainRequest, OnAssetBundleLoadComplete);
+        }
+
+        private AsyncBundleCreateRequest HintCreateBundleAsync(AssetBundleHint hint)
+        {
+            var request = AssetBundle.LoadFromFileAsync(hint.bundlePath);
+
+            var bundleRequest = new AsyncBundleCreateRequest();
+            bundleRequest.createRequest = request;
+            bundleRequest.hint = hint;
+
+            for (int i = 0, count = hint.dependenceList.Count; i < count; i++)
+            {
+                var depHint = hint.dependenceList[i];
+                if (depHint.bundle == null)
+                {
+                    bundleRequest.dependenceRequestList.Add(HintCreateBundleAsync(depHint));
+                }
+            }
+
+            return bundleRequest;
+        }
+        private void OnAssetBundleLoadComplete(IAsyncResourceRequest request)
+        {
+            var mainCreateRequest = request as AsyncBundleCreateMainRequest;
+            DealAsyncBundleCreateRequest(mainCreateRequest.mainRequest);
+
+            HintLoadMainAssetAsync(mainCreateRequest.mainRequest.hint, mainCreateRequest.callback);
+        }
+
+        private void DealAsyncBundleCreateRequest(AsyncBundleCreateRequest request)
+        {
+            var createRequest = request;
+            var hint = createRequest.hint;
+            if (hint.bundle == null)
+            {
+                hint.bundle = createRequest.createRequest.assetBundle;
+            }
+            int depCount = createRequest.dependenceRequestList.Count;
+            for (int i = 0; i < depCount; i++)
+            {
+                DealAsyncBundleCreateRequest(createRequest.dependenceRequestList[i]);
+            }
+        }
+
+        private void HintLoadMainAssetAsync(AssetBundleHint hint, ResourceAsyncCallBack callBack)
+        {
+            if (hint.bundle == null)
+            {
+                HintLoadAssetBundleAsync(hint, callBack);
+                return;
+            }
+            if (hint.mainAsset != null)
+            {
+                HintInvokeCallback(hint, callBack);
+                return;
+            }
+            var request = hint.bundle.LoadAssetAsync(hint.assetName);
+
+            var assetRequest = new AsyncAssetRequest();
+            assetRequest.request = request;
+            assetRequest.callback = callBack;
+            assetRequest.hint = hint;
+
+            AddAsyncCallback(assetRequest, OnAssetLoadComplete);
+        }
+
+        private void OnAssetLoadComplete(IAsyncResourceRequest request)
+        {
+            var assetRequest = request as AsyncAssetRequest;
+            var hint = assetRequest.hint;
+            var callback = assetRequest.callback;
+            var asset = assetRequest.request.asset;
+            hint.mainAsset = asset;
+
+            HintInvokeCallback(hint, callback);
+        }
+
+        private void HintInvokeCallback(AssetBundleHint hint, ResourceAsyncCallBack callback)
+        {
+            HintIncreaseRefCount(hint);
+
+            var resourceRequest = new AsyncResourceRequest();
+            resourceRequest.isDone = true;
+            resourceRequest.asset = hint.mainAsset;
+
+            callback(resourceRequest);
+        }
+        #endregion
         #endregion
 
 
