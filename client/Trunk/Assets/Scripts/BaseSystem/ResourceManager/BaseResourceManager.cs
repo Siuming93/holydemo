@@ -74,7 +74,7 @@ namespace Monster.BaseSystem.ResourceManager
 
         #region self funcs
 
-        private void DoTrik()
+        protected virtual void DoTrik()
         {
             _doneARList.Clear();
             var itor = _asyncCallBacks.GetEnumerator();
