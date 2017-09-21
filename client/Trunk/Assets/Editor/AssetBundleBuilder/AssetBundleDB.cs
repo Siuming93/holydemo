@@ -10,6 +10,6 @@ namespace Assets.Editor.AssetBundleBuilder
     [System.Serializable]
     class AssetBundleDB : ScriptableObject
     {
-        public BuilderConfig config;
+        public BuilderConfig config = new BuilderConfig();
     }
 }

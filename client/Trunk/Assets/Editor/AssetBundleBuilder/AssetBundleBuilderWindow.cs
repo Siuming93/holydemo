@@ -10,6 +10,7 @@ namespace Assets.Editor.AssetBundleBuilder
 {
     class AssetBundleBuilderWindow : EditorWindow
     {
+        private const string DB_PATH = "Editor/AssetBundleBuilder/AssetBundleDataBase";
         private static AssetBundleBuilderWindow instance;
         [MenuItem("Tools/Show AssetBundle Builder")]
         public static void Open()
@@ -22,7 +23,9 @@ namespace Assets.Editor.AssetBundleBuilder
         {
             title = "Builder";
             minSize = new Vector2(300f, 400f);
-            _config = new BuilderConfig();
+            data = AssetDatabase.LoadAssetAtPath<AssetBundleDB>(DB_PATH);
+            data = data ?? ScriptableObject.CreateInstance<AssetBundleDB>();
+            _config = data.config;
         }
 
         private AssetBundleDB data;
