@@ -23,18 +23,14 @@ namespace Assets.Editor.AssetBundleBuilder
         {
             title = "Builder";
             minSize = new Vector2(300f, 400f);
-            data = AssetDatabase.LoadAssetAtPath<AssetBundleDB>(DB_PATH);
-            data = data ?? ScriptableObject.CreateInstance<AssetBundleDB>();
-            _config = data.config;
+            _config = new BuilderConfig();
         }
 
-        private AssetBundleDB data;
         private BuilderConfig _config;
         void OnGUI()
         {
             if (_config == null)
                 Init();
-
             EditorGUILayout.BeginHorizontal();
             EditorGUILayout.EndHorizontal();
             EditorGUILayout.BeginHorizontal();
@@ -121,7 +117,6 @@ namespace Assets.Editor.AssetBundleBuilder
             {BuildTarget.StandaloneWindows.ToString(),BuildTarget.StandaloneWindows},
             {BuildTarget.Android.ToString(),BuildTarget.Android},
         };
-
 
         void ShowTypeNamesMenu(string current, List<string> contents, Action<string> ExistSelected)
         {

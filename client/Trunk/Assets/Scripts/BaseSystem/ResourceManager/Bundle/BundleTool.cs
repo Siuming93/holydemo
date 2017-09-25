@@ -35,6 +35,12 @@ namespace Monster.BaseSystem.ResourceManager
 
         public static string LOCALE_BUNDLE_FLODER_PATH = Application.streamingAssetsPath;
 
+        public static string LOCALE_BUNDLE_FLODER_URL =
+#if UNITY_EDITOR
+ "file:///" + Application.streamingAssetsPath;
+#else
+        Application.streamingAssetsPath;
+#endif
     }
 
     public class AssetBundleInfoNode

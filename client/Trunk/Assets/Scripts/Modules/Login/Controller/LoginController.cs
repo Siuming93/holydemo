@@ -4,8 +4,20 @@ using Monster.Net;
 using Monster.Protocol;
 using Monster.BaseSystem.SceneManager;
 
-public class LoginController : Singleton<LoginController>
+public class LoginController 
 {
+    private static LoginController _instance;
+    public static LoginController instance
+    {
+        get
+        {
+            if (_instance == null)
+            {
+                _instance = new LoginController();
+            }
+            return _instance;
+        }
+    }
     private string _lastIp;
 
     public LoginController()

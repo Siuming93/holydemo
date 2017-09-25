@@ -2,7 +2,6 @@
 using System.Collections;
 using Monster.BaseSystem.ResourceManager;
 using UnityEngine;
-using Object = UnityEngine.Object;
 
 namespace Monster.BaseSystem.SceneManager
 {
@@ -22,7 +21,7 @@ namespace Monster.BaseSystem.SceneManager
             return null; ;
         }
 
-        private void OnLoginViewLoadComplete(ResourceManager.IAsyncResourceRequest resourceRequest)
+        private void OnLoginViewLoadComplete(IAsyncResourceRequest resourceRequest)
         {
             var origin = (resourceRequest as AsyncResourceRequest).asset;
             _loginView = GameObject.Instantiate(origin) as GameObject;
@@ -32,6 +31,7 @@ namespace Monster.BaseSystem.SceneManager
         public override IEnumerator BeforeLeaveScene(object data)
         {
             UIManager.Intance.RemoveChild(_loginView.transform);
+            ResourcesFacade.Instance.UnLoadAsset(_loginView);
             return null; ;
         }
 

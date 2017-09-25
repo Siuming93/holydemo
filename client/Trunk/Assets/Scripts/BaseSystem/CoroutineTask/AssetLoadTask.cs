@@ -13,8 +13,7 @@ namespace Monster.BaseSystem.CoroutineTask
         public override IEnumerator Run()
         {
             Init();
-            yield return 1;
-            DownLoadBundles();
+            yield return DownLoadBundles();
             this.Progress = 1;
             this.IsCompleted = true;
         }
@@ -30,27 +29,33 @@ namespace Monster.BaseSystem.CoroutineTask
             this.Description = "加载AssetBundles";
         }
 
-        private void DownLoadBundles()
+        private IEnumerator DownLoadBundles()
         {
+#if UNITY_EDITOR
             var targetPath = Application.streamingAssetsPath;
-            var map = FindAllBundleNames();
+            File.Copy(BundleConfig.BUNDLE_REMOTE_PATH + "/" + BundleConfig.CONFIG_FILE_NAME, targetPath + "/" + BundleConfig.CONFIG_FILE_NAME, true);
+            this.Description = "加载AssetBundlesConfig";
+            yield return 1;
+#endif
+            var url = BundleConfig.LOCALE_BUNDLE_FLODER_URL + "/" + BundleConfig.CONFIG_FILE_NAME;
+            WWW www = new WWW(url);
+            yield return www;
+            var map = FindAllBundleNames(www.text);
             AssetBundleConfig.map = map;
+            yield return 1;
+#if UNITY_EDITOR
             foreach (var name in map.Keys)
             {
                 var bundleName = BundleTool.GetBundleFileName(name);
                 File.Copy(BundleConfig.BUNDLE_REMOTE_PATH + "/" + bundleName, targetPath + "/" + bundleName, true);
+                this.Description = "复制AssetBundlesConfig";
+                yield return 1;
             }
+#endif
         }
 
-        private Dictionary<string, AssetBundleInfoNode> FindAllBundleNames()
+        private Dictionary<string, AssetBundleInfoNode> FindAllBundleNames(string config)
         {
-#if !UNITY_EDITOR
-            return new Dictionary<string, AssetRefrenceNode>();
-
-#endif
-            var reader = new StreamReader(File.OpenRead(BundleConfig.BUNDLE_REMOTE_PATH + "/" + BundleConfig.CONFIG_FILE_NAME));
-            var config = reader.ReadToEnd();
-            reader.Dispose();
             var map = JsonMapper.ToObject<Dictionary<string, AssetBundleInfoNode>>(config);
             return map;
         }

@@ -18,9 +18,12 @@ namespace Monster.BaseSystem.CoroutineTask
             for (int i = 0, count = mCoroutineTasks.Count; i < count; i++)
             {
                 BaseCoroutineTask task = mCoroutineTasks[i].Key;
-                this.Description = task.Description;
-                yield return task.Run();
-                this.Progress = mCoroutineTasks[i].Value;
+                while (!task.IsCompleted)
+                {
+                    this.Description = task.Description;
+                    this.Progress = mCoroutineTasks[i].Value;
+                    yield return task.Run();
+                }
             }
             yield return step++;
 
