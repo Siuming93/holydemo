@@ -16,11 +16,10 @@ namespace CinemaDirector
         public override void UpdateTrack(float time, float deltaTime)
         {
             base.elapsedTime = time;
-
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaActorClipCurve actorClipCurve = items[i] as CinemaActorClipCurve;
+                CinemaActorClipCurve actorClipCurve = item as CinemaActorClipCurve;
                 if (actorClipCurve != null)
                 {
                     actorClipCurve.SampleTime(time);
@@ -35,10 +34,9 @@ namespace CinemaDirector
         public override void SetTime(float time)
         {
             base.elapsedTime = time;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaActorClipCurve actorClipCurve = items[i] as CinemaActorClipCurve;
+                CinemaActorClipCurve actorClipCurve = item as CinemaActorClipCurve;
                 if (actorClipCurve != null)
                 {
                     actorClipCurve.SampleTime(time);
@@ -51,10 +49,9 @@ namespace CinemaDirector
         /// </summary>
         public override void Stop()
         {
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaActorClipCurve actorClipCurve = items[i] as CinemaActorClipCurve;
+                CinemaActorClipCurve actorClipCurve = item as CinemaActorClipCurve;
                 if (actorClipCurve != null)
                 {
                     actorClipCurve.Reset();

@@ -37,13 +37,13 @@ public class ActorItemTrackInspector : Editor
             {
                 EditorGUI.indentLevel++;
 
-                for (int i = 0; i < actions.Length; i++)
+                foreach (CinemaActorAction action in actions)
                 {
-                    EditorGUILayout.ObjectField(actions[i].name, actions[i], typeof(CinemaActorAction), true);
+                    EditorGUILayout.ObjectField(action.name, action, typeof(CinemaActorAction), true);
                 }
-                for (int i = 0; i < actorEvents.Length; i++)
+                foreach (CinemaActorEvent actorEvent in actorEvents)
                 {
-                    EditorGUILayout.ObjectField(actorEvents[i].name, actorEvents[i], typeof(CinemaActorEvent), true);
+                    EditorGUILayout.ObjectField(actorEvent.name, actorEvent, typeof(CinemaActorEvent), true);
                 }
                 EditorGUI.indentLevel--;
             }
@@ -54,13 +54,12 @@ public class ActorItemTrackInspector : Editor
             GenericMenu createMenu = new GenericMenu();
 
             Type actorActionType = typeof(CinemaActorAction);
-            Type[] actionSubTypes = DirectorHelper.GetAllSubTypes(actorActionType);
-            for (int i = 0; i < actionSubTypes.Length; i++)
+            foreach (Type type in DirectorHelper.GetAllSubTypes(actorActionType))
             {
                 string text = string.Empty;
                 string category = string.Empty;
                 string label = string.Empty;
-                foreach (CutsceneItemAttribute attribute in actionSubTypes[i].GetCustomAttributes(typeof(CutsceneItemAttribute), true))
+                foreach (CutsceneItemAttribute attribute in type.GetCustomAttributes(typeof(CutsceneItemAttribute), true))
                 {
                     if (attribute != null)
                     {
@@ -70,18 +69,17 @@ public class ActorItemTrackInspector : Editor
                         break;
                     }
                 }
-                ContextData userData = new ContextData { type = actionSubTypes[i], label = label, category = category };
+                ContextData userData = new ContextData { type = type, label = label, category = category };
                 createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddEvent), userData);
             }
 
             Type actorEventType = typeof(CinemaActorEvent);
-            Type[] eventSubTypes = DirectorHelper.GetAllSubTypes(actorEventType);
-            for (int i = 0; i < eventSubTypes.Length; i++)
+            foreach (Type type in DirectorHelper.GetAllSubTypes(actorEventType))
             {
                 string text = string.Empty;
                 string category = string.Empty;
                 string label = string.Empty;
-                foreach (CutsceneItemAttribute attribute in eventSubTypes[i].GetCustomAttributes(typeof(CutsceneItemAttribute), true))
+                foreach (CutsceneItemAttribute attribute in type.GetCustomAttributes(typeof(CutsceneItemAttribute), true))
                 {
                     if (attribute != null)
                     {
@@ -91,7 +89,7 @@ public class ActorItemTrackInspector : Editor
                         break;
                     }
                 }
-                ContextData userData = new ContextData { type = eventSubTypes[i], label = label, category = category };
+                ContextData userData = new ContextData { type = type, label = label, category = category };
                 createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddEvent), userData);
             }
             createMenu.ShowAsContext();

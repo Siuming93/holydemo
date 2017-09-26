@@ -33,16 +33,12 @@ namespace CinemaDirector
             if (animator == null)
             { return; }
 
-            AnimatorCullingMode cullingData = animator.cullingMode;
-            animator.cullingMode = AnimatorCullingMode.AlwaysAnimate;
-
             List<RevertInfo> revertCache = new List<RevertInfo>();
 
             // Build the cache of revert info.
-            MonoBehaviour[] mb = this.GetComponentsInChildren<MonoBehaviour>();
-            for (int i = 0; i < mb.Length; i++)
+            foreach (MonoBehaviour mb in this.GetComponentsInChildren<MonoBehaviour>())
             {
-                IRevertable revertable = mb[i] as IRevertable;
+                IRevertable revertable = mb as IRevertable;
                 if (revertable != null)
                 {
                     revertCache.AddRange(revertable.CacheState());
@@ -63,12 +59,11 @@ namespace CinemaDirector
 
             for (int i = 0; i < frameCount-1; i++)
             {
-                TimelineTrack[] tracks = GetTracks();
-                for (int j = 0; j < tracks.Length; j++)
+                foreach (TimelineTrack track in GetTracks())
                 {
-                    if (!(tracks[j] is DialogueTrack))
+                    if (!(track is DialogueTrack))
                     {
-                        tracks[j].UpdateTrack(i * (1.0f / frameRate), (1.0f / frameRate));
+                        track.UpdateTrack(i * (1.0f / frameRate), (1.0f / frameRate));
                     }
                 }
                 animator.Update(1.0f / frameRate);
@@ -84,9 +79,8 @@ namespace CinemaDirector
             Actor.transform.localRotation = rotation;
             Actor.transform.localScale = scale;
 
-            for (int i = 0; i < revertCache.Count; i++)
+            foreach (RevertInfo revertable in revertCache)
             {
-                RevertInfo revertable = revertCache[i];
                 if (revertable != null)
                 {
                     if ((revertable.EditorRevert == RevertMode.Revert && !Application.isPlaying) ||
@@ -96,7 +90,7 @@ namespace CinemaDirector
                     }
                 }
             }
-            animator.cullingMode = cullingData;
+
             base.Initialize();
         }
 
@@ -145,12 +139,11 @@ namespace CinemaDirector
             }
             else
             {
-                TimelineTrack[] tracks = GetTracks();
-                for (int i = 0; i < tracks.Length; i++)
+                foreach (TimelineTrack track in GetTracks())
                 {
-                    if (!(tracks[i] is MecanimTrack))
+                    if (!(track is MecanimTrack))
                     {
-                        tracks[i].UpdateTrack(time, deltaTime);
+                        track.UpdateTrack(time, deltaTime);
                     } 
                 }
 
@@ -163,15 +156,7 @@ namespace CinemaDirector
 
                 if (Actor.gameObject.activeInHierarchy)
                 {
-#if UNITY_5 && !UNITY_5_0 && !UNITY_5_1
-                    if (animator.isInitialized)
-                        animator.playbackTime = time;
-#else
-                 // if (animator.)
-                        animator.playbackTime = time;
-#endif
-
-
+                    animator.playbackTime = time;
                     animator.Update(0);
                 }
             }
@@ -181,20 +166,18 @@ namespace CinemaDirector
         {
             if (Application.isPlaying)
             {
-                TimelineTrack[] tracks = GetTracks();
-                for (int i = 0; i < tracks.Length; i++)
+                foreach (TimelineTrack track in GetTracks())
                 {
-                    tracks[i].SetTime(time);
+                    track.SetTime(time);
                 }
             }
             else
             {
-                TimelineTrack[] tracks = GetTracks();
-                for (int i = 0; i < tracks.Length; i++)
+                foreach (TimelineTrack track in GetTracks())
                 {
-                    if (!(tracks[i] is MecanimTrack))
+                    if (!(track is MecanimTrack))
                     {
-                        tracks[i].SetTime(time);
+                        track.SetTime(time);
                     }
                 }
 

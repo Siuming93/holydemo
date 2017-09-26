@@ -14,11 +14,12 @@ namespace CinemaDirector
         {
             if (actor != null)
             {
-                Animation animation = actor.GetComponentInChildren<Animation>();
+                Animation animation = actor.GetComponent<Animation>();
                 if (!animation)
                 {
                     return;
                 }
+
                 animation.CrossFade(Animation, TargetWeight, PlayMode);
             }
         }

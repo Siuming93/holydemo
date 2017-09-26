@@ -5,9 +5,6 @@ using UnityEditor.AnimatedValues;
 using System.Collections.Generic;
 using System;
 using System.Reflection;
-using System.Xml.Linq;
-using System.Linq;
-using System.IO;
 
 namespace CinemaSuite
 {
@@ -19,16 +16,8 @@ namespace CinemaSuite
         private GUISkin skin = null;
         private bool showOnStartup = true;
 
-		List<string> availableProductNames = new List<string>{
-            "CinemaFaceCap",
-            "CinemaDirector",
-			"CinemaMocap",
-			"CinemaProCams",
-			"CinemaThemes",
-        };
-
-		List<ProductInfo> availableProducts = new List<ProductInfo>();
-		List<ProductInfo> installedProducts = new List<ProductInfo>();
+        List<ProductInfo> installedProducts = new List<ProductInfo>();
+        List<ProductInfo> availableProducts = new List<ProductInfo>();
 
         private AnimBool showInstalledProducts;
         private AnimBool showAvailableProducts;
@@ -127,7 +116,7 @@ namespace CinemaSuite
             facebookIcon = Resources.Load<Texture2D>("Cinema_Suite_Facebook" + suffix);
             forumIcon = Resources.Load<Texture2D>("Cinema_Suite_Forums" + suffix);
 
-//            loadProductInfo();
+            loadProductInfo();
         }
 
         protected void OnGUI()
@@ -236,25 +225,34 @@ namespace CinemaSuite
 
         private void loadProductInfo()
         {
-			for (int i = 0; i < availableProductNames.Count; i++)
-			{
-				string baseFilename = "BaseProductInfo";
-				string installedFilename = string.Concat(availableProductNames[i], "InstalledProductInfo");
-				string path = IsInstalled(installedFilename);
+            List<ProductInfo> baseProducts = new List<ProductInfo>()
+             {
+                 new CinemaDirectorBaseProductInfo(), new CinemaProCamsBaseProductInfo(), 
+                 new CinemaThemesBaseProductInfo(), new CinemaMocapBaseProductInfo()
+             };
 
-				if (path != null)
-				{
-					ProductInfo installedProduct = ParseXml(XDocument.Load(path))[0];
-					installedProduct.Initialize(Repaint);
-					installedProducts.Add(installedProduct);
-				}
-				else
-				{
-					ProductInfo availableProduct = ParseXml(XDocument.Parse(((TextAsset)Resources.Load(baseFilename)).text))[i];
-					availableProduct.Initialize(Repaint);
-					availableProducts.Add(availableProduct);
-				}
-			}
+            availableProducts = new List<ProductInfo>();
+            installedProducts = new List<ProductInfo>();
+
+            foreach (var productInfo in baseProducts)
+            {
+                Type[] installedProductTypes = GetAllSubTypes(productInfo.GetType());
+                if (installedProductTypes.Length > 0)
+                {
+                    foreach (Type productType in installedProductTypes)
+                    {
+                        ProductInfo installedProduct = Activator.CreateInstance(productType) as ProductInfo;
+                        installedProduct.Initialize(Repaint);
+                        installedProducts.Add(installedProduct);
+                    }
+                }
+                else
+                {
+                    ProductInfo product = Activator.CreateInstance(productInfo.GetType()) as ProductInfo;
+                    product.Initialize(Repaint);
+                    availableProducts.Add(product);
+                }
+            }
         }
         
         private void DrawAboutCinemaSuiteSection()
@@ -345,53 +343,6 @@ namespace CinemaSuite
             }
             return list.ToArray();
         }
-
-		public List<ProductInfo> ParseXml(XDocument xml)
-		{
-			string suffix = EditorGUIUtility.isProSkin ? "_Pro" : "_Personal";
-
-			var productList = (from element in xml.Root.Elements("product")
-			                    select new ProductInfo
-			                    {
-				name = (string)element.Element("name"),
-				keyImage = Resources.Load((string)element.Element("keyImage")) as Texture2D,
-				headerText = "<size=16>" + (string)element.Element("headerText") + "</size>",
-				header2Text = "<size=14>" + (string)element.Element("header2Text") + "</size>",
-				bodyText = (string)element.Element("bodyText"),
-				resourceImage1 = Resources.Load((string)element.Element("resourceImage1") + suffix) as Texture2D,
-				resourceImage2 = Resources.Load((string)element.Element("resourceImage2") + suffix) as Texture2D,
-				resourceImage3 = Resources.Load((string)element.Element("resourceImage3") + suffix) as Texture2D,
-				resourceImage4 = Resources.Load((string)element.Element("resourceImage4") + suffix) as Texture2D,
-				resourceImage1Link = (string)element.Element("resourceImage1Link"),
-				resourceImage2Link = (string)element.Element("resourceImage2Link"),
-				resourceImage3Link = (string)element.Element("resourceImage3Link"),
-				resourceImage4Link = (string)element.Element("resourceImage4Link"),
-				resourceImage1Label = (string)element.Element("resourceImage1Label"),
-				resourceImage2Label = (string)element.Element("resourceImage2Label"),
-				resourceImage3Label = (string)element.Element("resourceImage3Label"),
-				resourceImage4Label = (string)element.Element("resourceImage4Label"),
-				assetStorePage = (string)element.Element("assetStorePage"),
-				installed = Convert.ToBoolean((string)element.Element("installed"))
-			}).ToList();
-
-			return productList;
-		}
-		
-		public string IsInstalled(string InstalledProduct)
-		{
-			var allFiles = Directory.GetFiles("Assets/Cinema Suite/", "*.xml", SearchOption.AllDirectories);
-			
-			if (allFiles.Length != 0) {
-				foreach (var fi in allFiles)
-				{
-					if (fi.Contains(InstalledProduct))
-					{
-						return fi;
-					}
-				}
-			}
-			return null;
-		}
 
         /// <summary>
         /// Show the Cinema Mocap Window

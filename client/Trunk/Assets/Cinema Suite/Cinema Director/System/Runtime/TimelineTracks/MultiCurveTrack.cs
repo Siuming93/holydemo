@@ -9,9 +9,8 @@ namespace CinemaDirector
 
         public override void Initialize()
         {
-            for (int i = 0; i < this.TimelineItems.Length; i++)
+            foreach (CinemaMultiActorCurveClip clipCurve in this.TimelineItems)
             {
-                CinemaMultiActorCurveClip clipCurve = this.TimelineItems[i] as CinemaMultiActorCurveClip;
                 clipCurve.Initialize();
             }
         }
@@ -19,18 +18,16 @@ namespace CinemaDirector
         public override void UpdateTrack(float time, float deltaTime)
         {
             base.elapsedTime = time;
-            for (int i = 0; i < this.TimelineItems.Length; i++)
+            foreach (CinemaMultiActorCurveClip clipCurve in this.TimelineItems)
             {
-                CinemaMultiActorCurveClip clipCurve = this.TimelineItems[i] as CinemaMultiActorCurveClip;
                 clipCurve.SampleTime(time);
             }
         }
 
         public override void Stop()
         {
-            for (int i = 0; i < this.TimelineItems.Length; i++)
+            foreach (CinemaMultiActorCurveClip clipCurve in this.TimelineItems)
             {
-                CinemaMultiActorCurveClip clipCurve = this.TimelineItems[i] as CinemaMultiActorCurveClip;
                 clipCurve.Revert();
             }
         }

@@ -66,10 +66,7 @@ namespace CinemaDirector
                         break;
                 }
 
-	            if (Application.isPlaying)
-	            {
-		            actor.SendMessage(MethodName, Parameter, SendMessageOptions);
-	            }
+                actor.SendMessage(MethodName, Parameter, SendMessageOptions);
             }
         }
 

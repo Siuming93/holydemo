@@ -11,67 +11,6 @@ using UnityEngine;
 [CutsceneTrackGroupAttribute(typeof(TrackGroup))]
 public class GenericTrackGroupControl : TrackGroupControl
 {
-    private bool lockedState = false;
-
-    private void lockStatus(bool locked)
-    {
-        lockedState = !lockedState;
-        TrackGroup trackGroup = TrackGroup.Behaviour as TrackGroup;
-
-        if (trackGroup != null)
-        {
-            var tracks = TrackGroup.Tracks;
-
-            foreach (var tracktype in tracks)
-                tracktype.Behaviour.gameObject.GetComponent<TimelineTrack>().lockedStatus = locked;
-        }
-    }
-
-    private void uniformLockStatus()
-    {
-        TrackGroup trackGroup = TrackGroup.Behaviour as TrackGroup;
-
-        if (trackGroup != null)
-        {
-            var tracks = TrackGroup.Tracks;
-            bool status = false;
-            float counter = 0;
-            float total = 0;
-
-            foreach (var tracktype in tracks)
-            {
-                if (counter == 0)
-                    status = tracktype.Behaviour.gameObject.GetComponent<TimelineTrack>().lockedStatus;
-                if (status == tracktype.Behaviour.gameObject.GetComponent<TimelineTrack>().lockedStatus)
-                    counter++;
-
-                total++;
-            }
-
-            if (counter > total / 2)
-                lockedState = status;
-            else
-                lockedState = !status;
-        }
-    }
-
-    protected override void updateHeaderControl6(Rect position)
-    {
-        uniformLockStatus();
-
-        if (!lockedState)
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.UnlockIconLRG))
-                lockStatus(!lockedState);
-        }
-        else
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.LockIconLRG))
-                lockStatus(!lockedState);
-        }
-    }
-
-
     /// <summary>
     /// Create and show a context menu for adding new Timeline Tracks.
     /// </summary>
@@ -82,7 +21,7 @@ public class GenericTrackGroupControl : TrackGroupControl
         {
             // Get the possible tracks that this group can contain.
             List<Type> trackTypes = trackGroup.GetAllowedTrackTypes();
-
+            
             GenericMenu createMenu = new GenericMenu();
 
             // Get the attributes of each track.

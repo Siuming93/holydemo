@@ -203,96 +203,70 @@ public class CutsceneCreatorWindow : EditorWindow
 
             if (GUILayout.Button("Create Cutscene"))
             {
-                CreateCutscene();
+                string cutsceneName = DirectorHelper.getCutsceneItemName(txtCutsceneName, typeof(Cutscene));
+
+                GameObject cutsceneGO = new GameObject(cutsceneName);
+                Cutscene cutscene = cutsceneGO.AddComponent<Cutscene>();
+
+                for (int i = 0; i < directorTrackGroupsSelection; i++)
+                {
+                    DirectorGroup dg = CutsceneItemFactory.CreateDirectorGroup(cutscene);
+                    dg.Ordinal = 0;
+                    for (int j = 0; j < shotTrackSelection; j++)
+                    {
+                        CutsceneItemFactory.CreateShotTrack(dg);
+                    }
+                    for (int j = 0; j < audioTrackSelection; j++)
+                    {
+                        CutsceneItemFactory.CreateAudioTrack(dg);
+                    }
+                    for (int j = 0; j < globalItemTrackSelection; j++)
+                    {
+                        CutsceneItemFactory.CreateGlobalItemTrack(dg);
+                    }
+                }
+
+                for (int i = 0; i < actorTrackGroupsSelection; i++)
+                {
+                    CutsceneItemFactory.CreateActorTrackGroup(cutscene, actors[i]);
+                }
+
+                for (int i = 0; i < multiActorTrackGroupsSelection; i++)
+                {
+                    CutsceneItemFactory.CreateMultiActorTrackGroup(cutscene);
+                }
+
+                for (int i = 0; i < characterTrackGroupsSelection; i++)
+                {
+                    CutsceneItemFactory.CreateCharacterTrackGroup(cutscene, characters[i]);
+                }
+
+                float duration = txtDuration;
+                if (timeEnum == DirectorHelper.TimeEnum.Minutes) duration *= 60;
+                cutscene.Duration = duration;
+
+                int undoIndex = Undo.GetCurrentGroup();
+
+                if(StartMethod != StartMethod.None)
+                {
+                    GameObject cutsceneTriggerGO = new GameObject("Cutscene Trigger");
+                    CutsceneTrigger cutsceneTrigger = cutsceneTriggerGO.AddComponent<CutsceneTrigger>();
+                    if (StartMethod == StartMethod.OnTrigger)
+                    {
+                        cutsceneTriggerGO.AddComponent<BoxCollider>();
+                    }
+                    cutsceneTrigger.StartMethod = StartMethod;
+                    cutsceneTrigger.Cutscene = cutscene;
+                    Undo.RegisterCreatedObjectUndo(cutsceneTriggerGO, string.Format("Created {0}", txtCutsceneName));
+                }
+                
+                Undo.RegisterCreatedObjectUndo(cutsceneGO, string.Format("Created {0}",txtCutsceneName));
+                Undo.CollapseUndoOperations(undoIndex);
+
+                Selection.activeTransform = cutsceneGO.transform;
+
             }
         }
         EditorGUILayout.EndHorizontal();
-    }
-
-    public Cutscene CreateCutscene()
-    {
-        string cutsceneName = DirectorHelper.getCutsceneItemName(txtCutsceneName, typeof(Cutscene));
-
-        GameObject cutsceneGO = new GameObject(cutsceneName);
-        Cutscene cutscene = cutsceneGO.AddComponent<Cutscene>();
-
-        for (int i = 0; i < directorTrackGroupsSelection; i++)
-        {
-            DirectorGroup dg = CutsceneItemFactory.CreateDirectorGroup(cutscene);
-            dg.Ordinal = 0;
-            for (int j = 0; j < shotTrackSelection; j++)
-            {
-                CutsceneItemFactory.CreateShotTrack(dg);
-            }
-            for (int j = 0; j < audioTrackSelection; j++)
-            {
-                CutsceneItemFactory.CreateAudioTrack(dg);
-            }
-            for (int j = 0; j < globalItemTrackSelection; j++)
-            {
-                CutsceneItemFactory.CreateGlobalItemTrack(dg);
-            }
-        }
-
-        for (int i = 0; i < actorTrackGroupsSelection; i++)
-        {
-            CutsceneItemFactory.CreateActorTrackGroup(cutscene, actors[i]);
-        }
-
-        for (int i = 0; i < multiActorTrackGroupsSelection; i++)
-        {
-            CutsceneItemFactory.CreateMultiActorTrackGroup(cutscene);
-        }
-
-        for (int i = 0; i < characterTrackGroupsSelection; i++)
-        {
-            CutsceneItemFactory.CreateCharacterTrackGroup(cutscene, characters[i]);
-        }
-
-        float duration = txtDuration;
-        if (timeEnum == DirectorHelper.TimeEnum.Minutes) duration *= 60;
-        cutscene.Duration = duration;
-
-        cutscene.IsLooping = isLooping;
-
-        cutscene.IsSkippable = isSkippable;
-
-        int undoIndex = Undo.GetCurrentGroup();
-
-        if (StartMethod != StartMethod.None)
-        {
-            CreateCutsceneTrigger(cutscene);
-        }
-
-        Undo.RegisterCreatedObjectUndo(cutsceneGO, string.Format("Created {0}", txtCutsceneName));
-        Undo.CollapseUndoOperations(undoIndex);
-
-        Selection.activeTransform = cutsceneGO.transform;
-
-        return cutscene;
-    }
-
-    public Cutscene CreateEmptyCutscene()
-    {
-        directorTrackGroupsSelection = 0;
-        actorTrackGroupsSelection = 0;
-        multiActorTrackGroupsSelection = 0;
-        characterTrackGroupsSelection = 0;
-        return CreateCutscene();
-    }
-
-    public CutsceneTrigger CreateCutsceneTrigger(Cutscene cutscene)
-    {
-        GameObject cutsceneTriggerGO = new GameObject("Cutscene Trigger");
-        CutsceneTrigger cutsceneTrigger = cutsceneTriggerGO.AddComponent<CutsceneTrigger>();
-        if (StartMethod == StartMethod.OnTrigger)
-        {
-            cutsceneTriggerGO.AddComponent<BoxCollider>();
-        }
-        cutsceneTrigger.StartMethod = StartMethod;
-        cutsceneTrigger.Cutscene = cutscene;
-        Undo.RegisterCreatedObjectUndo(cutsceneTriggerGO, string.Format("Created {0}", txtCutsceneName));
-
-        return cutsceneTrigger;
     }
 }

@@ -2,7 +2,6 @@ using CinemaDirector;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
-using System.Text.RegularExpressions;
 using UnityEditor;
 using UnityEngine;
 
@@ -171,7 +170,6 @@ public class DirectorHelper
                         trackWrapper.HasChanged = true;
                         trackWrapper.RemoveItem(item);
                     }
-                    trackWrapper.IsLocked = track.lockedStatus;
                 }
                 
                 // Remove missing tracks
@@ -381,14 +379,7 @@ public class DirectorHelper
     public static Component[] getValidComponents(GameObject actor)
     {
         Component[] components = actor.GetComponents<Component>();
-        List<Component> validComponents = new List<Component>();
-        for (int i = 0; i < components.Length; i++)
-        {
-            if (components[i] != null)
-                validComponents.Add(components[i]);
-        }
-
-        return validComponents.ToArray();
+        return components;
     }
 
     public static Component[] getEnableableComponents(GameObject actor)
@@ -480,13 +471,6 @@ public class DirectorHelper
             {
                 name = "Scale";
             }
-        }
-        else
-        {
-            //'camelCase' to 'Title Case'
-            const string pattern = @"(?<=[^A-Z])(?=[A-Z])";
-            name = Regex.Replace(memberName, pattern, " ", RegexOptions.None);
-            name = name.Substring(0, 1).ToUpper() + name.Substring(1);
         }
         return name;
     }

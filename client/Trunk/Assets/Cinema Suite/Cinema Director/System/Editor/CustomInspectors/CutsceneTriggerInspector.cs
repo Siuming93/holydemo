@@ -14,7 +14,6 @@ public class CutsceneTriggerInspector : Editor
     private SerializedProperty cutscene;
     private SerializedProperty triggerObject;
     private SerializedProperty skipButton;
-    private SerializedProperty triggerButton;
 
 
     #region 
@@ -32,7 +31,6 @@ public class CutsceneTriggerInspector : Editor
         cutscene = trigger.FindProperty("Cutscene");
         triggerObject = trigger.FindProperty("TriggerObject");
         skipButton = trigger.FindProperty("SkipButtonName");
-        triggerButton = trigger.FindProperty("TriggerButtonName");
     }
 
     /// <summary>
@@ -49,17 +47,12 @@ public class CutsceneTriggerInspector : Editor
         {
             startMethod.enumValueIndex = (int)newStartMethod;
 
-            CutsceneTrigger cutsceneTrigger = (this.target as CutsceneTrigger);
-            if (newStartMethod == StartMethod.OnTrigger || newStartMethod == StartMethod.OnTriggerStayAndButtonDown)
+            if (newStartMethod == StartMethod.OnTrigger)
             {
-                if (cutsceneTrigger != null && cutsceneTrigger.gameObject.GetComponent<BoxCollider>() == null)
+                CutsceneTrigger cutsceneTrigger = (this.target as CutsceneTrigger);
+                if (cutsceneTrigger != null && cutsceneTrigger.gameObject.GetComponent<Collider>() == null)
                 {
                     cutsceneTrigger.gameObject.AddComponent<BoxCollider>();
-                    cutsceneTrigger.gameObject.GetComponent<BoxCollider>().isTrigger = true;
-                }
-                else if (cutsceneTrigger != null && cutsceneTrigger.gameObject.GetComponent<BoxCollider>() != null)
-                {
-                    cutsceneTrigger.gameObject.GetComponent<BoxCollider>().isTrigger = true;
                 }
             }
             else
@@ -77,11 +70,6 @@ public class CutsceneTriggerInspector : Editor
         if (newStartMethod == StartMethod.OnTrigger)
         {
             EditorGUILayout.PropertyField(triggerObject);
-        }
-        else if (newStartMethod == StartMethod.OnTriggerStayAndButtonDown)
-        {
-            EditorGUILayout.PropertyField(triggerObject);
-            EditorGUILayout.PropertyField(triggerButton);
         }
 
         EditorGUILayout.PropertyField(skipButton);

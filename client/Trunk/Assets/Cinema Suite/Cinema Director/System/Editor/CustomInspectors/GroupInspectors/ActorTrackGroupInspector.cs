@@ -84,13 +84,13 @@ public class ActorTrackGroupInspector : Editor
             {
                 EditorGUI.indentLevel++;
 
-                for (int i = 0; i < tracks.Length; i++)
+                foreach (TimelineTrack track in tracks)
                 {
                     EditorGUILayout.BeginHorizontal();
-                    tracks[i].name = EditorGUILayout.TextField(tracks[i].name);
+                    track.name = EditorGUILayout.TextField(track.name);
                     if (GUILayout.Button(inspectorIcon, GUILayout.Width(24)))
                     {
-                        Selection.activeObject = tracks[i];
+                        Selection.activeObject = track;
                     }
                     EditorGUILayout.EndHorizontal();
                 }

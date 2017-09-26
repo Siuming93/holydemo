@@ -18,13 +18,13 @@ namespace CinemaDirector
         {
             base.Initialize();
 
-            for (int i = 0; i < this.ActorEvents.Length; i++)
+            foreach (CinemaActorEvent cinemaEvent in this.ActorEvents)
             {
-                for (int j = 0; j < Actors.Count; j++)
+                foreach (Transform actor in Actors)
                 {
-                    if (Actors[j] != null)
+                    if (actor != null)
                     {
-                        this.ActorEvents[i].Initialize(Actors[j].gameObject);
+                        cinemaEvent.Initialize(actor.gameObject);
                     }
                 }
             }
@@ -40,43 +40,40 @@ namespace CinemaDirector
             float previousTime = elapsedTime;
             base.SetTime(time);
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
                 // Check if it is an actor event.
-                CinemaActorEvent cinemaEvent = items[i] as CinemaActorEvent;
+                CinemaActorEvent cinemaEvent = item as CinemaActorEvent;
                 if (cinemaEvent != null)
                 {
-                    if ((previousTime < cinemaEvent.Firetime && time >= cinemaEvent.Firetime) || (cinemaEvent.Firetime == 0f && previousTime <= cinemaEvent.Firetime && time > cinemaEvent.Firetime))
+                    if (((previousTime < cinemaEvent.Firetime) || (previousTime <= 0f)) && (((time >= cinemaEvent.Firetime))))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                cinemaEvent.Trigger(Actors[j].gameObject);
+                                cinemaEvent.Trigger(actor.gameObject);
                             }
                         }
                     }
-                    else if (previousTime > cinemaEvent.Firetime && time <= cinemaEvent.Firetime)
+                    else if (((previousTime >= cinemaEvent.Firetime) && (time < cinemaEvent.Firetime)))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
-                                cinemaEvent.Reverse(Actors[j].gameObject);
+                            if (actor != null)
+                                cinemaEvent.Reverse(actor.gameObject);
                         }
                     }
                 }
 
                 // Check if it is an actor action.
-                CinemaActorAction action = items[i] as CinemaActorAction;
+                CinemaActorAction action = item as CinemaActorAction;
                 if (action != null)
                 {
-                    for (int j = 0; j < Actors.Count; j++)
+                    foreach (Transform actor in Actors)
                     {
-                        if (Actors[j] != null)
-                        {
-                                action.SetTime(Actors[j].gameObject, (time - action.Firetime), time - previousTime);
-                        }
+                        if (actor != null)
+                            action.SetTime(actor.gameObject, (time - action.Firetime), time - previousTime);
                     }
                 }
             }
@@ -92,108 +89,81 @@ namespace CinemaDirector
             float previousTime = base.elapsedTime;
             base.UpdateTrack(time, deltaTime);
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
                 // Check if it is an actor event.
-                CinemaActorEvent cinemaEvent = items[i] as CinemaActorEvent;
+                CinemaActorEvent cinemaEvent = item as CinemaActorEvent;
                 if (cinemaEvent != null)
                 {
-                    if ((previousTime < cinemaEvent.Firetime && time >= cinemaEvent.Firetime) || (cinemaEvent.Firetime == 0f && previousTime <= cinemaEvent.Firetime && time > cinemaEvent.Firetime))
+                    if (((previousTime < cinemaEvent.Firetime) || (previousTime <= 0f)) && (((base.elapsedTime >= cinemaEvent.Firetime))))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
-                                cinemaEvent.Trigger(Actors[j].gameObject);
+                            if (actor != null)
+                                cinemaEvent.Trigger(actor.gameObject);
                         }
                     }
-                    else if (previousTime >= cinemaEvent.Firetime && base.elapsedTime <= cinemaEvent.Firetime)
+                    if (((previousTime >= cinemaEvent.Firetime) && (base.elapsedTime < cinemaEvent.Firetime)))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
-                                cinemaEvent.Reverse(Actors[j].gameObject);
+                            if (actor != null)
+                                cinemaEvent.Reverse(actor.gameObject);
                         }
                     }
                 }
 
-                CinemaActorAction action = items[i] as CinemaActorAction;
+                CinemaActorAction action = item as CinemaActorAction;
                 if (action != null)
                 {
-                    if (((previousTime < action.Firetime || previousTime <= 0f) && base.elapsedTime >= action.Firetime) && base.elapsedTime < action.EndTime)
+                    if ((previousTime < action.Firetime && base.elapsedTime >= action.Firetime) && base.elapsedTime < action.EndTime)
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                action.Trigger(Actors[j].gameObject);
+                                action.Trigger(actor.gameObject);
                             }
                         }
                     }
-                    else if (previousTime <= action.EndTime && base.elapsedTime >= action.EndTime)
+                    else if (previousTime <= action.EndTime && base.elapsedTime > action.EndTime)
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                action.End(Actors[j].gameObject);
+                                action.End(actor.gameObject);
                             }
                         }
                     }
-                    else if (previousTime >= action.Firetime && previousTime < action.EndTime && base.elapsedTime <= action.Firetime)
+                    else if (previousTime >= action.Firetime && previousTime < action.EndTime && base.elapsedTime < action.Firetime)
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                action.ReverseTrigger(Actors[j].gameObject);
+                                action.ReverseTrigger(actor.gameObject);
                             }
                         }
                     }
-                    else if (((previousTime > action.EndTime || previousTime >= action.Cutscene.Duration) && (base.elapsedTime > action.Firetime) && (base.elapsedTime <= action.EndTime)))
+                    else if ((previousTime > action.EndTime && (base.elapsedTime > action.Firetime) && (base.elapsedTime <= action.EndTime)))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                action.ReverseEnd(Actors[j].gameObject);
+                                action.ReverseEnd(actor.gameObject);
                             }
                         }
                     }
                     else if ((base.elapsedTime > action.Firetime) && (base.elapsedTime <= action.EndTime))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
                                 float runningTime = time - action.Firetime;
-                                action.UpdateTime(Actors[j].gameObject, runningTime, deltaTime);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        /// <summary>
-        /// Pause playback while being played.
-        /// </summary>
-        public override void Pause()
-        {
-            base.Pause();
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
-            {
-                CinemaActorAction action = items[i] as CinemaActorAction;
-                if (action != null)
-                {
-                    if (((elapsedTime > action.Firetime)) && (elapsedTime < (action.Firetime + action.Duration)))
-                    {
-                        for (int j = 0; j < Actors.Count; j++)
-                        {
-                            if (Actors[j] != null)
-                            {
-                                action.Pause(Actors[j].gameObject);
+                                action.UpdateTime(actor.gameObject, runningTime, deltaTime);
                             }
                         }
                     }
@@ -207,19 +177,18 @@ namespace CinemaDirector
         public override void Resume()
         {
             base.Resume();
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaActorAction action = items[i] as CinemaActorAction;
+                CinemaActorAction action = item as CinemaActorAction;
                 if (action != null)
                 {
                     if (((elapsedTime > action.Firetime)) && (elapsedTime < (action.Firetime + action.Duration)))
                     {
-                        for (int j = 0; j < Actors.Count; j++)
+                        foreach (Transform actor in Actors)
                         {
-                            if (Actors[j] != null)
+                            if (actor != null)
                             {
-                                action.Resume(Actors[j].gameObject);
+                                action.Resume(actor.gameObject);
                             }
                         }
                     }
@@ -234,26 +203,25 @@ namespace CinemaDirector
         {
             base.Stop();
             base.elapsedTime = 0f;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaActorEvent cinemaEvent = items[i] as CinemaActorEvent;
+                CinemaActorEvent cinemaEvent = item as CinemaActorEvent;
                 if (cinemaEvent != null)
                 {
-                    for (int j = 0; j < Actors.Count; j++)
+                    foreach (Transform actor in Actors)
                     {
-                        if (Actors[j] != null)
-                            cinemaEvent.Stop(Actors[j].gameObject);
+                        if (actor != null)
+                            cinemaEvent.Stop(actor.gameObject);
                     }
                 }
             
-                CinemaActorAction action = items[i] as CinemaActorAction;
+                CinemaActorAction action = item as CinemaActorAction;
                 if (action != null)
                 {
-                    for (int j = 0; j < Actors.Count; j++)
+                    foreach (Transform actor in Actors)
                     {
-                        if (Actors[j] != null)
-                            action.Stop(Actors[j].gameObject);
+                        if (actor != null)
+                            action.Stop(actor.gameObject);
                     }
                 }
             }

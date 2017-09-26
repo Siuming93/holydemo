@@ -12,15 +12,13 @@ using CinemaDirector;
 [CutsceneTrackAttribute(typeof(CurveTrack))]
 public class ActorCurveTrackControl : CinemaCurveTrackControl
 {
-    private TimelineTrack track;
-
     public override void Initialize()
     {
         base.Initialize();
         isExpanded = true;
     }
 
-    protected override void updateHeaderControl3(UnityEngine.Rect position)
+    protected override void updateHeaderControl4(UnityEngine.Rect position)
     {
         CurveTrack track = TargetTrack.Behaviour as CurveTrack;
         if (track == null) return;
@@ -28,30 +26,12 @@ public class ActorCurveTrackControl : CinemaCurveTrackControl
         Color temp = GUI.color;
         GUI.color = (track.TimelineItems.Length > 0) ? Color.green : Color.red;
 
-        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.AddIcon))
+        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.addIcon))
         {
             addNewCurveItem(track);
         }
         GUI.color = temp;
     }
-
-    protected override void updateHeaderControl4(UnityEngine.Rect position)
-    {
-        track = this.Behaviour.gameObject.GetComponent<TimelineTrack>();
-
-        if (!track.lockedStatus)
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.UnlockIconSM))
-                track.lockedStatus = true;
-        }
-        else
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.LockIconSM))
-                track.lockedStatus = false;
-        }
-    }
-
-
 
     private void addNewCurveItem(CurveTrack track)
     {

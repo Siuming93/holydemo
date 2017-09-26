@@ -1,7 +1,6 @@
 ﻿using CinemaSuite.Common;
 // Cinema Suite
 using System;
-using System.Linq;
 using System.Reflection;
 using UnityEngine;
 
@@ -75,60 +74,11 @@ namespace CinemaDirector.Helpers
                 }
                 else if (MemberInfo[0] is MethodInfo)
                 {
-                    Type[] paramTypes = new Type[] { };
-
-                    //Initialize array of parameter types
-                    if (value.GetType().IsArray)
+                    MethodInfo mi = (MemberInfo[0] as MethodInfo);
+                    if (mi.IsStatic || (!mi.IsStatic && Instance != null))
                     {
-                        object[] values = (object[])value;
-
-                        paramTypes = new Type[values.Length];
-                        for (int i = 0; i < values.Length; i++)
-                        {
-                            paramTypes[i] = values[i].GetType();
-                        }
-                    }
-                    else if (value != null)
-                    {
-                        paramTypes = new Type[] { value.GetType() };
-                    }
-
-                    //Look for a match
-                    int matchIndex = -1;
-                    for (int i = 0; i < MemberInfo.Length; i++)
-                    {
-                        ParameterInfo[] pi = (MemberInfo[i] as MethodInfo).GetParameters();
-                        Type[] methodParams = new Type[pi.Length];
-                        for (int j = 0; j < pi.Length; j++)
-                        {
-                            methodParams[j] = pi[j].ParameterType;
-                        }
-                        if (Enumerable.SequenceEqual(paramTypes, methodParams))
-                        {
-                            matchIndex = i;
-                            break;
-                        }
-                    }
-
-                    if (matchIndex != -1)
-                    {
-                        //Invoke the matching MethodInfo
-                        MethodInfo mi = (MemberInfo[matchIndex] as MethodInfo);
-
-                        if (mi.IsStatic || (!mi.IsStatic && Instance != null))
-                        {
-                            if (value == null)
-                                mi.Invoke(Instance, null);
-                            else if (value.GetType().IsArray)
-                                mi.Invoke(Instance, (object[])value);
-                            else
-                                mi.Invoke(Instance, new object[] { value });
-                        }
-                    }
-                    else
-                    {
-                        Debug.LogError("Error while reverting: Could not find method \"" + MemberInfo[0].Name +
-                            "\" that accepts parameters {" + string.Join(", ", paramTypes.Select(v => v.ToString()).ToArray()) + "}.");
+                        object[] values = new object[] { value };
+                        mi.Invoke(Instance, values);
                     }
                 }
             }

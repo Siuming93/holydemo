@@ -32,9 +32,8 @@ namespace CinemaDirector
         {
             List<Transform> actors = new List<Transform>(GetActors());
             List<RevertInfo> reverts = new List<RevertInfo>();
-            for (int i = 0; i < actors.Count; i++)
+            foreach (Transform go in actors)
             {
-                Transform go = actors[i];
                 if (go != null)
                 {
                     Transform t = go.GetComponent<Transform>();

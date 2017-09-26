@@ -25,9 +25,6 @@ public class DirectorWindow : EditorWindow
     private const string PREVIEW_MODE = "Preview Mode";
     private const string CREATE = "Create";
     private GUIContent new_cutscene = new GUIContent("New Cutscene");
-    private GUIContent default_cutscene = new GUIContent("Default Cutscene");
-    private GUIContent empty_cutscene = new GUIContent("Empty Cutscene");
-    private GUIContent new_cutscene_trigger = new GUIContent("New Cutscene Trigger");
 
     const string TITLE = "Director";
     const string MENU_ITEM = "Window/Cinema Suite/Cinema Director/Director %#d";
@@ -92,7 +89,6 @@ public class DirectorWindow : EditorWindow
         // Restrict the Repaint rate
         double delta = (DateTime.Now - previousTime).TotalSeconds;
         previousTime = System.DateTime.Now;
-
         if (delta > 0)
         {
             accumulatedTime += delta;
@@ -102,9 +98,6 @@ public class DirectorWindow : EditorWindow
             base.Repaint();
             accumulatedTime -= FRAME_LIMITER;
         }
-
-        if (delta == 0.0)
-            return;
 
         if (cutscene != null)
         {
@@ -124,7 +117,7 @@ public class DirectorWindow : EditorWindow
         EditorApplication.playmodeStateChanged = (EditorApplication.CallbackFunction)System.Delegate.Combine(EditorApplication.playmodeStateChanged, new EditorApplication.CallbackFunction(this.PlaymodeStateChanged));
 
         GUISkin skin = ScriptableObject.CreateInstance<GUISkin>();
-        skin = (EditorGUIUtility.isProSkin) ? EditorGUIUtility.Load("Cinema Suite/Cinema Director/" + PRO_SKIN + ".guiskin") as GUISkin : EditorGUIUtility.Load("Cinema Suite/Cinema Director/" + FREE_SKIN + ".guiskin") as GUISkin;
+        skin = (EditorGUIUtility.isProSkin) ? Resources.Load<GUISkin>(PRO_SKIN) : Resources.Load<GUISkin>(FREE_SKIN);
         loadTextures();
 
 #if UNITY_5 && !UNITY_5_0
@@ -160,12 +153,11 @@ public class DirectorWindow : EditorWindow
 
         if (instanceId >= 0)
         {
-            Cutscene[] cutscenes = GameObject.FindObjectsOfType<Cutscene>();
-            for (int i = 0; i < cutscenes.Length; i++)
+            foreach (Cutscene c in GameObject.FindObjectsOfType<Cutscene>())
             {
-                if (cutscenes[i].GetInstanceID() == instanceId)
+                if (c.GetInstanceID() == instanceId)
                 {
-                    cutscene = cutscenes[i];
+                    cutscene = c;
                 }
             }
         }
@@ -185,7 +177,7 @@ public class DirectorWindow : EditorWindow
 
         if (EditorPrefs.HasKey("DirectorControl.DefaultTangentMode"))
         {
-            //directorControl.DefaultTangentMode = EditorPrefs.GetInt("DirectorControl.DefaultTangentMode");
+            directorControl.DefaultTangentMode = EditorPrefs.GetInt("DirectorControl.DefaultTangentMode");
         }
     }
 
@@ -329,20 +321,14 @@ public class DirectorWindow : EditorWindow
         {
             GenericMenu createMenu = new GenericMenu();
             createMenu.AddItem(new_cutscene, false, openCutsceneCreatorWindow);
-            createMenu.AddItem(default_cutscene, false, createDefaultCutscene);
-            createMenu.AddItem(empty_cutscene, false, createEmptyCutscene);
-
 
             if (cutscene != null)
             {
                 createMenu.AddSeparator(string.Empty);
-                createMenu.AddItem(new_cutscene_trigger, false, createCutsceneTrigger);
-                createMenu.AddSeparator(string.Empty);
 
-                Type[] subTypes = DirectorHelper.GetAllSubTypes(typeof(TrackGroup));
-                for (int i = 0; i < subTypes.Length; i++)
+                foreach (Type type in DirectorHelper.GetAllSubTypes(typeof(TrackGroup)))
                 {
-                    TrackGroupContextData userData = getContextDataFromType(subTypes[i]);
+                    TrackGroupContextData userData = getContextDataFromType(type);
                     string text = string.Format(userData.Label);
                     createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddTrackGroup), userData);
                 }
@@ -542,78 +528,76 @@ public class DirectorWindow : EditorWindow
     /// </summary>
     private void loadTextures()
     {
-        string dir = "Cinema Suite/Cinema Director/";
         string suffix = EditorGUIUtility.isProSkin ? "_Light" : "_Dark";
-        string filetype_png = ".png";
         string missing = " is missing from Resources folder.";
 
-        settingsImage = EditorGUIUtility.Load(dir + SETTINGS_ICON + suffix + filetype_png)  as Texture;
+        settingsImage = Resources.Load<Texture>(SETTINGS_ICON + suffix);
         if (settingsImage == null)
         {
             Debug.Log(SETTINGS_ICON + suffix + missing);
         }
 
-        rescaleImage = EditorGUIUtility.Load(dir + HORIZONTAL_RESCALE_ICON + suffix + filetype_png) as Texture;
+        rescaleImage = Resources.Load<Texture>(HORIZONTAL_RESCALE_ICON + suffix);
         if (rescaleImage == null)
         {
             Debug.Log(HORIZONTAL_RESCALE_ICON + suffix + missing);
         }
 
-        zoomInImage = EditorGUIUtility.Load(dir + ZOOMIN_ICON + suffix + filetype_png) as Texture;
+        zoomInImage = Resources.Load<Texture>(ZOOMIN_ICON + suffix);
         if (zoomInImage == null)
         {
             Debug.Log(ZOOMIN_ICON + suffix + missing);
         }
 
-        zoomOutImage = EditorGUIUtility.Load(dir + ZOOMOUT_ICON + suffix + filetype_png) as Texture;
+        zoomOutImage = Resources.Load<Texture>(ZOOMOUT_ICON + suffix);
         if (zoomOutImage == null)
         {
             Debug.Log(ZOOMOUT_ICON + suffix + missing);
         }
 
-        snapImage = EditorGUIUtility.Load(dir + MAGNET_ICON + suffix + filetype_png) as Texture;
+        snapImage = Resources.Load<Texture>(MAGNET_ICON + suffix);
         if (snapImage == null)
         {
             Debug.Log(MAGNET_ICON + suffix + missing);
         }
 
-        rollingEditImage = EditorGUIUtility.Load(dir + "Director_RollingIcon" + filetype_png) as Texture;
+        rollingEditImage = Resources.Load<Texture>("Director_RollingIcon");
         if (rollingEditImage == null)
         {
             Debug.Log("Rolling edit icon missing from Resources folder.");
         }
         
-        rippleEditImage = EditorGUIUtility.Load(dir + "Director_RippleIcon" + filetype_png) as Texture;
+        rippleEditImage = Resources.Load<Texture>("Director_RippleIcon");
         if (rippleEditImage == null)
         {
             Debug.Log("Ripple edit icon missing from Resources folder.");
         }
 
-        pickerImage = EditorGUIUtility.Load(dir + PICKER_ICON + suffix + filetype_png) as Texture;
+        pickerImage = Resources.Load<Texture>(PICKER_ICON + suffix);
         if (pickerImage == null)
         {
             Debug.Log(PICKER_ICON + suffix + missing);
         }
 
-        refreshImage = EditorGUIUtility.Load(dir + REFRESH_ICON + suffix + filetype_png) as Texture;
+        refreshImage = Resources.Load<Texture>(REFRESH_ICON+suffix);
         if (refreshImage == null)
         {
             Debug.Log(REFRESH_ICON+suffix+missing);
         }
 
-        titleImage = EditorGUIUtility.Load(dir + TITLE_ICON + suffix + filetype_png) as Texture;
+        titleImage = Resources.Load<Texture>(TITLE_ICON + suffix);
         if (titleImage == null)
         {
             Debug.Log(TITLE_ICON + suffix + missing);
         }
 
-        cropImage = EditorGUIUtility.Load(dir + "Director_Resize_Crop" + suffix + filetype_png) as Texture;
+        cropImage = Resources.Load<Texture>("Director_Resize_Crop" + suffix);
         if (cropImage == null)
         {
             Debug.Log("Director_Resize_Crop" + suffix + missing);
         }
 
-        scaleImage = EditorGUIUtility.Load(dir + "Director_Resize_Scale" + suffix + filetype_png) as Texture;
+        scaleImage = Resources.Load<Texture>("Director_Resize_Scale" + suffix);
         if (scaleImage == null)
         {
             Debug.Log("Director_Resize_Crop" + suffix + missing);
@@ -637,10 +621,8 @@ public class DirectorWindow : EditorWindow
     private TrackGroupContextData getContextDataFromType(Type type)
     {
         string label = string.Empty;
-        object[] attrs = type.GetCustomAttributes(typeof(TrackGroupAttribute), true);
-        for (int i = 0; i < attrs.Length; i++)
+        foreach (TrackGroupAttribute attribute in type.GetCustomAttributes(typeof(TrackGroupAttribute), true))
         {
-            TrackGroupAttribute attribute = attrs[i] as TrackGroupAttribute;
             if (attribute != null)
             {
                 label = attribute.Label;
@@ -683,27 +665,6 @@ public class DirectorWindow : EditorWindow
     internal void openCutsceneCreatorWindow()
     {
         EditorWindow.GetWindow<CutsceneCreatorWindow>();
-    }
-
-    internal void createDefaultCutscene()
-    {
-        CutsceneCreatorWindow ccw = CreateInstance<CutsceneCreatorWindow>();
-        ccw.CreateCutscene();
-    }
-
-    internal void createEmptyCutscene()
-    {
-        CutsceneCreatorWindow ccw = CreateInstance<CutsceneCreatorWindow>();
-        ccw.CreateEmptyCutscene();
-    }
-
-    internal void createCutsceneTrigger()
-    {
-        CutsceneCreatorWindow ccw = CreateInstance<CutsceneCreatorWindow>();
-        Cutscene cs = cutscene != null ? cutscene : null; // explicitly set to null if cutscene is missing
-        CutsceneTrigger ct = ccw.CreateCutsceneTrigger(cutscene);
-
-        Selection.activeGameObject = ct.gameObject;
     }
 
     public bool BetaFeaturesEnabled

@@ -23,10 +23,10 @@ public class AudioTrackInspector : Editor
     public override void OnInspectorGUI()
     {
         audioTrack.Update();
-        CinemaAudio[] audio = (target as AudioTrack).AudioClips;
-        for (int i = 0; i < audio.Length; i++)
+
+        foreach (CinemaAudio audio in (target as AudioTrack).AudioClips)
         {
-            EditorGUILayout.ObjectField(audio[i].name, audio[i], typeof(CinemaAudio), true);
+            EditorGUILayout.ObjectField(audio.name, audio, typeof(CinemaAudio), true);
         }
 
         if (GUILayout.Button(addAudio))

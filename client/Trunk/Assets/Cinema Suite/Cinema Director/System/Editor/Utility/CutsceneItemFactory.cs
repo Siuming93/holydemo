@@ -131,7 +131,6 @@ public class CutsceneItemFactory
         }
 
         itemGO.transform.parent = timelineTrack.transform;
-        timelineTrack.Cutscene.recache();
         return ti;
     }
 
@@ -215,7 +214,6 @@ public class CutsceneItemFactory
         itemGO.transform.localPosition = Vector3.zero;
         itemGO.transform.localRotation = Quaternion.identity;
         itemGO.transform.localScale = Vector3.one;
-        timelineTrack.Cutscene.recache();
         return ti;
     }
 
@@ -306,27 +304,27 @@ public class CutsceneItemFactory
         SortedDictionary<float, CinemaShot> sortedShots = new SortedDictionary<float, CinemaShot>();
         foreach (CinemaShot s in shotTrack.TimelineItems)
         {
-            sortedShots.Add(s.Firetime, s);
+            sortedShots.Add(s.CutTime, s);
         }
 
         float latestTime = 0;
         float length = DEFAULT_SHOT_LENGTH;
         foreach (CinemaShot s in sortedShots.Values)
         {
-            if (latestTime >= s.Firetime)
+            if (latestTime >= s.CutTime)
             {
-                latestTime = Mathf.Max(latestTime, s.Firetime + s.Duration);
+                latestTime = Mathf.Max(latestTime, s.CutTime + s.Duration);
             }
             else
             {
-                length = s.Firetime - latestTime;
+                length = s.CutTime - latestTime;
                 break;
             }
         }
 
         CinemaShot shot = shotGO.AddComponent<CinemaShot>();
-        shot.Firetime = latestTime;
-        shot.Duration = length;
+        shot.CutTime = latestTime;
+        shot.ShotLength = length;
 
         return shot;
     }
@@ -360,7 +358,7 @@ public class CutsceneItemFactory
         action.Firetime = latestTime;
         action.Duration = length;
         item.transform.parent = track.transform;
-        track.Cutscene.recache();
+
         return action;
     }
 
@@ -393,7 +391,7 @@ public class CutsceneItemFactory
 
         action.Firetime = latestTime;
         action.Duration = length;
-        track.Cutscene.recache();
+
         return action;
 
     }
@@ -500,7 +498,6 @@ public class CutsceneItemFactory
         CinemaGlobalEvent globalEvent = item.AddComponent(type) as CinemaGlobalEvent;
 
         globalEvent.Firetime = firetime;
-        track.Cutscene.recache();
         return globalEvent;
     }
 
@@ -511,7 +508,7 @@ public class CutsceneItemFactory
         CinemaActorEvent actorEvent = item.AddComponent(type) as CinemaActorEvent;
 
         actorEvent.Firetime = firetime;
-        track.Cutscene.recache();
+
         return actorEvent;
     }
 

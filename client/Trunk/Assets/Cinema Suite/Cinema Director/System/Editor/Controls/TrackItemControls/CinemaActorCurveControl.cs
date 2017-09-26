@@ -42,9 +42,8 @@ public class CinemaActorCurveControl : CinemaCurveControl
         if (clipCurve == null) return;
 
         List<KeyValuePair<string, string>> currentCurves = new List<KeyValuePair<string, string>>();
-        for (int i = 0; i < clipCurve.CurveData.Count; i++)
+        foreach (MemberClipCurveData data in clipCurve.CurveData)
         {
-            MemberClipCurveData data = clipCurve.CurveData[i];
             KeyValuePair<string, string> curveStrings = new KeyValuePair<string, string>(data.Type, data.PropertyName);
             currentCurves.Add(curveStrings);
         }
@@ -54,9 +53,9 @@ public class CinemaActorCurveControl : CinemaCurveControl
         createMenu.AddItem(new GUIContent("Rename"), false, renameItem, behaviour);
         createMenu.AddItem(new GUIContent("Copy"), false, copyItem, behaviour);
         createMenu.AddItem(new GUIContent("Delete"), false, deleteItem, behaviour);
+        createMenu.AddSeparator(string.Empty);
         if (clipCurve.Actor != null)
         {
-            createMenu.AddSeparator(string.Empty);
             Component[] components = DirectorHelper.getValidComponents(clipCurve.Actor.gameObject);
 
             for (int i = 0; i < components.Length; i++)
@@ -100,39 +99,34 @@ public class CinemaActorCurveControl : CinemaCurveControl
             }
             Undo.RecordObject(arg.clipCurve, "Added Curve");
             arg.clipCurve.AddClipCurveData(arg.component, arg.memberInfo.Name, isProperty, t);
-            arg.clipCurve.Cutscene.recache();
             EditorUtility.SetDirty(arg.clipCurve);
         }
     }
 
     private void checkToAddNewKeyframes(CinemaActorClipCurve clipCurve, DirectorControlState state)
     {
-        if (state.IsInPreviewMode && IsEditing &&
-            clipCurve.Cutscene.State == Cutscene.CutsceneState.Paused && GUIUtility.hotControl == 0 && 
+        if (state.IsInPreviewMode && IsEditing && GUIUtility.hotControl == 0 && 
             (clipCurve.Firetime <= state.ScrubberPosition && 
             state.ScrubberPosition <= clipCurve.Firetime + clipCurve.Duration) && clipCurve.Actor != null)
         {
             Undo.RecordObject(clipCurve, "Auto Key Created");
             bool hasDifferenceBeenFound = false;
-            for (int i = 0; i < clipCurve.CurveData.Count; i++)
+            foreach (MemberClipCurveData data in clipCurve.CurveData)
             {
-                MemberClipCurveData data = clipCurve.CurveData[i];
                 if (data.Type == string.Empty || data.PropertyName == string.Empty) continue;
 
                 Component component = clipCurve.Actor.GetComponent(data.Type);
                 object value = clipCurve.GetCurrentValue(component, data.PropertyName, data.IsProperty);
 
                 PropertyTypeInfo typeInfo = data.PropertyType;
+                if (typeInfo == PropertyTypeInfo.Int || typeInfo == PropertyTypeInfo.Long || typeInfo == PropertyTypeInfo.Float ||
+                typeInfo == PropertyTypeInfo.Double)
+                {
+                    float x = (float)value;
+                    float curve1Value = data.Curve1.Evaluate(state.ScrubberPosition);
 
-                if (typeInfo == PropertyTypeInfo.Int || typeInfo == PropertyTypeInfo.Long)
-                {
-                    float curve1Value = data.Curve1.Evaluate(state.ScrubberPosition);
-                    hasDifferenceBeenFound |= addKeyOnUserInteraction(Convert.ToInt32(value), curve1Value, data.Curve1, state.ScrubberPosition);
-                }
-                else if (typeInfo == PropertyTypeInfo.Float || typeInfo == PropertyTypeInfo.Double)
-                {
-                    float curve1Value = data.Curve1.Evaluate(state.ScrubberPosition);
-                    hasDifferenceBeenFound |= addKeyOnUserInteraction(Convert.ToSingle(value), curve1Value, data.Curve1, state.ScrubberPosition);
+                    hasDifferenceBeenFound |= addKeyOnUserInteraction(x, curve1Value, data.Curve1, state.ScrubberPosition);
+
                 }
                 else if (typeInfo == PropertyTypeInfo.Vector2)
                 {
@@ -253,39 +247,6 @@ public class CinemaActorCurveControl : CinemaCurveControl
                 EditorUtility.SetDirty(clipCurve);
             }
         }
-    }
-
-    private bool addKeyOnUserInteraction(int value, float curveValue, AnimationCurve curve, float scrubberPosition)
-    {
-        int curveVal = Mathf.RoundToInt(curveValue);
-        float floatValue = (float)value;
-
-        bool differenceFound = false;
-        if (Math.Abs(value - curveVal) != 0)
-        {
-            differenceFound = true;
-            if (hasUserInteracted)
-            {
-                bool doesKeyExist = false;
-                for (int j = 0; j < curve.length; j++)
-                {
-                    Keyframe k = curve[j];
-                    if (k.time == scrubberPosition)
-                    {
-                        Keyframe newKeyframe = new Keyframe(k.time, floatValue, k.inTangent, k.outTangent);
-                        newKeyframe.tangentMode = k.tangentMode;
-                        AnimationCurveHelper.MoveKey(curve, j, newKeyframe);
-                        doesKeyExist = true;
-                    }
-                }
-                if (!doesKeyExist)
-                {
-                    Keyframe kf = new Keyframe(scrubberPosition, floatValue);
-                    AnimationCurveHelper.AddKey(curve, kf);
-                }
-            }
-        }
-        return differenceFound;
     }
 
     private bool addKeyOnUserInteraction(float value, float curveValue, AnimationCurve curve, float scrubberPosition)

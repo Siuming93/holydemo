@@ -13,10 +13,9 @@ namespace CinemaDirector
         /// <param name="time">The new time.</param>
         public override void SetTime(float time)
         {
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaAudio cinemaAudio = items[i] as CinemaAudio;
+                CinemaAudio cinemaAudio = item as CinemaAudio;
                 if (cinemaAudio != null)
                 {
                     float audioTime = time - cinemaAudio.Firetime;
@@ -30,10 +29,9 @@ namespace CinemaDirector
         /// </summary>
         public override void Pause()
         {
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaAudio cinemaAudio = items[i] as CinemaAudio;
+                CinemaAudio cinemaAudio = item as CinemaAudio;
                 if (cinemaAudio != null)
                 {
                     cinemaAudio.Pause();
@@ -51,10 +49,9 @@ namespace CinemaDirector
             float elapsedTime = base.elapsedTime;
             base.elapsedTime = time;
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaAudio cinemaAudio = items[i] as CinemaAudio;
+                CinemaAudio cinemaAudio = item as CinemaAudio;
                 if (cinemaAudio != null)
                 {
                     if (((elapsedTime < cinemaAudio.Firetime) || (elapsedTime <= 0f)) && (((base.elapsedTime >= cinemaAudio.Firetime))))
@@ -79,10 +76,9 @@ namespace CinemaDirector
         /// </summary>
         public override void Resume()
         {
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaAudio cinemaAudio = items[i] as CinemaAudio;
+                CinemaAudio cinemaAudio = item as CinemaAudio;
                 if (cinemaAudio != null)
                 {
                     if (((base.Cutscene.RunningTime > cinemaAudio.Firetime)) && (base.Cutscene.RunningTime < (cinemaAudio.Firetime + cinemaAudio.Duration)))
@@ -99,10 +95,9 @@ namespace CinemaDirector
         public override void Stop()
         {
             base.elapsedTime = 0f;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaAudio cinemaAudio = items[i] as CinemaAudio;
+                CinemaAudio cinemaAudio = item as CinemaAudio;
                 if (cinemaAudio != null)
                 {
                     cinemaAudio.Stop();

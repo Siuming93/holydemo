@@ -54,12 +54,11 @@ namespace CinemaDirector
 
                         case PropertyTypeInfo.Double:
                         case PropertyTypeInfo.Float:
+                        case PropertyTypeInfo.Int:
                         case PropertyTypeInfo.Long:
                             value = data.Curve1.Evaluate(time);
                             break;
-                        case PropertyTypeInfo.Int:
-                            value = Mathf.RoundToInt(data.Curve1.Evaluate(time));
-                            break;
+
                         case PropertyTypeInfo.Quaternion:
                             Quaternion q;
                             q.x = data.Curve1.Evaluate(time);

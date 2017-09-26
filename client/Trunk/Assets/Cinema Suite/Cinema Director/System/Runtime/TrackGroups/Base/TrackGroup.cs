@@ -39,10 +39,9 @@ namespace CinemaDirector
                 trackCache = GetTracks();
                 hasBeenOptimized = true;
             }
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].Optimize();
+                track.Optimize();
             }
         }
 
@@ -51,10 +50,9 @@ namespace CinemaDirector
         /// </summary>
         public virtual void Initialize()
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].Initialize();
+                track.Initialize();
             }
         }
 
@@ -65,10 +63,9 @@ namespace CinemaDirector
         /// <param name="deltaTime">The deltaTime since the last update call</param>
         public virtual void UpdateTrackGroup(float time, float deltaTime)
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].UpdateTrack(time, deltaTime);
+                track.UpdateTrack(time, deltaTime);
             }
         }
 
@@ -77,10 +74,9 @@ namespace CinemaDirector
         /// </summary>
         public virtual void Pause()
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].Pause();
+                track.Pause();
             }
         }
 
@@ -89,10 +85,9 @@ namespace CinemaDirector
         /// </summary>
         public virtual void Stop()
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].Stop();
+                track.Stop();
             }
         }
 
@@ -101,10 +96,9 @@ namespace CinemaDirector
         /// </summary>
         public virtual void Resume()
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].Resume();
+                track.Resume();
             }
         }
 
@@ -114,10 +108,9 @@ namespace CinemaDirector
         /// <param name="time">The new running time</param>
         public virtual void SetRunningTime(float time)
         {
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                tracks[i].SetTime(time);
+                track.SetTime(time);
             }
         }
 
@@ -130,15 +123,14 @@ namespace CinemaDirector
         public virtual List<float> GetMilestones(float from, float to)
         {
             List<float> times = new List<float>();
-            TimelineTrack[] tracks = GetTracks();
-            for (int i = 0; i < tracks.Length; i++)
+            foreach (TimelineTrack track in GetTracks())
             {
-                List<float> trackTimes = tracks[i].GetMilestones(from, to);
-                for (int j = 0; j < trackTimes.Count; j++)
+                List<float> trackTimes = track.GetMilestones(from, to);
+                foreach(float f in trackTimes)
                 {
-                    if(!times.Contains(trackTimes[j]))
+                    if(!times.Contains(f))
                     {
-                        times.Add(trackTimes[j]);
+                        times.Add(f);
                     }
                 }
             }
@@ -182,15 +174,14 @@ namespace CinemaDirector
             }
 
             List<TimelineTrack> tracks = new List<TimelineTrack>();
-//            List<Type> allowedTypes = GetAllowedTrackTypes();
-//            for (int i = 0; i < allowedTypes.Count; i++)
-//            {
-                var components = GetComponentsInChildren<TimelineTrack>(true);
-                for (int j = 0; j < components.Length; j++)
+            foreach (Type t in GetAllowedTrackTypes())
+            {
+                var components = GetComponentsInChildren(t);
+                foreach(var component in components)
                 {
-                    tracks.Add((TimelineTrack)components[j]);
+                    tracks.Add((TimelineTrack)component);
                 }
-//            }
+            }
 
             tracks.Sort(
                 delegate(TimelineTrack track1, TimelineTrack track2)

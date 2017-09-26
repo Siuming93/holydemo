@@ -11,7 +11,7 @@ public class ActorTrackGroupControl : GenericTrackGroupControl
         LabelPrefix = styles.ActorGroupIcon.normal.background;
     }
 
-    protected override void updateHeaderControl4(Rect position)
+    protected override void updateHeaderControl5(Rect position)
     {
         Transform actor = (TrackGroup.Behaviour as ActorTrackGroup).Actor;
 
@@ -21,7 +21,7 @@ public class ActorTrackGroupControl : GenericTrackGroupControl
         int controlID = GUIUtility.GetControlID("ActorTrackGroupControl".GetHashCode(), FocusType.Passive, position);
 
         GUI.enabled = !(state.IsInPreviewMode && (actor == null));
-        if (GUI.Button(position, string.Empty, styles.PickerStyle))
+        if (GUI.Button(position, string.Empty, styles.pickerStyle))
         {
             if (actor == null)
             {

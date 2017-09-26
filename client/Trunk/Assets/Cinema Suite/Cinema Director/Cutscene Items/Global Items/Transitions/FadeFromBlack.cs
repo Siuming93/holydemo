@@ -23,13 +23,12 @@ namespace CinemaDirector
                 guiTexture = gameObject.AddComponent<GUITexture>();
                 gameObject.transform.position = Vector3.zero;
                 gameObject.transform.localScale = new Vector3(100, 100, 100);
-				guiTexture.texture = new Texture2D(1, 1);
-				guiTexture.enabled = false;
-				guiTexture.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
-				guiTexture.color = Color.clear;
-			}
-		    
-		}
+                guiTexture.texture = new Texture2D(1, 1);
+                guiTexture.enabled = false;
+                guiTexture.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
+                guiTexture.color = Color.clear;
+            }
+        }
 
         /// <summary>
         /// Enable the overlay texture and set the Color to Black.
@@ -38,14 +37,10 @@ namespace CinemaDirector
         {
 			GUITexture guiTexture = gameObject.GetComponent<GUITexture> ();
 			if (guiTexture != null) {
-				if (guiTexture.texture == null)
-				{
-					guiTexture.texture = Texture2D.whiteTexture;
-				}
-				guiTexture.enabled = true;
-				guiTexture.pixelInset = new Rect (0f, 0f, Screen.width, Screen.height);
-				guiTexture.color = From;
-			}
+								guiTexture.enabled = true;
+								guiTexture.pixelInset = new Rect (0f, 0f, Screen.width, Screen.height);
+								guiTexture.color = From;
+						}
         }
 
         /// <summary>

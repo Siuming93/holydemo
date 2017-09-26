@@ -3,7 +3,6 @@ using System.Reflection;
 #if NETFX_CORE
 using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 #endif
 
 namespace CinemaSuite.Common
@@ -11,14 +10,10 @@ namespace CinemaSuite.Common
     /// A helper class for reflection calls, that allows for calls on multiple platforms.
     public static class ReflectionHelper
     {
-#if NETFX_CORE
-        private static List<Assembly> assemblies = new List<Assembly>();
-#endif
         public static Assembly[] GetAssemblies()
         {
 #if NETFX_CORE
-            if(assemblies == null || assemblies.Count == 0)
-            {
+                var assemblies = new List<Assembly>();
                 var folder = Windows.ApplicationModel.Package.Current.InstalledLocation;
 			    var files = folder.GetFilesAsync();
 			    files.AsTask().Wait();
@@ -40,28 +35,23 @@ namespace CinemaSuite.Common
 				        }
 				    }
 			    }
-
-                var typeInfo = typeof(CinemaDirector.Cutscene).GetTypeInfo();
-                assemblies.Add(typeInfo.Assembly);  
-            }
                 return assemblies.ToArray();
 #else
-            return AppDomain.CurrentDomain.GetAssemblies();
+                return AppDomain.CurrentDomain.GetAssemblies();
 #endif
         }
 
         public static Type[] GetTypes(Assembly assembly)
         {
 #if NETFX_CORE
-            var types = new List<Type>();
-            //foreach (var t in assembly.GetTypes())
-            foreach (var t in assembly.DefinedTypes.Select(aa => aa.AsType()).ToArray())
-            {
-                types.Add(t);
-            }
-            return types.ToArray();
+                var types = new List<Type>();
+                foreach (var t in assembly.GetTypes())
+                {
+                    types.Add(t);
+                }
+                return types.ToArray();
 #else
-            return assembly.GetTypes();
+                return assembly.GetTypes();
 #endif
         }
 

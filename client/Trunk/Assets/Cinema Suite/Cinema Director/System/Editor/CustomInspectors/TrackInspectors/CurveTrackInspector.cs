@@ -27,10 +27,9 @@ public class CurveTrackInspector : Editor
     public override void OnInspectorGUI()
     {
         curveTrack.Update();
-        TimelineItem[] items = (target as CurveTrack).TimelineItems;
-        for (int i = 0; i < items.Length; i++)
+
+        foreach (CinemaActorClipCurve clip in (target as CurveTrack).TimelineItems)
         {
-            CinemaActorClipCurve clip = items[i] as CinemaActorClipCurve;
             EditorGUILayout.ObjectField(clip.name, clip, typeof(CinemaActorClipCurve), true);
         }
 

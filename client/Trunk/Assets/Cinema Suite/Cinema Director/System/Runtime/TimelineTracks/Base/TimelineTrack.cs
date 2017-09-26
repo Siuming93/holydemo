@@ -7,9 +7,6 @@ namespace CinemaDirector
     public abstract class TimelineTrack : MonoBehaviour, IOptimizable
     {
         [SerializeField]
-        public bool lockedStatus = false; //lockstate of track
-
-        [SerializeField]
         private int ordinal = -1; // Ordering of Tracks
 
         [SerializeField]
@@ -18,7 +15,7 @@ namespace CinemaDirector
         // Options for when this Track will execute its Timeline Items.
         public PlaybackMode PlaybackMode = PlaybackMode.RuntimeAndEdit;
 
-        protected float elapsedTime = 0f;
+        protected float elapsedTime = -1f;
 
         // A cache of the TimelineItems for optimization purposes.
         protected TimelineItem[] itemCache;
@@ -38,12 +35,11 @@ namespace CinemaDirector
                 itemCache = GetTimelineItems();
                 hasBeenOptimized = true;
             }
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                if (items[i] is IOptimizable)
+                if (item is IOptimizable)
                 {
-                    (items[i] as IOptimizable).Optimize();
+                    (item as IOptimizable).Optimize();
                 }
             }
         }
@@ -51,13 +47,12 @@ namespace CinemaDirector
         /// <summary>
         /// Perform any initialization before the cutscene begins a fresh playback
         /// </summary>
-        public virtual void Initialize()
+        public virtual void Initialize() 
         {
-            elapsedTime = 0f;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            elapsedTime = -1f;
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                items[i].Initialize();
+                item.Initialize();
             }
         }
 
@@ -65,44 +60,43 @@ namespace CinemaDirector
         /// Update the track to the given time
         /// </summary>
         /// <param name="time"></param>
-        public virtual void UpdateTrack(float runningTime, float deltaTime)
+        public virtual void UpdateTrack(float runningTime, float deltaTime) 
         {
             float previousTime = elapsedTime;
             elapsedTime = runningTime;
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaGlobalEvent cinemaEvent = items[i] as CinemaGlobalEvent;
+                CinemaGlobalEvent cinemaEvent = item as CinemaGlobalEvent;
                 if (cinemaEvent == null) continue;
-               
-                if ((previousTime < cinemaEvent.Firetime || previousTime <= 0f) && elapsedTime >= cinemaEvent.Firetime)
+
+                if ((previousTime < cinemaEvent.Firetime) && (((elapsedTime >= cinemaEvent.Firetime))))
                 {
                     cinemaEvent.Trigger();
                 }
-                else if (previousTime >= cinemaEvent.Firetime && elapsedTime <= cinemaEvent.Firetime)
+                else if (((previousTime >= cinemaEvent.Firetime) && (elapsedTime < cinemaEvent.Firetime)))
                 {
                     cinemaEvent.Reverse();
                 }
             }
-            
-            for (int i = 0; i < items.Length; i++)
+
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                CinemaGlobalAction action = items[i] as CinemaGlobalAction;
+                CinemaGlobalAction action = item as CinemaGlobalAction;
                 if (action == null) continue;
-                if (((previousTime < action.Firetime || previousTime <= 0f) && elapsedTime >= action.Firetime) && elapsedTime < action.EndTime)
+                if ((previousTime < action.Firetime && elapsedTime >= action.Firetime) && elapsedTime < action.EndTime)
                 {
                     action.Trigger();
                 }
-                else if ((previousTime <= action.EndTime) && (elapsedTime >= action.EndTime))
+                else if ((previousTime < action.EndTime) && (elapsedTime >= action.EndTime))
                 {
                     action.End();
                 }
-                else if (previousTime > action.Firetime && previousTime <= action.EndTime && elapsedTime <= action.Firetime)
+                else if (previousTime > action.Firetime && previousTime <= action.EndTime && elapsedTime < action.Firetime)
                 {
                     action.ReverseTrigger();
                 }
-                else if ((previousTime > action.EndTime || previousTime >= action.Cutscene.Duration) && (elapsedTime > action.Firetime) && (elapsedTime <= action.EndTime))
+                else if ((previousTime > (action.EndTime) && (elapsedTime > action.Firetime) && (elapsedTime <= action.EndTime)))
                 {
                     action.ReverseEnd();
                 }
@@ -134,25 +128,24 @@ namespace CinemaDirector
             float previousTime = elapsedTime;
             elapsedTime = time;
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
                 // Check if it is a global event.
-                CinemaGlobalEvent cinemaEvent = items[i] as CinemaGlobalEvent;
+                CinemaGlobalEvent cinemaEvent = item as CinemaGlobalEvent;
                 if (cinemaEvent != null)
                 {
-                    if ((previousTime < cinemaEvent.Firetime && time >= cinemaEvent.Firetime) || (cinemaEvent.Firetime == 0f && previousTime <= cinemaEvent.Firetime && time > cinemaEvent.Firetime))
+                    if ((previousTime < cinemaEvent.Firetime) && (((elapsedTime >= cinemaEvent.Firetime))))
                     {
                         cinemaEvent.Trigger();
                     }
-                    else if (previousTime > cinemaEvent.Firetime && elapsedTime <= cinemaEvent.Firetime)
+                    else if (((previousTime >= cinemaEvent.Firetime) && (elapsedTime < cinemaEvent.Firetime)))
                     {
                         cinemaEvent.Reverse();
                     }
                 }
 
                 // Check if it is a global action.
-                CinemaGlobalAction action = items[i] as CinemaGlobalAction;
+                CinemaGlobalAction action = item as CinemaGlobalAction;
                 if (action != null)
                 {
                     action.SetTime((time - action.Firetime), time - previousTime);
@@ -169,22 +162,21 @@ namespace CinemaDirector
         public virtual List<float> GetMilestones(float from, float to)
         {
             bool isReverse = from > to;
-
+            
             List<float> times = new List<float>();
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                if ((!isReverse && from < items[i].Firetime && to >= items[i].Firetime) || (isReverse && from > items[i].Firetime && to <= items[i].Firetime))
+                if ((!isReverse && from < item.Firetime && to >= item.Firetime) || (isReverse && from > item.Firetime && to <= item.Firetime))
                 {
-                    if (!times.Contains(items[i].Firetime))
+                    if (!times.Contains(item.Firetime))
                     {
-                        times.Add(items[i].Firetime);
+                        times.Add(item.Firetime);
                     }
                 }
 
-                if (items[i] is TimelineAction)
+                if (item is TimelineAction)
                 {
-                    float endTime = (items[i] as TimelineAction).EndTime;
+                    float endTime = (item as TimelineAction).EndTime;
                     if ((!isReverse && from < endTime && to >= endTime) || (isReverse && from > endTime && to <= endTime))
                     {
                         if (!times.Contains(endTime))
@@ -201,13 +193,11 @@ namespace CinemaDirector
         /// <summary>
         /// Notify the track items that the cutscene has been stopped
         /// </summary>
-        public virtual void Stop()
+        public virtual void Stop() 
         {
-            elapsedTime = 0f;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (TimelineItem item in GetTimelineItems())
             {
-                items[i].Stop();
+                item.Stop();
             }
         }
 
@@ -244,7 +234,7 @@ namespace CinemaDirector
                 {
                     // GetComponentInParent does not seem to work in Unity 5.3. 
                     // This means that the Cutscene hierarchy structure has to be strictly maintained.
-#if UNITY_5_3 || UNITY_5_3_OR_NEWER
+#if UNITY_5_3 || UNITY_5_4_3
                     group = transform.parent.GetComponent<TrackGroup>();
 #else
                     group = transform.parent.GetComponentInParent<TrackGroup>();
@@ -285,7 +275,7 @@ namespace CinemaDirector
             get { return canOptimize; }
             set { canOptimize = value; }
         }
-
+        
         /// <summary>
         /// Get all TimelineItems that are allowed to be in this Track.
         /// </summary>
@@ -298,17 +288,16 @@ namespace CinemaDirector
                 return itemCache;
             }
 
-//            List<TimelineItem> items = new List<TimelineItem>();
-////            List<Type> allowedTypes = GetAllowedCutsceneItems();
-////            for (int i = 0; i < allowedTypes.Count; i++)
-//            {
-//                var components = GetComponentsInChildren(typeof(TimelineItem));
-//                for (int j = 0; j < components.Length; j++)
-//                {
-//                    items.Add((TimelineItem)components[j]);
-//                }
-//            }
-	        return GetComponentsInChildren<TimelineItem>(true);//items.ToArray();
+            List<TimelineItem> items = new List<TimelineItem>();
+            foreach (Type t in GetAllowedCutsceneItems())
+            {
+                var components = GetComponentsInChildren(t);
+                foreach (var component in components)
+                {
+                    items.Add((TimelineItem)component);
+                }
+            }
+            return items.ToArray();
         }
 
         public virtual TimelineItem[] TimelineItems

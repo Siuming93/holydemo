@@ -38,10 +38,6 @@ namespace CinemaDirector
             GUITexture guiTexture = gameObject.GetComponent<GUITexture>();
             if (guiTexture != null)
             {
-                if (guiTexture.texture == null)
-                {
-                    guiTexture.texture = Texture2D.whiteTexture;
-                }
                 guiTexture.enabled = true;
                 guiTexture.pixelInset = new Rect(0f, 0f, Screen.width, Screen.height);
                 guiTexture.color = From;

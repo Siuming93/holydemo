@@ -33,10 +33,7 @@ namespace CinemaDirector
 
             audio.time = 0.0f;
             audio.loop = loop;
-	        if (Actor.activeInHierarchy)
-	        {
-		        audio.Play();
-	        }
+            audio.Play();
         }
 
         public override void UpdateTime(GameObject Actor, float runningTime, float deltaTime)

@@ -12,8 +12,6 @@ using CinemaDirector;
 [CutsceneTrackAttribute(typeof(MultiCurveTrack))]
 public class MultiActorCurveTrackControl : CinemaCurveTrackControl
 {
-    private TimelineTrack track;
-
     public override void Initialize()
     {
         base.Initialize();
@@ -21,29 +19,13 @@ public class MultiActorCurveTrackControl : CinemaCurveTrackControl
     }
     protected override void updateHeaderControl4(UnityEngine.Rect position)
     {
-        track = this.Behaviour.gameObject.GetComponent<TimelineTrack>();
-
-        if (!track.lockedStatus)
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.UnlockIconSM))
-                track.lockedStatus = true;
-        }
-        else
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.LockIconSM))
-                track.lockedStatus = false;
-        }
-    }
-
-    protected override void updateHeaderControl3(UnityEngine.Rect position)
-    {
         MultiCurveTrack track = TargetTrack.Behaviour as MultiCurveTrack;
         if (track == null) return;
 
         Color temp = GUI.color;
         GUI.color = (track.TimelineItems.Length > 0) ? Color.green : Color.red;
 
-        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.AddIcon))
+        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.addIcon))
         {
             addNewCurveItem(track);
         }

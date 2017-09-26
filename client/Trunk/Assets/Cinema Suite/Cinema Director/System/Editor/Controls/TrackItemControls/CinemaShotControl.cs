@@ -74,12 +74,12 @@ public class CinemaShotControl : CinemaActionControl
         createMenu.AddItem(new GUIContent("Delete"), false, deleteItem, shot);
         createMenu.AddSeparator(string.Empty);
         createMenu.AddItem(new GUIContent("Focus"), false, focusShot, shot);
-        for (int i = 0; i < cameras.Length; i++)
+        foreach (Camera c in cameras)
         {
             ContextSetCamera arg = new ContextSetCamera();
             arg.shot = shot;
-            arg.camera = cameras[i];
-            createMenu.AddItem(new GUIContent(string.Format(MODIFY_CAMERA, cameras[i].gameObject.name)), false, setCamera, arg);
+            arg.camera = c;
+            createMenu.AddItem(new GUIContent(string.Format(MODIFY_CAMERA, c.gameObject.name)), false, setCamera, arg);
         }
         
         createMenu.ShowAsContext();

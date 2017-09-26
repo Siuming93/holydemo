@@ -13,13 +13,12 @@ public class GenericTrackControl : TimelineTrackControl
 {
     private ContextData savedData = null; // Saved data from the object picker.
     private int controlID; // The control ID for this track control.
-    private TimelineTrack track;
 
     /// <summary>
-    /// Header Control 4 is typically the "Add" control.
+    /// Header Control 3 is typically the "Add" control.
     /// </summary>
     /// <param name="position">The position that this control is drawn at.</param>
-    protected override void updateHeaderControl4(UnityEngine.Rect position)
+    protected override void updateHeaderControl5(UnityEngine.Rect position)
     {
         TimelineTrack track = TargetTrack.Behaviour as TimelineTrack;
         if (track == null) return;
@@ -29,7 +28,7 @@ public class GenericTrackControl : TimelineTrackControl
 
         controlID = GUIUtility.GetControlID(track.GetInstanceID(), FocusType.Passive);
 
-        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.AddIcon))
+        if (GUI.Button(position, string.Empty, TrackGroupControl.styles.addIcon))
         {
             // Get the possible items that this track can contain.
             List<Type> trackTypes = track.GetAllowedCutsceneItems();
@@ -51,9 +50,9 @@ public class GenericTrackControl : TimelineTrackControl
             {
                 // Present context menu for selection.
                 GenericMenu createMenu = new GenericMenu();
-                for (int i = 0; i < trackTypes.Count; i++)
+                foreach (Type t in trackTypes)
                 {
-                    ContextData data = getContextData(trackTypes[i]);
+                    ContextData data = getContextData(t);
 
                     createMenu.AddItem(new GUIContent(string.Format("{0}/{1}", data.Category, data.Label)), false, addCutsceneItem, data);
                 }
@@ -78,22 +77,6 @@ public class GenericTrackControl : TimelineTrackControl
         GUI.color = temp;
     }
 
-    protected override void updateHeaderControl5(UnityEngine.Rect position)
-    {
-        track = this.Behaviour.gameObject.GetComponent<TimelineTrack>();
-
-        if (!track.lockedStatus)
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.UnlockIconSM))
-                track.lockedStatus = true;
-        }
-        else
-        {
-            if (GUI.Button(position, string.Empty, TrackGroupControl.styles.LockIconSM))
-                track.lockedStatus = false;
-        }
-    }
-
     protected override void showBodyContextMenu(Event evt)
     {
         TimelineTrack itemTrack = TargetTrack.Behaviour as TimelineTrack;
@@ -101,9 +84,9 @@ public class GenericTrackControl : TimelineTrackControl
 
         List<Type> trackTypes = itemTrack.GetAllowedCutsceneItems();
         GenericMenu createMenu = new GenericMenu();
-        for (int i = 0; i < trackTypes.Count; i++)
+        foreach (Type t in trackTypes)
         {
-            ContextData data = getContextData(trackTypes[i]);
+            ContextData data = getContextData(t);
             data.Firetime = (evt.mousePosition.x - state.Translation.x) / state.Scale.x;
             createMenu.AddItem(new GUIContent(string.Format("Add New/{0}/{1}", data.Category, data.Label)), false, addCutsceneItem, data);
         }

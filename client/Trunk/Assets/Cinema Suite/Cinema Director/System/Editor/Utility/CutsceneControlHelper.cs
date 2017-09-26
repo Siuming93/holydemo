@@ -19,10 +19,9 @@ namespace CinemaDirectorControl.Utility
         public static void ShowAddTrackGroupContextMenu(Cutscene cutscene)
         {
             GenericMenu createMenu = new GenericMenu();
-            Type[] subTypes = DirectorHelper.GetAllSubTypes(typeof(TrackGroup));
-            for (int i = 0; i < subTypes.Length; i++)
+            foreach (Type type in DirectorHelper.GetAllSubTypes(typeof(TrackGroup)))
             {
-                TrackGroupContextData userData = getContextDataFromType(cutscene, subTypes[i]);
+                TrackGroupContextData userData = getContextDataFromType(cutscene, type);
                 string text = string.Format(userData.Label);
                 createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddTrackGroup), userData);
             }
@@ -37,9 +36,9 @@ namespace CinemaDirectorControl.Utility
             GenericMenu createMenu = new GenericMenu();
 
             // Get the attributes of each track.
-            for (int i = 0; i < trackTypes.Count; i++)
+            foreach (Type t in trackTypes)
             {
-                MemberInfo info = trackTypes[i];
+                MemberInfo info = t;
                 string label = string.Empty;
                 foreach (TimelineTrackAttribute attribute in info.GetCustomAttributes(typeof(TimelineTrackAttribute), true))
                 {
@@ -47,7 +46,7 @@ namespace CinemaDirectorControl.Utility
                     break;
                 }
 
-                createMenu.AddItem(new GUIContent(string.Format("Add {0}", label)), false, addTrack, new TrackContextData(label, trackTypes[i], trackGroup));
+                createMenu.AddItem(new GUIContent(string.Format("Add {0}", label)), false, addTrack, new TrackContextData(label, t, trackGroup));
             }
 
             createMenu.ShowAsContext();
@@ -66,10 +65,8 @@ namespace CinemaDirectorControl.Utility
         private static TrackGroupContextData getContextDataFromType(Cutscene cutscene, Type type)
         {
             string label = string.Empty;
-            object[] attrs = type.GetCustomAttributes(typeof(TrackGroupAttribute), true);
-            for (int i = 0; i < attrs.Length; i++)
+            foreach (TrackGroupAttribute attribute in type.GetCustomAttributes(typeof(TrackGroupAttribute), true))
             {
-                TrackGroupAttribute attribute = attrs[i] as TrackGroupAttribute;
                 if (attribute != null)
                 {
                     label = attribute.Label;

@@ -38,13 +38,13 @@ public class GlobalItemTrackInspector : Editor
             {
                 EditorGUI.indentLevel++;
 
-                for (int i = 0; i < actions.Length; i++)
+                foreach (CinemaGlobalAction action in actions)
                 {
-                    EditorGUILayout.ObjectField(actions[i].name, actions[i], typeof(CinemaGlobalAction), true);
+                    EditorGUILayout.ObjectField(action.name, action, typeof(CinemaGlobalAction), true);
                 }
-                for (int i = 0; i < events.Length; i++)
+                foreach (CinemaGlobalEvent globalEvent in events)
                 {
-                    EditorGUILayout.ObjectField(events[i].name, events[i], typeof(CinemaGlobalEvent), true);
+                    EditorGUILayout.ObjectField(globalEvent.name, globalEvent, typeof(CinemaGlobalEvent), true);
                 }
                 EditorGUI.indentLevel--;
             }
@@ -54,16 +54,13 @@ public class GlobalItemTrackInspector : Editor
         {
             GenericMenu createMenu = new GenericMenu();
 
-            Type[] actionSubTypes = DirectorHelper.GetAllSubTypes(typeof(CinemaGlobalAction));
-            for (int i = 0; i < actionSubTypes.Length; i++)
+            foreach (Type type in DirectorHelper.GetAllSubTypes(typeof(CinemaGlobalAction)))
             {
                 string text = string.Empty;
                 string category = string.Empty;
                 string label = string.Empty;
-                object[] attrs = actionSubTypes[i].GetCustomAttributes(typeof(CutsceneItemAttribute), true);
-                for (int j = 0; j < attrs.Length; j++)
+                foreach (CutsceneItemAttribute attribute in type.GetCustomAttributes(typeof(CutsceneItemAttribute), true))
                 {
-                    CutsceneItemAttribute attribute = attrs[i] as CutsceneItemAttribute;
                     if (attribute != null)
                     {
                         category = attribute.Category;
@@ -74,21 +71,18 @@ public class GlobalItemTrackInspector : Editor
                 }
                 if (label != string.Empty)
                 {
-                    ContextData userData = new ContextData { Type = actionSubTypes[i], Label = label, Category = category };
+                    ContextData userData = new ContextData { Type = type, Label = label, Category = category };
                     createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddEvent), userData);
                 }
             }
 
-            Type[] eventSubTypes = DirectorHelper.GetAllSubTypes(typeof(CinemaGlobalEvent));
-            for (int i = 0; i < eventSubTypes.Length; i++)
+            foreach (Type type in DirectorHelper.GetAllSubTypes(typeof(CinemaGlobalEvent)))
             {
                 string text = string.Empty;
                 string category = string.Empty;
                 string label = string.Empty;
-                object[] attrs = eventSubTypes[i].GetCustomAttributes(typeof(CutsceneItemAttribute), true);
-                for (int j = 0; j < attrs.Length; j++)
+                foreach (CutsceneItemAttribute attribute in type.GetCustomAttributes(typeof(CutsceneItemAttribute), true))
                 {
-                    CutsceneItemAttribute attribute = attrs[j] as CutsceneItemAttribute;
                     if (attribute != null)
                     {
                         category = attribute.Category;
@@ -99,7 +93,7 @@ public class GlobalItemTrackInspector : Editor
                 }
                 if (label != string.Empty)
                 {
-                    ContextData userData = new ContextData { Type = eventSubTypes[i], Label = label, Category = category };
+                    ContextData userData = new ContextData { Type = type, Label = label, Category = category };
                     createMenu.AddItem(new GUIContent(text), false, new GenericMenu.MenuFunction2(AddEvent), userData);
                 }
             }

@@ -56,7 +56,6 @@ public class CinemaCurveControl : CinemaCurveClipItemControl
         if (curveClip == null) return;
 
         curveClip.Cutscene.SetRunningTime(e.time);
-        curveClip.Cutscene.EnterPreviewMode();
     }
 
     void CinemaCurveControl_TranslateCurveClipItem(object sender, CurveClipItemEventArgs e)
@@ -115,13 +114,11 @@ public class CinemaCurveControl : CinemaCurveClipItemControl
 
         // Remove missing track items
         List<CinemaMemberCurveWrapper> itemRemovals = new List<CinemaMemberCurveWrapper>();
-        for (int i = 0; i < clipWrapper.MemberCurves.Length; i++)
+        foreach (CinemaMemberCurveWrapper cw in clipWrapper.MemberCurves)
         {
-            CinemaMemberCurveWrapper cw = clipWrapper.MemberCurves[i];
             bool found = false;
-            for (int j = 0; j < clipCurve.CurveData.Count; j++)
+            foreach (MemberClipCurveData member in clipCurve.CurveData)
             {
-                MemberClipCurveData member = clipCurve.CurveData[j];
                 if (member.Type == cw.Type && member.PropertyName == cw.PropertyName)
                 {
                     found = true;
@@ -133,9 +130,9 @@ public class CinemaCurveControl : CinemaCurveClipItemControl
                 itemRemovals.Add(cw);
             }
         }
-        for (int i = 0; i < itemRemovals.Count; i++)
+        foreach (CinemaMemberCurveWrapper item in itemRemovals)
         {
-            ArrayUtility.Remove<CinemaMemberCurveWrapper>(ref clipWrapper.MemberCurves, itemRemovals[i]);
+            ArrayUtility.Remove<CinemaMemberCurveWrapper>(ref clipWrapper.MemberCurves, item);
         }
     }
 }

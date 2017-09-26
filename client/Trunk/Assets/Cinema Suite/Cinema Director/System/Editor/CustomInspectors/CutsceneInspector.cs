@@ -38,7 +38,7 @@ public class CutsceneInspector : Editor
     {
         if (inspectorIcon == null)
         {
-            inspectorIcon = EditorGUIUtility.Load("Cinema Suite/Cinema Director/" + "Director_InspectorIcon" + ".png") as Texture;
+            inspectorIcon = Resources.Load<Texture>("Director_InspectorIcon");
         }
         if (inspectorIcon == null)
         {
@@ -85,9 +85,8 @@ public class CutsceneInspector : Editor
             EditorGUI.indentLevel++;
             Cutscene c = base.serializedObject.targetObject as Cutscene;
 
-            for (int i = 0; i < c.TrackGroups.Length; i++)
+            foreach (TrackGroup container in c.TrackGroups)
             {
-                TrackGroup container = c.TrackGroups[i];
                 EditorGUILayout.BeginHorizontal();
                 
                 container.name = EditorGUILayout.TextField(container.name);

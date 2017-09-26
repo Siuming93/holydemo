@@ -35,13 +35,11 @@ namespace CinemaDirector
         public RevertInfo[] CacheState()
         {
             List<GameObject> gameObjects = new List<GameObject>();
-            for(int i = 0; i < Tags.Count; i++)
+            foreach (string tag in Tags)
             {
-                string tag = Tags[i];
                 GameObject[] tagged = GameObject.FindGameObjectsWithTag(tag);
-                for (int j = 0; j < tagged.Length; j++)
+                foreach (GameObject gameObject in tagged)
                 {
-                    GameObject gameObject = tagged[j];
                     if (gameObject != null)
                     {
                         gameObjects.Add(gameObject);
@@ -52,9 +50,8 @@ namespace CinemaDirector
             gameObjects.AddRange(GameObjects);
 
             List<RevertInfo> reverts = new List<RevertInfo>();
-            for (int i = 0; i < gameObjects.Count; i++)
+            foreach (GameObject go in gameObjects)
             {
-                GameObject go = gameObjects[i];
                 if (go != null)
                 {
                     reverts.Add(new RevertInfo(this, go, "SetActive", go.activeInHierarchy));
@@ -70,13 +67,12 @@ namespace CinemaDirector
         public override void Trigger()
         {
             tagsCache.Clear();
-            for (int i = 0; i < Tags.Count; i++)
+            foreach (string tag in Tags)
             {
-                string tag = Tags[i];
                 GameObject[] gameObjects = GameObject.FindGameObjectsWithTag(tag);
-                for (int j = 0; j < gameObjects.Length; j++)
+                foreach (GameObject gameObject in gameObjects)
                 {
-                    tagsCache.Add(gameObjects[j]);
+                    tagsCache.Add(gameObject);
                 }
             }
 
@@ -114,15 +110,15 @@ namespace CinemaDirector
         private void setActive(bool enabled)
         {
             // Enable gameobjects
-            for (int i = 0; i < GameObjects.Count; i++)
+            foreach (GameObject gameObject in GameObjects)
             {
-                GameObjects[i].SetActive(enabled);
+                gameObject.SetActive(enabled);
             }
 
             // Enable tags
-            for (int i = 0; i < tagsCache.Count; i++)
+            foreach (GameObject gameObject in tagsCache)
             {
-                tagsCache[i].SetActive(enabled);
+                gameObject.SetActive(enabled);
             }
         }
 

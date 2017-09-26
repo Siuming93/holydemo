@@ -13,9 +13,8 @@ namespace CinemaDirector
         {
             if (actor != null && Children != null)
             {
-                for (int i = 0; i < Children.Length; i++)
+                foreach (GameObject child in Children)
                 {
-                    GameObject child = Children[i];
                     child.transform.parent = actor.transform;
                 }
             }

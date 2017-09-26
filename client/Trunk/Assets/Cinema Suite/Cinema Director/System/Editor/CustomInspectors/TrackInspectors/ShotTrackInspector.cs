@@ -27,32 +27,15 @@ public class ShotTrackInspector : Editor
 
         EditorGUILayout.Foldout(shotFoldout, "Shot List");
         ShotTrack track = base.serializedObject.targetObject as ShotTrack;
-        TimelineItem[] items = track.TimelineItems;
-        for (int i = 0; i < items.Length; i++)
+        foreach (CinemaShot shot in track.TimelineItems)
         {
-            CinemaGlobalAction shot = items[i] as CinemaGlobalAction;
             shot.name = EditorGUILayout.TextField(new GUIContent("Shot Name"), shot.name);
 
             EditorGUI.indentLevel++;
-
-
-            // Check if it is an actor event.
-            CinemaShot cinemaShot = shot as CinemaShot;
-            if (cinemaShot != null)
-            {
-                cinemaShot.shotCamera = EditorGUILayout.ObjectField(new GUIContent("Camera"), cinemaShot.shotCamera, typeof(Camera), true) as Camera;
-            }
-            else
-            {
-                // Display something for non-default shots
-            }
-
-            shot.Firetime = EditorGUILayout.FloatField(new GUIContent("Cut Time"), shot.Firetime);
-            shot.Duration = EditorGUILayout.FloatField(new GUIContent("Shot Length"), shot.Duration);
+                shot.shotCamera = EditorGUILayout.ObjectField(new GUIContent("Camera"), shot.shotCamera, typeof(Camera), true) as Camera;
+                shot.CutTime = EditorGUILayout.FloatField(new GUIContent("Cut Time"), shot.CutTime);
+                shot.ShotLength = EditorGUILayout.FloatField(new GUIContent("Shot Length"), shot.ShotLength);
             EditorGUI.indentLevel--;
-
-
-
         }
 
         if(GUILayout.Button("Add New Shot"))

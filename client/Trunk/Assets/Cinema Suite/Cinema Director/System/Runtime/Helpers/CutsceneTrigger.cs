@@ -12,7 +12,6 @@ namespace CinemaDirector
         public Cutscene Cutscene;
         public GameObject TriggerObject;
         public string SkipButtonName = "Jump";
-        public string TriggerButtonName = "Fire1";
         public float Delay = 0f;
         private bool hasTriggered = false;
 
@@ -65,43 +64,7 @@ namespace CinemaDirector
         /// <param name="other">The other collider.</param>
         void OnTriggerEnter(Collider other)
         {
-            if (StartMethod == StartMethod.OnTrigger && !hasTriggered && other.gameObject == TriggerObject)
-            {
-                hasTriggered = true;
-                Cutscene.Play();
-            }
-        }
-
-        /// <summary>
-        /// If Cutscene is setup to play on trigger, watch for the trigger event.
-        /// </summary>
-        /// <param name="other">The other collider.</param>
-        void OnTriggerEnter2D(Collider2D other)
-        {
-            if (StartMethod == StartMethod.OnTrigger && !hasTriggered && other.gameObject == TriggerObject)
-            {
-                hasTriggered = true;
-                Cutscene.Play();
-            }
-        }
-
-
-        /// <summary>
-        /// If Cutscene is setup to play on button down and on trigger, watch for the trigger event.
-        /// </summary>
-        /// <param name="other">The other collider.</param>
-        void OnTriggerStay(Collider other)
-        {
-            if (StartMethod == StartMethod.OnTriggerStayAndButtonDown && !hasTriggered && other.gameObject == TriggerObject && Input.GetButtonDown(TriggerButtonName))
-            {
-                hasTriggered = true;
-                Cutscene.Play();
-            }
-        }
-
-        void OnTriggerStay2D(Collider2D other)
-        {
-            if (StartMethod == StartMethod.OnTriggerStayAndButtonDown && !hasTriggered && other.gameObject == TriggerObject && Input.GetButtonDown(TriggerButtonName))
+            if (!hasTriggered && other.gameObject == TriggerObject)
             {
                 hasTriggered = true;
                 Cutscene.Play();
@@ -113,7 +76,6 @@ namespace CinemaDirector
     {
         OnStart,
         OnTrigger,
-        OnTriggerStayAndButtonDown,
         None
     }
 }

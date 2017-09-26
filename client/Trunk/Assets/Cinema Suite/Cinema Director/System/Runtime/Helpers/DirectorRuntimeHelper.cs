@@ -23,33 +23,29 @@ namespace CinemaDirector
             // Get all the allowed Genres for this track group
             TimelineTrackGenre[] genres = new TimelineTrackGenre[0];
 
-            TrackGroupAttribute[] tga = ReflectionHelper.GetCustomAttributes<TrackGroupAttribute>(trackGroup.GetType(), true);
-            for (int i = 0; i < tga.Length; i++)
+            foreach (TrackGroupAttribute attribute in ReflectionHelper.GetCustomAttributes<TrackGroupAttribute>(trackGroup.GetType(), true))
             {
-                if (tga[i] != null)
+                if (attribute != null)
                 {
-                    genres = tga[i].AllowedTrackGenres;
+                    genres = attribute.AllowedTrackGenres;
                     break;
                 }
             }
 
-            Type[] subTypes = DirectorRuntimeHelper.GetAllSubTypes(typeof(TimelineTrack));
             List<Type> allowedTrackTypes = new List<Type>();
-            for (int i = 0; i < subTypes.Length; i++)
+            foreach (Type type in DirectorRuntimeHelper.GetAllSubTypes(typeof(TimelineTrack)))
             {
-                TimelineTrackAttribute[] customAttributes = ReflectionHelper.GetCustomAttributes<TimelineTrackAttribute>(subTypes[i], true);
-                for (int j = 0; j < customAttributes.Length; j++)
+                foreach (TimelineTrackAttribute attribute in ReflectionHelper.GetCustomAttributes<TimelineTrackAttribute>(type, true))
                 {
-                    if (customAttributes[j] != null)
+                    if (attribute != null)
                     {
-                        for (int k = 0; k < customAttributes[j].TrackGenres.Length; k++)
+                        foreach (TimelineTrackGenre genre in attribute.TrackGenres)
                         {
-                            TimelineTrackGenre genre = customAttributes[j].TrackGenres[k];
-                            for (int l = 0; l < genres.Length; l++)
+                            foreach (TimelineTrackGenre genre2 in genres)
                             {
-                                if (genre == genres[l])
+                                if (genre == genre2)
                                 {
-                                    allowedTrackTypes.Add(subTypes[i]);
+                                    allowedTrackTypes.Add(type);
                                     break;
                                 }
                             }
@@ -68,37 +64,33 @@ namespace CinemaDirector
         /// <param name="timelineTrack">The track to look up.</param>
         /// <returns>A list of valid cutscene item types.</returns>
         public static List<Type> GetAllowedItemTypes(TimelineTrack timelineTrack)
-        {            
-            // Get all the allowed Genres for this track group
+        {
+            // Get all the allowed Genres for this track
             CutsceneItemGenre[] genres = new CutsceneItemGenre[0];
-
-            TimelineTrackAttribute[] tta = ReflectionHelper.GetCustomAttributes<TimelineTrackAttribute>(timelineTrack.GetType(), true);
-            for (int i = 0; i < tta.Length; i++)
+            
+            foreach (TimelineTrackAttribute attribute in ReflectionHelper.GetCustomAttributes<TimelineTrackAttribute>(timelineTrack.GetType(), true))
             {
-                if (tta[i] != null)
+                if (attribute != null)
                 {
-                    genres = tta[i].AllowedItemGenres;
+                    genres = attribute.AllowedItemGenres;
                     break;
                 }
             }
 
-            Type[] subTypes = DirectorRuntimeHelper.GetAllSubTypes(typeof(TimelineItem));
-            List<Type> allowedTrackTypes = new List<Type>();
-            for (int i = 0; i < subTypes.Length; i++)
+            List<Type> allowedItemTypes = new List<Type>();
+            foreach (Type type in DirectorRuntimeHelper.GetAllSubTypes(typeof(TimelineItem)))
             {
-                CutsceneItemAttribute[] customAttributes = ReflectionHelper.GetCustomAttributes<CutsceneItemAttribute>(subTypes[i], true);
-                for (int j = 0; j < customAttributes.Length; j++)
+                foreach (CutsceneItemAttribute attribute in ReflectionHelper.GetCustomAttributes<CutsceneItemAttribute>(type, true))
                 {
-                    if (customAttributes[j] != null)
+                    if (attribute != null)
                     {
-                        for (int k = 0; k < customAttributes[j].Genres.Length; k++)
+                        foreach (CutsceneItemGenre genre in attribute.Genres)
                         {
-                            CutsceneItemGenre genre = customAttributes[j].Genres[k];
-                            for (int l = 0; l < genres.Length; l++)
+                            foreach (CutsceneItemGenre genre2 in genres)
                             {
-                                if (genre == genres[l])
+                                if (genre == genre2)
                                 {
-                                    allowedTrackTypes.Add(subTypes[i]);
+                                    allowedItemTypes.Add(type);
                                     break;
                                 }
                             }
@@ -108,7 +100,7 @@ namespace CinemaDirector
                 }
             }
 
-            return allowedTrackTypes;
+            return allowedItemTypes;
         }
 
         /// <summary>
@@ -119,28 +111,15 @@ namespace CinemaDirector
         private static Type[] GetAllSubTypes(System.Type ParentType)
         {
             List<System.Type> list = new List<System.Type>();
-            Assembly[] assemblies = ReflectionHelper.GetAssemblies();
-            for (int i = 0; i < assemblies.Length; i++)
+            foreach (Assembly a in ReflectionHelper.GetAssemblies())
             {
-	            Type[] types = null;
-				try
-				{
-					types = ReflectionHelper.GetTypes(assemblies[i]);
-				}
-				catch(Exception e)
-				{
-					Debug.LogWarning(assemblies[i].FullName + "Load Error");
-				}
-	            if (types != null)
-	            {
-		            for (int j = 0; j < types.Length; j++)
-		            {
-			            if (types[j] != null && ReflectionHelper.IsSubclassOf(types[j], ParentType))
-			            {
-				            list.Add(types[j]);
-			            }
-		            }
-	            }
+                foreach (System.Type type in ReflectionHelper.GetTypes(a))
+                {
+                    if (type != null && ReflectionHelper.IsSubclassOf(type, ParentType))
+                    {
+                        list.Add(type);
+                    }
+                }
             }
             return list.ToArray();
         }
@@ -153,10 +132,9 @@ namespace CinemaDirector
         public static List<Transform> GetAllTransformsInHierarchy(Transform parent)
         {
             List<Transform> children = new List<Transform>();
-            
-            for (int i = 0; i < parent.childCount; i++)
+
+            foreach (Transform child in parent)
             {
-                Transform child = parent.GetChild(i);
                 children.AddRange(GetAllTransformsInHierarchy(child));
                 children.Add(child);
             }

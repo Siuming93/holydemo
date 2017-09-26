@@ -22,7 +22,7 @@ namespace CinemaDirector
             get { return curveData; }
         }
 
-        protected virtual bool initializeClipCurves(MemberClipCurveData data, Component component) { return false; }
+        protected virtual void initializeClipCurves(MemberClipCurveData data, Component component) { }
 
         public void AddClipCurveData(Component component, string name, bool isProperty, Type type)
         {
@@ -31,14 +31,8 @@ namespace CinemaDirector
             data.PropertyName = name;
             data.IsProperty = isProperty;
             data.PropertyType = UnityPropertyTypeInfo.GetMappedType(type);
-            if (initializeClipCurves(data, component))
-            {
-                curveData.Add(data);
-            }
-            else
-            {
-                Debug.LogError("Could not initialize curve clip, invalid initial values.");
-            }
+            initializeClipCurves(data, component);
+            curveData.Add(data);
         }
 
         protected object evaluate(MemberClipCurveData memberData, float time)
@@ -100,21 +94,21 @@ namespace CinemaDirector
 
         private void updateKeyframeTime(float oldTime, float newTime)
         {
-            for (int i = 0; i < curveData.Count; i++)
+            foreach (MemberClipCurveData data in curveData)
             {
-                int curveCount = UnityPropertyTypeInfo.GetCurveCount(curveData[i].PropertyType);
-                for (int j = 0; j < curveCount; j++)
+                int curveCount = UnityPropertyTypeInfo.GetCurveCount(data.PropertyType);
+                for (int i = 0; i < curveCount; i++)
                 {
-                    AnimationCurve animationCurve = curveData[i].GetCurve(j);
-                    for (int k = 0; k < animationCurve.length; k++)
+                    AnimationCurve animationCurve = data.GetCurve(i);
+                    for (int j = 0; j < animationCurve.length; j++)
                     {
-                        Keyframe kf = animationCurve.keys[k];
+                        Keyframe kf = animationCurve.keys[j];
 
                         if (Mathf.Abs(kf.time - oldTime) < 0.00001)
                         {
                             Keyframe newKeyframe = new Keyframe(newTime, kf.value, kf.inTangent, kf.outTangent);
                             newKeyframe.tangentMode = kf.tangentMode;
-                            AnimationCurveHelper.MoveKey(animationCurve, k, newKeyframe);
+                            AnimationCurveHelper.MoveKey(animationCurve, j, newKeyframe);
                         }
                     }
                 }
@@ -124,30 +118,30 @@ namespace CinemaDirector
         public void TranslateCurves(float amount)
         {
             base.Firetime += amount;
-            for (int i = 0; i < curveData.Count; i++)
+            foreach (MemberClipCurveData data in curveData)
             {
-                int curveCount = UnityPropertyTypeInfo.GetCurveCount(curveData[i].PropertyType);
-                for (int j = 0; j < curveCount; j++)
+                int curveCount = UnityPropertyTypeInfo.GetCurveCount(data.PropertyType);
+                for (int i = 0; i < curveCount; i++)
                 {
-                    AnimationCurve animationCurve = curveData[i].GetCurve(j);
+                    AnimationCurve animationCurve = data.GetCurve(i);
                     if (amount > 0)
                     {
-                        for (int k = animationCurve.length - 1; k >= 0; k--)
+                        for (int j = animationCurve.length - 1; j >= 0; j--)
                         {
-                            Keyframe kf = animationCurve.keys[k];
+                            Keyframe kf = animationCurve.keys[j];
                             Keyframe newKeyframe = new Keyframe(kf.time + amount, kf.value, kf.inTangent, kf.outTangent);
                             newKeyframe.tangentMode = kf.tangentMode;
-                            AnimationCurveHelper.MoveKey(animationCurve, k, newKeyframe);
+                            AnimationCurveHelper.MoveKey(animationCurve, j, newKeyframe);
                         }
                     }
                     else
                     {
-                        for (int k = 0; k < animationCurve.length; k++)
+                        for (int j = 0; j < animationCurve.length; j++)
                         {
-                            Keyframe kf = animationCurve.keys[k];
+                            Keyframe kf = animationCurve.keys[j];
                             Keyframe newKeyframe = new Keyframe(kf.time + amount, kf.value, kf.inTangent, kf.outTangent);
                             newKeyframe.tangentMode = kf.tangentMode;
-                            AnimationCurveHelper.MoveKey(animationCurve, k, newKeyframe);
+                            AnimationCurveHelper.MoveKey(animationCurve, j, newKeyframe);
                         }
                     }
                 }

@@ -51,13 +51,11 @@ public class CinemaMultiActorCurveControl : CinemaCurveControl
 
         // Remove missing track items
         List<CinemaMemberCurveWrapper> itemRemovals = new List<CinemaMemberCurveWrapper>();
-        for (int i = 0; i < clipWrapper.MemberCurves.Length; i++)
+        foreach (CinemaMemberCurveWrapper cw in clipWrapper.MemberCurves)
         {
-            CinemaMemberCurveWrapper cw = clipWrapper.MemberCurves[i];
             bool found = false;
-            for (int j = 0; j < clipCurve.CurveData.Count; j++)
+            foreach (MemberClipCurveData member in clipCurve.CurveData)
             {
-                MemberClipCurveData member = clipCurve.CurveData[j];
                 if (member.PropertyType.ToString() == cw.Type && member.PropertyName == cw.PropertyName)
                 {
                     found = true;
@@ -69,9 +67,9 @@ public class CinemaMultiActorCurveControl : CinemaCurveControl
                 itemRemovals.Add(cw);
             }
         }
-        for (int i = 0; i < itemRemovals.Count; i++)
+        foreach (CinemaMemberCurveWrapper item in itemRemovals)
         {
-            ArrayUtility.Remove<CinemaMemberCurveWrapper>(ref clipWrapper.MemberCurves, itemRemovals[i]);
+            ArrayUtility.Remove<CinemaMemberCurveWrapper>(ref clipWrapper.MemberCurves, item);
         }
     }
 

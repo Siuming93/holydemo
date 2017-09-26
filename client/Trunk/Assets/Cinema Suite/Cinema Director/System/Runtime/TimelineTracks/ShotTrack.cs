@@ -9,9 +9,9 @@ namespace CinemaDirector
 
     public class ShotEventArgs : EventArgs
     {
-        public CinemaGlobalAction shot;
+        public CinemaShot shot;
 
-        public ShotEventArgs(CinemaGlobalAction shot)
+        public ShotEventArgs(CinemaShot shot)
         {
             this.shot = shot;
         }
@@ -33,17 +33,14 @@ namespace CinemaDirector
         {
             base.elapsedTime = 0f;
 
-            CinemaGlobalAction firstCamera = null;
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            CinemaShot firstCamera = null;
+            foreach (CinemaShot shot in GetTimelineItems())
             {
-                CinemaGlobalAction shot = items[i] as CinemaGlobalAction;
                 shot.Initialize();
             }
 
-            for (int i = 0; i < items.Length; i++)
+            foreach (CinemaShot shot in GetTimelineItems())
             {
-                CinemaGlobalAction shot = items[i] as CinemaGlobalAction;
                 if (shot.Firetime == 0)
                 {
                     firstCamera = shot;
@@ -74,12 +71,10 @@ namespace CinemaDirector
             float previousTime = base.elapsedTime;
             base.elapsedTime = time;
 
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (CinemaShot shot in GetTimelineItems())
             {
-                CinemaGlobalAction shot = items[i] as CinemaGlobalAction;
-                float endTime = shot.Firetime + shot.Duration;
-                if ((previousTime <= shot.Firetime) && (base.elapsedTime >= shot.Firetime) && (base.elapsedTime < endTime))
+                float endTime = shot.CutTime + shot.Duration;
+                if ((previousTime <= shot.CutTime) && (base.elapsedTime >= shot.CutTime) && (base.elapsedTime < endTime))
                 {
                     shot.Trigger();
                     if (ShotBegins != null)
@@ -87,7 +82,7 @@ namespace CinemaDirector
                         ShotBegins(this, new ShotEventArgs(shot));
                     }
                 }
-                else if ((previousTime >= endTime) && (base.elapsedTime < endTime) && (base.elapsedTime >= shot.Firetime))
+                else if ((previousTime >= endTime) && (base.elapsedTime < endTime) && (base.elapsedTime >= shot.CutTime))
                 {
                     shot.Trigger();
                     if (ShotBegins != null)
@@ -95,7 +90,7 @@ namespace CinemaDirector
                         ShotBegins(this, new ShotEventArgs(shot));
                     }
                 }
-                else if ((previousTime >= shot.Firetime) && (previousTime < endTime) && (base.elapsedTime >= endTime))
+                else if ((previousTime >= shot.CutTime) && (previousTime < endTime) && (base.elapsedTime >= endTime))
                 {
                     shot.End();
                     if (ShotEnds != null)
@@ -103,7 +98,7 @@ namespace CinemaDirector
                         ShotEnds(this, new ShotEventArgs(shot));
                     }
                 }
-                else if ((previousTime > shot.Firetime) && (previousTime < endTime) && (base.elapsedTime < shot.Firetime))
+                else if ((previousTime > shot.CutTime) && (previousTime < endTime) && (base.elapsedTime < shot.CutTime))
                 {
                     shot.End();
                     if (ShotEnds != null)
@@ -120,20 +115,18 @@ namespace CinemaDirector
         /// <param name="time">The new running time.</param>
         public override void SetTime(float time)
         {
-            CinemaGlobalAction previousShot = null;
-            CinemaGlobalAction newShot = null;
+            CinemaShot previousShot = null;
+            CinemaShot newShot = null;
 
             // Get the old shot and the new shot
-            TimelineItem[] items = GetTimelineItems();
-            for (int i = 0; i < items.Length; i++)
+            foreach (CinemaShot shot in GetTimelineItems())
             {
-                CinemaGlobalAction shot = items[i] as CinemaGlobalAction;
-                float endTime = shot.Firetime + shot.Duration;
-                if ((elapsedTime >= shot.Firetime) && (elapsedTime < endTime))
+                float endTime = shot.CutTime + shot.Duration;
+                if ((elapsedTime >= shot.CutTime) && (elapsedTime < endTime))
                 {
                     previousShot = shot;
                 }
-                if ((time >= shot.Firetime) && (time < endTime))
+                if ((time >= shot.CutTime) && (time < endTime))
                 {
                     newShot = shot;
                 }

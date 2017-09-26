@@ -127,9 +127,9 @@ public class MultiActorClipCurveInspector : Editor
 
                 // Display component selection
                 Component[] components = getValidComponents(actor.gameObject);
-                for (int j = 0; j < components.Length; j++)
+                foreach (Component component in components)
                 {
-                    componentSelectionList.Add(new GUIContent(components[j].GetType().Name));
+                    componentSelectionList.Add(new GUIContent(component.GetType().Name));
                 }
                 componentSelection[i] = EditorGUILayout.Popup(new GUIContent("Component"), componentSelection[i], componentSelectionList.ToArray());
 
@@ -137,9 +137,9 @@ public class MultiActorClipCurveInspector : Editor
 
                 // Display property selection
                 PropertyInfo[] properties = getValidProperties(components[componentSelection[i]], (PropertyTypeInfo)propertyType.enumValueIndex);
-                for (int j = 0; j < properties.Length; j++)
+                foreach (PropertyInfo propertyInfo in properties)
                 {
-                    propertySelectionList.Add(new GUIContent(properties[j].Name));
+                    propertySelectionList.Add(new GUIContent(propertyInfo.Name));
                 }
                 Color temp = GUI.color;
                 if (propertySelectionList.Count < 1)
@@ -172,12 +172,11 @@ public class MultiActorClipCurveInspector : Editor
     private PropertyInfo[] getValidProperties(Component component, PropertyTypeInfo propertyTypeInfo)
     {
         List<PropertyInfo> properties = new List<PropertyInfo>();
-        PropertyInfo[] pi = component.GetType().GetProperties();
-        for (int i = 0; i < pi.Length; i++)
+        foreach (PropertyInfo propertyInfo in component.GetType().GetProperties())
         {
-            if (UnityPropertyTypeInfo.GetMappedType(pi[i].PropertyType) == propertyTypeInfo && pi[i].CanWrite)
+            if (UnityPropertyTypeInfo.GetMappedType(propertyInfo.PropertyType) == propertyTypeInfo && propertyInfo.CanWrite)
             {
-                properties.Add(pi[i]);
+                properties.Add(propertyInfo);
             }
         }
         return properties.ToArray();

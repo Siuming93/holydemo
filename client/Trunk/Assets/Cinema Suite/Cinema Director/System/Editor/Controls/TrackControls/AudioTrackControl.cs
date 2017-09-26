@@ -32,10 +32,9 @@ public class AudioTrackControl : GenericTrackControl
                 if (controlBackground.Contains(Event.current.mousePosition))
                 {
                     bool audioFound = false;
-                    Object[] objRefs = DragAndDrop.objectReferences;
-                    for (int i = 0; i < objRefs.Length; i++)
+                    foreach (Object objectReference in DragAndDrop.objectReferences)
                     {
-                        AudioClip clip = objRefs[i] as AudioClip;
+                        AudioClip clip = objectReference as AudioClip;
                         if (clip != null)
                         {
                             audioFound = true;
@@ -53,10 +52,9 @@ public class AudioTrackControl : GenericTrackControl
                 if (controlBackground.Contains(Event.current.mousePosition))
                 {
                     AudioClip clip = null;
-                    Object[] objRefs = DragAndDrop.objectReferences;
-                    for (int i = 0; i < objRefs.Length; i++)
+                    foreach (Object objectReference in DragAndDrop.objectReferences)
                     {
-                        AudioClip audioClip = objRefs[i] as AudioClip;
+                        AudioClip audioClip = objectReference as AudioClip;
                         if (audioClip != null)
                         {
                             clip = audioClip;

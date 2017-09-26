@@ -26,10 +26,9 @@ public class MultiCurveTrackInspector : Editor
     public override void OnInspectorGUI()
     {
         curveTrack.Update();
-        TimelineItem[] items = (target as MultiCurveTrack).TimelineItems;
-        for (int i = 0; i < items.Length; i++)
+
+        foreach (CinemaMultiActorCurveClip clip in (target as MultiCurveTrack).TimelineItems)
         {
-            CinemaMultiActorCurveClip clip = items[i] as CinemaMultiActorCurveClip;
             EditorGUILayout.ObjectField(clip.name, clip, typeof(CinemaMultiActorCurveClip), true);
         }
 

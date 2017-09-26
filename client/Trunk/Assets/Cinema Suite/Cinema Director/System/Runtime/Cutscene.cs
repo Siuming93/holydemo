@@ -51,26 +51,11 @@ namespace CinemaDirector
         private List<RevertInfo> revertCache = new List<RevertInfo>();
         #endregion
 
-        // Event fired when Cutscene starts to play or is resumed.
-        public event CutsceneHandler CutsceneStarted;
-
         // Event fired when Cutscene's runtime reaches it's duration.
         public event CutsceneHandler CutsceneFinished;
 
         // Event fired when Cutscene has been paused.
         public event CutsceneHandler CutscenePaused;
-
-	    private float _fps = 30f;
-
-		public float GetFPS()
-		{
-			return _fps;
-		}
-
-		public void SetFPS(float value)
-		{
-			_fps = value;
-		}
 
         /// <summary>
         /// Optimizes the Cutscene by preparing all tracks and timeline items into a cache.
@@ -83,17 +68,15 @@ namespace CinemaDirector
                 trackGroupCache = GetTrackGroups();
                 hasBeenOptimized = true;
             }
-            TrackGroup[] trackGroups = GetTrackGroups();
-            for (int i = 0; i < trackGroups.Length; i++)
+            foreach (TrackGroup tg in GetTrackGroups())
             {
-                trackGroups[i].Optimize();
+                tg.Optimize();
             }
         }
 
         /// <summary>
         /// Plays/Resumes the cutscene from inactive/paused states using a Coroutine.
         /// </summary>
-        private Coroutine _updateCoroutine;
         public void Play()
         {
             if (state == CutsceneState.Inactive)
@@ -103,19 +86,10 @@ namespace CinemaDirector
             else if (state == CutsceneState.Paused)
             {
                 state = CutsceneState.Playing;
-                if (_updateCoroutine != null)
-                {
-                    StopCoroutine(_updateCoroutine);
-                }
-                _updateCoroutine = StartCoroutine(updateCoroutine());
-            }
-
-            if (CutsceneStarted != null)
-            {
-                CutsceneStarted(this, new CutsceneEventArgs());
+                StartCoroutine(updateCoroutine());
             }
         }
-        
+
         private IEnumerator freshPlay()
         {
             yield return StartCoroutine(PreparePlay());
@@ -125,11 +99,7 @@ namespace CinemaDirector
 
             // Beging playing
             state = CutsceneState.Playing;
-            if (_updateCoroutine != null)
-            {
-                StopCoroutine(_updateCoroutine);
-            }
-            _updateCoroutine = StartCoroutine(updateCoroutine());
+            StartCoroutine(updateCoroutine());
         }
 
         /// <summary>
@@ -139,17 +109,13 @@ namespace CinemaDirector
         {
             if (state == CutsceneState.Playing)
             {
-                if (_updateCoroutine != null)
-                {
-                    StopCoroutine(_updateCoroutine);
-                }
+                StopCoroutine("updateCoroutine");
             }
             if (state == CutsceneState.PreviewPlaying || state == CutsceneState.Playing || state == CutsceneState.Scrubbing)
             {
-                TrackGroup[] trackGroups = GetTrackGroups();
-                for (int i = 0; i < trackGroups.Length; i++)
+                foreach (TrackGroup trackGroup in GetTrackGroups())
                 {
-                    trackGroups[i].Pause();
+                    trackGroup.Pause();
                 }
             }
             state = CutsceneState.Paused;
@@ -178,23 +144,18 @@ namespace CinemaDirector
         /// </summary>
         public void Stop()
         {
-            this.runningTime = 0f;
-
-            TrackGroup[] trackGroups = GetTrackGroups();
-            for (int i = 0; i < trackGroups.Length; i++)
+            this.RunningTime = 0f;
+            
+            foreach (TrackGroup trackGroup in GetTrackGroups())
             {
-                trackGroups[i].Stop();
+                trackGroup.Stop();
             }
 
-            if (state != CutsceneState.Inactive)
-                revert();
+            revert();
 
             if (state == CutsceneState.Playing)
             {
-                if (_updateCoroutine != null)
-                {
-                    StopCoroutine(_updateCoroutine);
-                }
+                StopCoroutine("updateCoroutine");
                 if (state == CutsceneState.Playing && isLooping)
                 {
                     state = CutsceneState.Inactive;
@@ -227,10 +188,9 @@ namespace CinemaDirector
         {
             this.RunningTime += (deltaTime * playbackSpeed);
 
-            TrackGroup[] trackGroups = GetTrackGroups();
-            for (int i = 0; i < trackGroups.Length; i++)
+            foreach (TrackGroup group in GetTrackGroups())
             {
-                trackGroups[i].UpdateTrackGroup(RunningTime, deltaTime * playbackSpeed);
+                group.UpdateTrackGroup(RunningTime, deltaTime * playbackSpeed);
             }
             if (state != CutsceneState.Scrubbing)
             {
@@ -280,12 +240,11 @@ namespace CinemaDirector
                 if (deltaTime > (1 / 30f))
                 {
                     float prevTime = RunningTime;
-                    List<float> milestones = getMilestones(RunningTime + deltaTime);
-                    for (int i = 0; i < milestones.Count; i++)
+                    foreach (float milestone in getMilestones(RunningTime + deltaTime))
                     {
-                        float delta = milestones[i] - prevTime;
+                        float delta = milestone - prevTime;
                         UpdateCutscene(delta);
-                        prevTime = milestones[i];
+                        prevTime = milestone;
                     }
                 }
                 else
@@ -305,12 +264,11 @@ namespace CinemaDirector
         /// <param name="time">The new running time to be set.</param>
         public void SetRunningTime(float time)
         {
-            List<float> milestones = getMilestones(time);
-            for (int i = 0; i < milestones.Count; i++)
+            foreach (float milestone in getMilestones(time))
             {
-                for (int j = 0; j < this.TrackGroups.Length; j++)
+                foreach (TrackGroup group in this.TrackGroups)
                 {
-                    this.TrackGroups[j].SetRunningTime(milestones[i]);
+                    group.SetRunningTime(milestone);
                 }
             }
 
@@ -373,11 +331,11 @@ namespace CinemaDirector
         {
             if (Application.isEditor)
             {
-                for (int i = 0; i < this.TrackGroups.Length; i++)
+                foreach (TrackGroup group in this.TrackGroups)
                 {
-                    if (this.TrackGroups[i] is IBakeable)
+                    if (group is IBakeable)
                     {
-                        (this.TrackGroups[i] as IBakeable).Bake();
+                        (group as IBakeable).Bake();
                     }
                 }
             }
@@ -513,9 +471,9 @@ namespace CinemaDirector
             saveRevertData();
             
             // Initialize each track group.
-            for (int i = 0; i < this.TrackGroups.Length; i++)
+            foreach (TrackGroup trackGroup in this.TrackGroups)
             {
-                this.TrackGroups[i].Initialize();
+                trackGroup.Initialize();
             }
             hasBeenInitialized = true;
         }
@@ -527,16 +485,15 @@ namespace CinemaDirector
         {
             revertCache.Clear();
             // Build the cache of revert info.
-            MonoBehaviour[] mbArray = this.GetComponentsInChildren<MonoBehaviour>();
-            for (int i = 0; i < mbArray.Length; i++)
+            foreach (MonoBehaviour mb in this.GetComponentsInChildren<MonoBehaviour>())
             {
-                IRevertable revertable = mbArray[i] as IRevertable;
+                IRevertable revertable = mb as IRevertable;
                 if (revertable != null)
                 {
                     RevertInfo[] ri = revertable.CacheState();
                     if(ri == null || ri.Length < 1)
                     {
-                        Debug.Log(string.Format("Cinema Director tried to cache the state of {0}, but failed.", mbArray[i].name));
+                        Debug.Log(string.Format("Cinema Director tried to cache the state of {0}, but failed.", mb.name));
                     }
                     else
                     {
@@ -551,9 +508,8 @@ namespace CinemaDirector
         /// </summary>
         private void revert()
         {
-            for (int i = 0; i < revertCache.Count; i++)
+            foreach (RevertInfo revertable in revertCache)
             {
-                RevertInfo revertable = revertCache[i];
                 if (revertable != null)
                 {
                     if ((revertable.EditorRevert == RevertMode.Revert && !Application.isPlaying) ||
@@ -575,13 +531,13 @@ namespace CinemaDirector
             // Create a list of ordered milestone times.
             List<float> milestoneTimes = new List<float>();
             milestoneTimes.Add(time);
-            for (int i = 0; i < this.TrackGroups.Length; i++)
+            foreach (TrackGroup group in this.TrackGroups)
             {
-                List<float> times = this.TrackGroups[i].GetMilestones(RunningTime, time);
-                for (int j = 0; j < times.Count; j++)
+                List<float> times = group.GetMilestones(RunningTime, time);
+                foreach (float f in times)
                 {
-                    if (!milestoneTimes.Contains(times[j]))
-                        milestoneTimes.Add(times[j]);
+                    if (!milestoneTimes.Contains(f))
+                        milestoneTimes.Add(f);
                 }
             }
 
@@ -613,17 +569,17 @@ namespace CinemaDirector
         /// <returns></returns>
         private IEnumerator updateCoroutine()
         {
-            //bool firstFrame = true;
+            bool firstFrame = true;
             while (state == CutsceneState.Playing)
             {
-                //if (firstFrame)
-                //{
-                //    UpdateCutscene(0);
-                //    firstFrame = false;
-                //}
-                //else
+                if(firstFrame)
                 {
-                    UpdateCutscene(Mathf.Clamp(Time.deltaTime, 0, 1 / _fps));
+                    UpdateCutscene(0);
+                    firstFrame = false;
+                }
+                else
+                {
+                    UpdateCutscene(Time.deltaTime);
                 }
                 yield return null;
             }
@@ -634,24 +590,9 @@ namespace CinemaDirector
         /// </summary>
         private void resume()
         {
-            for (int i = 0; i < this.TrackGroups.Length; i++)
+            foreach (TrackGroup group in this.TrackGroups)
             {
-                this.TrackGroups[i].Resume();
-            }
-        }
-
-        /// <summary>
-        /// Will exit preview mode, cache all actor data, and re-enter the cutscene.
-        /// Call when adding new items or curves to the cutscene.
-        /// </summary>
-        public void recache()
-        {
-            if (state != CutsceneState.Inactive)
-            {
-                float runningTime = RunningTime;
-                ExitPreviewMode();
-                EnterPreviewMode();
-                ScrubToTime(runningTime);
+                group.Resume();
             }
         }
     }

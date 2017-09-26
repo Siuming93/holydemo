@@ -3,42 +3,38 @@ using UnityEditor;
 using UnityEngine;
 using UnityEditor.AnimatedValues;
 using System;
-using System.Xml;
-using System.Xml.Linq;
-using System.Linq;
-using System.IO;
 
 namespace CinemaSuite
 {
-    public class ProductInfo
+    public abstract class ProductInfo
     {
         public string name;
-        public string version;
+        protected string version;
 
-		public Texture2D keyImage;
-		public Texture2D fiveStars;
+        protected Texture2D keyImage;
+        protected Texture2D fiveStars;
 
-		public Texture2D resourceImage1;
-		public Texture2D resourceImage2;
-		public Texture2D resourceImage3;
-		public Texture2D resourceImage4;
+        protected Texture2D resourceImage1;
+        protected Texture2D resourceImage2;
+        protected Texture2D resourceImage3;
+        protected Texture2D resourceImage4;
 
-		public string resourceImage1Link;
-		public string resourceImage2Link;
-		public string resourceImage3Link;
-		public string resourceImage4Link;
+        protected string resourceImage1Link;
+        protected string resourceImage2Link;
+        protected string resourceImage3Link;
+        protected string resourceImage4Link;
 
-		public string resourceImage1Label;
-		public string resourceImage2Label;
-		public string resourceImage3Label;
-		public string resourceImage4Label;
+        protected string resourceImage1Label;
+        protected string resourceImage2Label;
+        protected string resourceImage3Label;
+        protected string resourceImage4Label;
 
-		public string headerText;
-		public string header2Text;
-		public string bodyText;
+        protected string headerText;
+        protected string header2Text;
+        protected string bodyText;
 
-		public bool installed = false;
-        public string assetStorePage = "";
+        protected bool installed = false;
+        protected string assetStorePage = "";
 
         public AnimBool ShowProductInfo;
 
@@ -121,6 +117,124 @@ namespace CinemaSuite
 
             EditorGUILayout.EndVertical();
             EditorGUILayout.EndHorizontal();
+        }
+
+    }
+
+    public class CinemaDirectorBaseProductInfo : ProductInfo
+    {
+        public CinemaDirectorBaseProductInfo() : base()
+        {
+            name = "Cinema Director";
+            keyImage = Resources.Load("DirectorKeyImage") as Texture2D;
+            headerText = "<size=16>Cinema Director</size>";
+            header2Text = "<size=14>Sequencer and Cutscene Editor.</size>";
+            bodyText = "A sequencer and timeline editor, perfect for creating cutscenes and queueing up timed events and actions.";
+
+            string suffix = EditorGUIUtility.isProSkin ? "_Pro" : "_Personal";
+
+            resourceImage1 = Resources.Load("Cinema_Suite_Video" + suffix) as Texture2D;
+            resourceImage2 = Resources.Load("Cinema_Suite_Store" + suffix) as Texture2D;
+            resourceImage3 = Resources.Load("Cinema_Suite_Forums" + suffix) as Texture2D;
+            resourceImage4 = Resources.Load("Cinema_Suite_Docs" + suffix) as Texture2D;
+
+            resourceImage1Link = "https://youtu.be/ufxdul8GNdg";
+            resourceImage2Link = "http://u3d.as/8vm";
+            resourceImage3Link = "http://forum.unity3d.com/threads/cinema-director-released.258242/";
+            resourceImage4Link = "http://www.cinema-suite.com/Documentation/CinemaDirector/CinemaDirectorDocumentation.pdf";
+
+            resourceImage1Label = "Video";
+            resourceImage2Label = "Store";
+            resourceImage3Label = "Forum";
+            resourceImage4Label = "Docs";
+
+            assetStorePage = "http://u3d.as/8vm";
+        }
+    }
+
+    public class CinemaMocapBaseProductInfo : ProductInfo
+    {
+        public CinemaMocapBaseProductInfo()
+            : base()
+        {
+            name = "Cinema Mo Cap";
+            keyImage = Resources.Load("MocapKeyImage") as Texture2D;
+            headerText = "<size=16>Cinema Mo Cap</size>";
+            header2Text = "<size=14>Markerless Motion Capture.</size>"; 
+            bodyText = "Capture animations right inside of Unity using your Kinect or Kinect 2! Animations are Mecanim compatible and can be applied to any humanoid character.";
+            string suffix = EditorGUIUtility.isProSkin ? "_Pro" : "_Personal";
+
+            resourceImage1 = Resources.Load("Cinema_Suite_Video" + suffix) as Texture2D;
+            resourceImage2 = Resources.Load("Cinema_Suite_Store" + suffix) as Texture2D;
+            resourceImage3 = Resources.Load("Cinema_Suite_Forums" + suffix) as Texture2D;
+            resourceImage4 = Resources.Load("Cinema_Suite_Docs" + suffix) as Texture2D;
+
+            resourceImage1Link = "https://youtu.be/X_aEFKNDTYw";
+            resourceImage2Link = "http://u3d.as/5PB";
+            resourceImage3Link = "http://forum.unity3d.com/threads/cinema-mo-cap-released.217012/";
+            resourceImage4Link = "http://www.cinema-suite.com/Documentation/CinemaMoCap/Current/CinemaMoCapDocumentation.pdf";
+
+            resourceImage1Label = "Video";
+            resourceImage2Label = "Store";
+            resourceImage3Label = "Forum";
+            resourceImage4Label = "Docs";
+        }
+    }
+
+    public class CinemaProCamsBaseProductInfo : ProductInfo
+    {
+        public CinemaProCamsBaseProductInfo()
+            : base()
+        {
+            name = "Cinema Pro Cams";
+            keyImage = Resources.Load("ProCamsKeyImage") as Texture2D;
+            headerText = "<size=16>Cinema Pro Cams</size>";
+            header2Text = "<size=14>Film Lens & 3D Toolkit.</size>";
+            bodyText = "Cinema Pro Cams is an industry standard toolbox to aid in the creation of accurate, real-world cinematic cameras inside of your Unity or project.";
+            string suffix = EditorGUIUtility.isProSkin ? "_Pro" : "_Personal";
+            resourceImage1 = Resources.Load("Cinema_Suite_Video" + suffix) as Texture2D;
+            resourceImage2 = Resources.Load("Cinema_Suite_Store" + suffix) as Texture2D;
+            resourceImage3 = Resources.Load("Cinema_Suite_Forums" + suffix) as Texture2D;
+            resourceImage4 = Resources.Load("Cinema_Suite_Docs" + suffix) as Texture2D;
+
+            resourceImage1Link = "https://youtu.be/Nx3gaSbLW0s";
+            resourceImage2Link = "http://u3d.as/6N6";
+            resourceImage3Link = "http://forum.unity3d.com/threads/cinema-pro-cams-released.238040/";
+            resourceImage4Link = "http://www.cinema-suite.com/Documentation/CinemaProCams/Current/CinemaProCamsDocumentation.pdf";
+
+            resourceImage1Label = "Video";
+            resourceImage2Label = "Store";
+            resourceImage3Label = "Forum";
+            resourceImage4Label = "Docs";
+        }
+    }
+
+    public class CinemaThemesBaseProductInfo : ProductInfo
+    {
+        public CinemaThemesBaseProductInfo()
+            : base()
+        {
+            name = "Cinema Themes";
+            keyImage = Resources.Load("ThemesKeyImage") as Texture2D;
+            headerText = "<size=16>Cinema Themes</size>";
+            header2Text = "<size=14>Get it Free!</size>";
+            bodyText = "Cinema Themes is a collection of LUTs (Look Up Textures) that create a cinematic look and feel. Capture that perfect mood for your environment as you tell your story.";
+
+            string suffix = EditorGUIUtility.isProSkin ? "_Pro" : "_Personal";
+            resourceImage1 = Resources.Load("Cinema_Suite_Video" + suffix) as Texture2D;
+            resourceImage2 = Resources.Load("Cinema_Suite_Store" + suffix) as Texture2D;
+            resourceImage3 = Resources.Load("Cinema_Suite_Docs" + suffix) as Texture2D;
+            resourceImage4 = Resources.Load("Cinema_Suite_Forums" + suffix) as Texture2D;
+
+            resourceImage1Link = "https://youtu.be/QR2nWGzlrJo";
+            resourceImage2Link = "http://u3d.as/8HZ";
+            resourceImage3Link = "http://www.cinema-suite.com/Documentation/CinemaThemes/CinemaThemesDocumentation.pdf";
+            resourceImage4Link = "http://cinema-suite.com/forum/viewforum.php?f=26";
+
+            resourceImage1Label = "Video";
+            resourceImage2Label = "Store";
+            resourceImage3Label = "Docs";
+            resourceImage4Label = "Forum";
         }
     }
 }

@@ -11,8 +11,7 @@ class SendMessageGameObjectInspector : Editor
 {
 
     private SerializedObject sendMessageGameObject;
-	private SerializedProperty fireTime;
-	private SerializedProperty sendMessageMethodName;
+    private SerializedProperty sendMessageMethodName;
     private SerializedProperty sendMessageParameterType;
     private SerializedProperty sendMessageOptions;
 
@@ -23,15 +22,10 @@ class SendMessageGameObjectInspector : Editor
     private SerializedProperty boolValue;
     private SerializedProperty stringValue;
 
-	#region Language
-	GUIContent firetimeContent = new GUIContent("Firetime", "The time in seconds at which this event is fired.");
-	#endregion
-
-	public void OnEnable()
+    public void OnEnable()
     {
         sendMessageGameObject = new SerializedObject(this.target);
-		this.fireTime = sendMessageGameObject.FindProperty("firetime");
-		this.sendMessageMethodName = sendMessageGameObject.FindProperty("MethodName");
+        this.sendMessageMethodName = sendMessageGameObject.FindProperty("MethodName");
         this.sendMessageParameterType = sendMessageGameObject.FindProperty("ParameterType");
         this.sendMessageOptions = sendMessageGameObject.FindProperty("SendMessageOptions");
 
@@ -47,8 +41,7 @@ class SendMessageGameObjectInspector : Editor
     {
         sendMessageGameObject.Update();
 
-		EditorGUILayout.PropertyField(this.fireTime, firetimeContent);
-		EditorGUILayout.PropertyField(sendMessageMethodName);
+        EditorGUILayout.PropertyField(sendMessageMethodName);
         EditorGUILayout.PropertyField(sendMessageParameterType);
         
         //  Show appropriate input field

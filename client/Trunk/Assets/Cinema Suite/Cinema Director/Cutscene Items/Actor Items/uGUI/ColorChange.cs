@@ -11,6 +11,10 @@ namespace CinemaDirector
     [CutsceneItemAttribute("uGUI", "Change Color", CutsceneItemGenre.ActorItem)]
     public class ColorChange : CinemaActorAction, IRevertable
     {
+        enum ColorBlockChoices {normalColor,highlightedColor,pressedColor, disabledColor};
+        [SerializeField]
+        ColorBlockChoices colorField;
+
         [SerializeField]
         Color colorValue = Color.white;
 
@@ -32,15 +36,14 @@ namespace CinemaDirector
         {
             List<Transform> actors = new List<Transform>(GetActors());
             List<RevertInfo> reverts = new List<RevertInfo>();
-            for (int i = 0; i < actors.Count; i++)
+            foreach (Transform go in actors)
             {
-                Transform go = actors[i];
                 if (go != null)
                 {
-                    Graphic clr = go.GetComponent<Graphic>();
+                    Selectable clr = go.GetComponent<Selectable>();
                     if (clr != null)
                     {
-                        reverts.Add(new RevertInfo(this, clr, "color", clr.color));
+                        reverts.Add(new RevertInfo(this, clr, "colors", clr.colors));
                     }
                 }
             }
@@ -50,62 +53,89 @@ namespace CinemaDirector
 
         public override void Trigger(GameObject actor)
         {
-            if (actor != null)
-            {
-                Graphic UIcomponent = actor.GetComponent<Graphic>();
+            Selectable UIcomponent = actor.GetComponent<Selectable>();
 
-                if (UIcomponent != null)
+
+            if (UIcomponent != null)
+                switch ((int)colorField)
                 {
-                    initialColor = UIcomponent.color;
+                    case 0: initialColor = UIcomponent.colors.normalColor;
+                        break;
+                    case 1: initialColor = UIcomponent.colors.highlightedColor;
+                        break;
+                    case 2: initialColor = UIcomponent.colors.pressedColor;
+                        break;
+                    case 3: initialColor = UIcomponent.colors.disabledColor;
+                        break;
                 }
-            }
         }
         
         public override void SetTime(GameObject actor, float time, float deltaTime)
         {
             if (actor != null)
-            {
                 if (time > 0 && time <= Duration)
-                {
                     UpdateTime(actor, time, deltaTime);
-                }
-            }
         }
 
         public override void UpdateTime(GameObject actor, float runningTime, float deltaTime)
         {
-            if (actor != null)
+            float transition = runningTime / Duration;
+
+            Selectable UIcomponent = actor.GetComponent<Selectable>();
+            
+            if (UIcomponent != null)
             {
-                float transition = runningTime / Duration;
+                ColorBlock tempValue = UIcomponent.colors;
+                Color lerpedColor= Color.Lerp(initialColor, colorValue, transition);
 
-                Graphic UIcomponent = actor.GetComponent<Graphic>();
-
-                if (UIcomponent != null)
+                switch ((int)colorField)
                 {
-                    Color lerpedColor = Color.Lerp(initialColor, colorValue, transition);
-                    UIcomponent.color = lerpedColor;
-
-                    #if UNITY_EDITOR
-                        EditorUtility.SetDirty(actor.GetComponent<Graphic>());
-                    #endif
+                    case 0: tempValue.normalColor = lerpedColor;
+                        break;
+                    case 1: tempValue.highlightedColor = lerpedColor;
+                        break;
+                    case 2: tempValue.pressedColor = lerpedColor;
+                        break;
+                    case 3: tempValue.disabledColor = lerpedColor;
+                        break;
                 }
-            }      
+
+                UIcomponent.colors = tempValue;
+                #if UNITY_EDITOR
+                EditorUtility.SetDirty(actor.GetComponent<Selectable>());
+                #endif
+            }            
         }
 
         public override void End(GameObject actor)
         {
-            if (actor != null)
+            Selectable UIcomponent = actor.GetComponent<Selectable>();
+
+            if (UIcomponent != null)
             {
-                Graphic UIcomponent = actor.GetComponent<Graphic>();
+                ColorBlock tempValue = UIcomponent.colors;
+
+                switch ((int)colorField)
+                {
+                    case 0:
+                        tempValue.normalColor = colorValue;
+                        break;
+                    case 1:
+                        tempValue.highlightedColor = colorValue;
+                        break;
+                    case 2:
+                        tempValue.pressedColor = colorValue;
+                        break;
+                    case 3:
+                        tempValue.disabledColor = colorValue;
+                        break;
+                }
 
                 if (UIcomponent != null)
-                {
-                    UIcomponent.color = colorValue;
-
-                    #if UNITY_EDITOR
-                        EditorUtility.SetDirty(actor.GetComponent<Graphic>());
-                    #endif
-                }
+                    UIcomponent.colors = tempValue;
+                #if UNITY_EDITOR
+                EditorUtility.SetDirty(actor.GetComponent<Selectable>());
+                #endif
             }
         }
         

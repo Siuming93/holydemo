@@ -10,9 +10,7 @@ public class ActorClipCurveInspector : Editor
 {
     // Properties
     private SerializedObject actorClipCurve;
-	private SerializedProperty fireTime;
-	private SerializedProperty duration;
-	private SerializedProperty editorRevert;
+    private SerializedProperty editorRevert;
     private SerializedProperty runtimeRevert;
 
     private int componentSeletion = 0;
@@ -22,25 +20,17 @@ public class ActorClipCurveInspector : Editor
     private GUIContent dataContent = new GUIContent("Curves");
     private GUIContent addContent = new GUIContent("Add new curves");
 
-	#region Language
-	GUIContent firetimeContent = new GUIContent("Firetime", "The time in seconds at which this event is fired.");
-	GUIContent durationContent = new GUIContent("Duration", "The event last time in seconds.");
-	#endregion
-
-	[Multiline]
+    [Multiline]
     private const string ERROR_MSG = "CinemaActorClipCurve requires an \nActorTrack as a parent object \nwith an assigned actor.";
     public void OnEnable()
     {
         actorClipCurve = new SerializedObject(this.target);
         this.editorRevert = actorClipCurve.FindProperty("editorRevertMode");
         this.runtimeRevert = actorClipCurve.FindProperty("runtimeRevertMode");
-		this.fireTime = actorClipCurve.FindProperty("firetime");
-		this.duration = actorClipCurve.FindProperty("duration");
-	}
+    }
 
     public override void OnInspectorGUI()
     {
-		
         actorClipCurve.Update();
         CinemaActorClipCurve clipCurveGameObject = (target as CinemaActorClipCurve);
         
@@ -52,10 +42,7 @@ public class ActorClipCurveInspector : Editor
 
         GameObject actor = clipCurveGameObject.Actor.gameObject;
 
-		EditorGUILayout.FloatField(firetimeContent, this.fireTime.floatValue);
-	    EditorGUILayout.FloatField(durationContent, this.duration.floatValue);
-
-		List<KeyValuePair<string, string>> currentCurves = new List<KeyValuePair<string, string>>();
+        List<KeyValuePair<string, string>> currentCurves = new List<KeyValuePair<string, string>>();
 
         EditorGUILayout.PropertyField(editorRevert);
         EditorGUILayout.PropertyField(runtimeRevert);
@@ -100,9 +87,7 @@ public class ActorClipCurveInspector : Editor
             for (int i = 0; i < components.Length; i++)
             {
                 Component component = components[i];
-
-                if (component != null)
-                    componentSelectionList.Add(new GUIContent(component.GetType().Name));
+                componentSelectionList.Add(new GUIContent(component.GetType().Name));
             }
 
             componentSeletion = EditorGUILayout.Popup(new GUIContent("Component"), componentSeletion, componentSelectionList.ToArray());
@@ -154,9 +139,8 @@ public class ActorClipCurveInspector : Editor
     public void OnSceneGUI()
     {
         CinemaActorClipCurve clipCurveGameObject = (target as CinemaActorClipCurve);
-        for (int i = 0; i < clipCurveGameObject.CurveData.Count; i++)
+        foreach (MemberClipCurveData data in clipCurveGameObject.CurveData)
         {
-            MemberClipCurveData data = clipCurveGameObject.CurveData[i];
             if (data.Type == "Transform" && data.PropertyName == "localPosition")
             {
                 //Vector3 position = new Vector3(data.Curve1[0].value, data.Curve2[0].value, data.Curve3[0].value);
