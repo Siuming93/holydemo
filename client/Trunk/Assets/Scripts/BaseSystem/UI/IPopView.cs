@@ -20,6 +20,8 @@ namespace Monster.BaseSystem.UI
         bool CheckCanShow(IPopContext context, ref string error);
 
         void Show(IPopContext context);
+
+        
     }
 
     public interface IPopContext
