@@ -14,5 +14,10 @@ namespace Monster.BaseSystem
         public static string BundleConfigPath = GameConfig.REMOTE_PATH + "/assetbundleConfig.bytes";
 
         public static string BundleLocalPath = Application.streamingAssetsPath;
+
+        /// <summary>
+        /// milisceond
+        /// </summary>
+        public static long serverTime;
     }
 }
