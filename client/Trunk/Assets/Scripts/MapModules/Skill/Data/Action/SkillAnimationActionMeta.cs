@@ -1,8 +1,9 @@
 ﻿using System.Collections;
 
-public class SkillMeta : BaseMeta<SkillMeta>
+class SkillAnimationActionMeta : BaseMeta<SkillAnimationActionMeta>
 {
-
+    public float delay;
+    public string name;
     public override void UpdateForm(Hashtable properties)
     {
         throw new System.NotImplementedException();

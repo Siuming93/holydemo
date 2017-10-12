@@ -28,7 +28,7 @@ public class CameraMovement : MonoBehaviour
     /// <summary>
     /// 玩家位置
     /// </summary>
-    protected Transform player;
+    public Transform player;
 
     /// <summary>
     /// 头顶的相对位置
@@ -46,9 +46,8 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     private void Start()
     {
-        player = GameObject.FindWithTag(Tags.Player).transform;
         points = new Vector3[5];
-        aboveVector = player.transform.position + new Vector3(0f, transform.position.y, 0f);
+        aboveVector = transform.position - player.transform.position;
 
         Vector3 v = transform.position - new Vector3(player.position.x, aboveVector.y, player.position.z);
 
@@ -67,7 +66,7 @@ public class CameraMovement : MonoBehaviour
         {
             case CameraState.Player:
                 SmoothMovement();
-                SmoothLookAt();
+                //SmoothLookAt();
                 break;
         }
     }
@@ -77,17 +76,7 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     private void SmoothMovement()
     {
-        Vector3 targetPoint = points[4];
-        for (int i = points.Length - 1; i >= 0; i--)
-        {
-            Vector3 point = new Vector3(player.position.x, aboveVector.y, player.position.z) + points[i];
-            if (CanSeePlayer(point))
-            {
-                targetPoint = point;
-                break;
-            }
-        }
-
+        Vector3 targetPoint = player.transform.position + aboveVector;
         transform.position = Vector3.Lerp(transform.position, targetPoint, Time.deltaTime * Speed);
     }
 
