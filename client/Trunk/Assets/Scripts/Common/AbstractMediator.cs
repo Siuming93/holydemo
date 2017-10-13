@@ -6,6 +6,7 @@ using System.Text;
 using PureMVC;
 using PureMVC.Interfaces;
 using PureMVC.Patterns.Mediator;
+using UnityEngine;
 
 
 public class AbstractMediator : Mediator
@@ -21,6 +22,7 @@ public class AbstractMediator : Mediator
     public AbstractMediator(string mediatorName) : base(mediatorName, null)
     {
         _notificationMap = new Dictionary<string, Action<object>>();
+        _notIgnore = new HashSet<string>();
     }
 
     public override void HandleNotification(INotification notification)
@@ -50,6 +52,12 @@ public class AbstractMediator : Mediator
         _notificationMap.Remove(name);
         if (_notIgnore.Contains(name))
             _notIgnore.Remove(name);
+    }
+
+    protected void SendNotification(string notificationName, object data = null)
+    {
+        Debug.Log("SendNotificaiton: "+notificationName);
+        Facade.SendNotification(notificationName, data);
     }
 }
 

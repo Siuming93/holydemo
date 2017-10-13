@@ -7,6 +7,9 @@ public class UpdateProxy : MonoBehaviour
     public static UpdateProxy Instance;
 
     public Action UpdateEvent;
+
+    public Action FixedUpdateEvent;
+
     void Awake()
     {
         Instance = this;
@@ -28,6 +31,14 @@ public class UpdateProxy : MonoBehaviour
 	        UpdateEvent.Invoke();
 	    }
 	}
+
+    void FixedUpdate()
+    {
+        if (FixedUpdateEvent != null)
+        {
+            FixedUpdateEvent.Invoke();
+        }
+    }
 
     void OnDestroy()
     {

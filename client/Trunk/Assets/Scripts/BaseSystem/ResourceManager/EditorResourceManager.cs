@@ -61,7 +61,8 @@ namespace Monster.BaseSystem.ResourceManager
                 Object.Destroy(assetToUnload);
                 return;
             }
-            Resources.UnloadAsset(assetToUnload);
+            GameObject.Destroy(assetToUnload);
+            //Resources.UnloadAsset(assetToUnload);
         }
     }
 }

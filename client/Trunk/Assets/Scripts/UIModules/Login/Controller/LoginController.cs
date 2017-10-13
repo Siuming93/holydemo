@@ -47,6 +47,6 @@ public class LoginController
     {
         PlayerPrefs.SetString("last_ip", _lastIp);
         PlayerPrefs.Save();
-        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(CitySceneManager.SCENE_NAME));
+        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
     }
 }

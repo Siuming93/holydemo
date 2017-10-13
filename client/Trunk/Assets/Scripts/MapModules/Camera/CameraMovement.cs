@@ -11,19 +11,10 @@ public enum CameraState
 /// <summary>
 /// 相机移动
 /// </summary>
-public class CameraMovement : MonoBehaviour
+public class CameraMovement
 {
-    public float Speed;
-
-    /// <summary>
-    /// 相机状态
-    /// </summary>
-    private CameraState cameraState = CameraState.Player;
-
-    /// <summary>
-    /// 相机可以移动的点
-    /// </summary>
-    private Vector3[] points;
+    public Transform cameraTransform;
+    public float speed = 10f;
 
     /// <summary>
     /// 玩家位置
@@ -35,26 +26,18 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     private Vector3 aboveVector;
 
-    public CameraState CameraState
-    {
-        get { return cameraState; }
-        set { cameraState = value; }
-    }
-
     /// <summary>
     /// 找到玩家,并初始化相机的几个位置点
     /// </summary>
-    private void Start()
+    public CameraMovement()
     {
-        points = new Vector3[5];
-        aboveVector = transform.position - player.transform.position;
+        aboveVector = new Vector3(-6.3f, 10.8f, -3.7f);
+        UpdateProxy.Instance.UpdateEvent += Update;
+    }
 
-        Vector3 v = transform.position - new Vector3(player.position.x, aboveVector.y, player.position.z);
-
-        for (int i = 0; i < points.Length; i++)
-        {
-            points[i] = (i * 0.25f) * v;
-        }
+    public void Dispose()
+    {
+        UpdateProxy.Instance.UpdateEvent -= Update;
     }
 
     /// <summary>
@@ -62,13 +45,7 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     private void Update()
     {
-        switch (CameraState)
-        {
-            case CameraState.Player:
-                SmoothMovement();
-                //SmoothLookAt();
-                break;
-        }
+        SmoothMovement();
     }
 
     /// <summary>
@@ -77,7 +54,7 @@ public class CameraMovement : MonoBehaviour
     private void SmoothMovement()
     {
         Vector3 targetPoint = player.transform.position + aboveVector;
-        transform.position = Vector3.Lerp(transform.position, targetPoint, Time.deltaTime * Speed);
+        cameraTransform.position = Vector3.Lerp(cameraTransform.position, targetPoint, Time.deltaTime * speed);
     }
 
     /// <summary>
@@ -85,28 +62,8 @@ public class CameraMovement : MonoBehaviour
     /// </summary>
     private void SmoothLookAt()
     {
-        Quaternion targetRotation = Quaternion.LookRotation(player.position - transform.position, Vector3.up);
+        Quaternion targetRotation = Quaternion.LookRotation(player.position - cameraTransform.position, Vector3.up);
 
-        transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * Speed);
-    }
-
-    /// <summary>
-    /// 通过射线检测判断所给位置是否能够看到主角
-    /// </summary>
-    /// <param name="position"></param>
-    /// <returns></returns>
-    private bool CanSeePlayer(Vector3 position)
-    {
-        bool b = false;
-        RaycastHit raycastHit = new RaycastHit();
-        Vector3 direction = player.position - position;
-
-        if (Physics.Raycast(position, direction, out raycastHit))
-        {
-            if (raycastHit.collider.gameObject.tag == Tags.Player)
-                return true;
-        }
-
-        return b;
+        cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetRotation, Time.deltaTime * speed);
     }
 }

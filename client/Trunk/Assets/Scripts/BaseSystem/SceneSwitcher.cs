@@ -24,6 +24,7 @@ namespace Monster.BaseSystem
 
             _managerMap.Add(LoginSceneManager.SCENE_NAME, new LoginSceneManager());
             _managerMap.Add(CitySceneManager.SCENE_NAME, new CitySceneManager());
+            _managerMap.Add(LeiTaiSceneManager.SCENE_NAME, new LeiTaiSceneManager());
         }
 
         public IEnumerator LoadScene(string sceneName)
