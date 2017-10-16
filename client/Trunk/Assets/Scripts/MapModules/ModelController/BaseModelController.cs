@@ -1,4 +1,5 @@
-﻿using Monster.BaseSystem;
+﻿using DG.Tweening;
+using Monster.BaseSystem;
 using Monster.BaseSystem.ResourceManager;
 using UnityEngine;
 
@@ -10,6 +11,10 @@ public abstract class BaseModelController
 
     public RectTransform uiRoot { protected set; get; }
 
+    public Animator animator { protected set; get; }
+
+    #region public funcs
+    #region load
     public void LoadModelPrefabAsync(string path)
     {
         ResourcesFacade.Instance.LoadAsync(path, OnResourceLoadComplete);
@@ -20,7 +25,9 @@ public abstract class BaseModelController
         origin = ResourcesFacade.Instance.Load<GameObject>(path);
         InstantiateModel(origin);
     }
+    #endregion
 
+    #region move
     public void Move(Vector2 delta)
     {
         if (model != null)
@@ -32,6 +39,47 @@ public abstract class BaseModelController
         }
     }
 
+    public void MoveTo(Vector2 pos)
+    {
+        if (model != null)
+        {
+            Vector3 endPos = new Vector3(pos.x, 0f, pos.y);
+            model.transform.localPosition = endPos;
+        }
+    }
+
+    public void LookAt(Vector2 dir)
+    {
+        if (model != null)
+        {
+            Vector3 endPos = model.transform.localPosition +  new Vector3(dir.x, 0, dir.y);
+            Vector3 worldPos = endPos;
+            model.transform.LookAt(worldPos, Vector3.up);
+        }
+    }
+    #endregion
+
+    #region animation
+
+    public void PlayMoveAnimation(bool isMove)
+    {
+        animator.SetBool("IsMove", isMove);
+    }
+
+    public void PlaySkillAnimation(string trigerName)
+    {
+        animator.SetTrigger(trigerName);
+    }
+
+    public void PlayDeathAnimation()
+    {
+        animator.SetTrigger("Death");
+    }
+    #endregion
+
+    #endregion
+
+    #region protected
     protected GameObject origin;
 
     protected  virtual void OnResourceLoadComplete(IAsyncResourceRequest resourcerequest)
@@ -48,7 +96,8 @@ public abstract class BaseModelController
     protected virtual void InstantiateModel(GameObject origin)
     {
         this.origin = origin;
-        model = Object.Instantiate(origin);
+        this.model = Object.Instantiate(origin);
+        this.animator = model.transform.GetComponentInChildren<Animator>();
     }
 
     protected virtual void Dispose()
@@ -56,6 +105,6 @@ public abstract class BaseModelController
         GameObject.Destroy(model);
         ResourcesFacade.Instance.UnLoadAsset(origin);
     }
-
+#endregion
     
 }

@@ -24,14 +24,13 @@ public class CameraMovement
     /// <summary>
     /// 头顶的相对位置
     /// </summary>
-    private Vector3 aboveVector;
+    private Vector3 aboveVector = new Vector3(0f, 10f, -8f);
 
     /// <summary>
     /// 找到玩家,并初始化相机的几个位置点
     /// </summary>
     public CameraMovement()
     {
-        aboveVector = new Vector3(-6.3f, 10.8f, -3.7f);
         UpdateProxy.Instance.UpdateEvent += Update;
     }
 

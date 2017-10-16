@@ -39,6 +39,7 @@ namespace Monster.BaseSystem.SceneManager
 
             _proxyList = new List<IProxy>()
             {
+                new SkillProxy(),
             };
             _mediatorList = new List<IMediator>() {
                    new BattleMainUIMediator(battleMainUI),

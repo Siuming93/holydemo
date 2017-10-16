@@ -1,6 +1,6 @@
 ﻿using System.Collections;
 
-class SkillEffectActionMeta : BaseMeta<SkillEffectActionMeta>
+public class SkillEffectMeta : BaseMeta<SkillEffectMeta>
 {
     public string effectPath;
     public float delay;

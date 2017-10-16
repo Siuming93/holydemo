@@ -31,6 +31,10 @@ namespace Monster.BaseSystem.CoroutineTask
             UpdateProxy.Instance.UpdateEvent += ResourcesFacade.Instance.Trik;
             yield return step++;
 
+            MetaManager metaManager = new MetaManager();
+            metaManager.AddMeta(MetaManager.FakeMeta());
+            yield return step++;
+
             NetManager.Instance.Init();
             yield return step++;
 

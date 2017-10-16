@@ -18,12 +18,27 @@ public class WorldPlayerBattleMediator : AbstractMediator
             player = _playerController.model.transform,
             speed = 10f,
         };
-        RegisterNotificationHandler(NotificationConst.PLAYER_MOVE_DElTA, OnPlayerMove);
+        RegisterNotificationHandler(NotificationConst.PLAYER_MOVE, OnPlayerMove);
+        RegisterNotificationHandler(NotificationConst.PLAYER_MOVE_END, OnPlayerMoveEnd);
+        RegisterNotificationHandler(NotificationConst.PLAYER_MOVE_START, OnPlayerMoveStart);
+    }
+
+    private void OnPlayerMoveStart(object obj)
+    {
+        _playerController.PlayMoveAnimation(true);
+    }
+
+    private void OnPlayerMoveEnd(object obj)
+    {
+        _playerController.PlayMoveAnimation(false);
     }
 
     private void OnPlayerMove(object obj)
     {
-        Vector2 delta = (Vector2) obj;
-        _playerController.Move(delta);
+        ModelMoveVO vo = (ModelMoveVO)obj;
+        PlayerProperty.Postion = vo.endPos;
+        PlayerProperty.Rotation = vo.dir;
+        _playerController.MoveTo(vo.endPos);
+        _playerController.LookAt(vo.dir);
     }
 }

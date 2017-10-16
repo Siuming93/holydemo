@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public abstract class BaseMeta<T> where T : new()
+public abstract class BaseMeta<T> : IMeta where T : new()
 {
     protected static Dictionary<string, T> map = new Dictionary<string, T>();
     public static T GetMeta(string id)
@@ -24,5 +24,5 @@ public abstract class BaseMeta<T> where T : new()
     }
 
     public abstract void UpdateForm(Hashtable properties);
-    
+
 }
