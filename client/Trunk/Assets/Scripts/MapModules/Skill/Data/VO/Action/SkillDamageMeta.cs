@@ -8,6 +8,7 @@ public class SkillDamageMeta : BaseMeta<SkillDamageMeta>
     public int damage;
     public override void UpdateForm(Hashtable properties)
     {
+        base.UpdateForm(properties);
         this.time = MetaUtil.GetFloatValue(properties, "time");
         this.damage = MetaUtil.GetIntValue(properties, "damage");
     }

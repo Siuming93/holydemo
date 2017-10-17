@@ -41,15 +41,14 @@ namespace Monster.BaseSystem.SceneManager
             {
                 new SkillProxy(),
             };
+            RegisterProxy(_proxyList);
+
             _mediatorList = new List<IMediator>() {
                    new BattleMainUIMediator(battleMainUI),
                    new WorldPlayerBattleMediator(cameraTransform),
             };
-
-
-
-            RegisterProxy(_proxyList);
             RegisterMediator(_mediatorList);
+
             yield return 0;
         }
 

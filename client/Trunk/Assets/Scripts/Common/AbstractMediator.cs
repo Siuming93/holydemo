@@ -56,7 +56,6 @@ public class AbstractMediator : Mediator
 
     protected void SendNotification(string notificationName, object data = null)
     {
-        Debug.Log("SendNotificaiton: "+notificationName);
         Facade.SendNotification(notificationName, data);
     }
 }

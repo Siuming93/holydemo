@@ -8,9 +8,10 @@ public class MetaManager
     public MetaManager()
     {
         _map = new Dictionary<string, Action<Hashtable>>();
-        _map.Add("Skill", SkillMeta.AddMeta);
         _map.Add("SkillAnimation", SkillAnimationMeta.AddMeta);
         _map.Add("SkillDamage", SkillAnimationMeta.AddMeta);
+        _map.Add("Skill", SkillMeta.AddMeta);
+
     }
     public void AddMeta(Dictionary<string, List<KeyValuePair<string, Hashtable>>> map)
     {

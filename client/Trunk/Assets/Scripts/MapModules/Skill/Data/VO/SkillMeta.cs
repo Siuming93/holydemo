@@ -10,6 +10,7 @@ public class SkillMeta : BaseMeta<SkillMeta>
     public SkillEffectMeta effectMeta;
     public override void UpdateForm(Hashtable properties)
     {
+        base.UpdateForm(properties);
         this.cd = MetaUtil.GetFloatValue(properties, "cd");
         this.duration = MetaUtil.GetFloatValue(properties, "duration");
         this.damageMeta = SkillDamageMeta.GetMeta(MetaUtil.GetStringValue(properties, "damageId"));
@@ -54,7 +55,7 @@ public class SkillMeta : BaseMeta<SkillMeta>
 
         list.Add(new KeyValuePair<string, Hashtable>("003", new Hashtable()
         {
-            {"id", "002"},
+            {"id", "003"},
             {"cd", "12"},
             {"duration", "2"},
             {"animationId", "003"},

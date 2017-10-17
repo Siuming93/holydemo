@@ -7,6 +7,7 @@ public class SkillAnimationMeta : BaseMeta<SkillAnimationMeta>
     public string name;
     public override void UpdateForm(Hashtable properties)
     {
+        base.UpdateForm(properties);
         this.time = MetaUtil.GetFloatValue(properties, "time");
         this.name = MetaUtil.GetStringValue(properties, "name");
     }

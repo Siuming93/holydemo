@@ -1,6 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
+using DG.Tweening;
 using Monster.BaseSystem;
+using UnityEngine.UI;
 
 public class BattleMainUIMediator : AbstractMediator
 {
@@ -8,10 +11,17 @@ public class BattleMainUIMediator : AbstractMediator
 
     private SkillProxy _proxy;
     private VirtualStick _stick;
-    private BattleMainUISkin  _skin;
+    private BattleMainUISkin _skin;
+
+    private Dictionary<string, Button> _skillBtnMap;
+    private Dictionary<string, Image> _skillImageMap;
+    private Dictionary<Image, Tweener> _skillTweenerMap; 
     public BattleMainUIMediator(GameObject view)
         : base(NAME)
     {
+
+        RegisterNotificationHandler(NotificationConst.USE_SKILL, OnSkillUse);
+
         this._skin = view.GetComponent<BattleMainUISkin>();
         this._proxy = ApplicationFacade.Instance.RetrieveProxy(SkillProxy.NAME) as SkillProxy;
 
@@ -27,8 +37,21 @@ public class BattleMainUIMediator : AbstractMediator
         this._stick = _skin.stick;
         this._stick.OnStickMovementEnd += OnStickMovementEnd;
         this._stick.OnStickMovementStart += OnStickMovementStart;
-    }
 
+        this._skillBtnMap = new Dictionary<string, Button>();
+        this._skillImageMap = new Dictionary<string, Image>();
+        this._skillTweenerMap = new Dictionary<Image, Tweener>();
+
+        this._skillBtnMap.Add(_proxy.attackVO.meta.id, _skin.attackBtn);
+        this._skillBtnMap.Add(_proxy.skill1VO.meta.id, _skin.skillBtn1);
+        this._skillBtnMap.Add(_proxy.skill2VO.meta.id, _skin.skillBtn2);
+        this._skillBtnMap.Add(_proxy.skill3VO.meta.id, _skin.skillBtn3);
+
+        this._skillImageMap.Add(_proxy.skill1VO.meta.id, _skin.skillCdImage1);
+        this._skillImageMap.Add(_proxy.skill2VO.meta.id, _skin.skillCdImage2);
+        this._skillImageMap.Add(_proxy.skill3VO.meta.id, _skin.skillCdImage3);
+
+    }
 
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
     {
@@ -90,5 +113,46 @@ public class BattleMainUIMediator : AbstractMediator
     {
         _proxy.UseSkill(_proxy.skill3VO);
     }
+    #endregion
+
+    #region noti funcs
+
+    private void OnSkillUse(object obj)
+    {
+       RefreshSkillBtn(obj as SkillVO);
+    }
+
+    private void RefreshSkillArea()
+    {
+        RefreshSkillBtn(_proxy.attackVO);
+        RefreshSkillBtn(_proxy.skill1VO);
+        RefreshSkillBtn(_proxy.skill2VO);
+        RefreshSkillBtn(_proxy.skill3VO);
+    }
+
+    private void RefreshSkillBtn(SkillVO vo)
+    {
+        float cd = vo.meta.cd;
+        float useTime = GameConfig.serverTime - vo.lastUseMiliSceond;
+        bool isCD = useTime < vo.meta.cd;
+        var button = _skillBtnMap[vo.meta.id];
+
+        button.interactable = !isCD;
+
+        Image image;
+        if (_skillImageMap.TryGetValue(vo.meta.id, out image))
+        {
+            image.enabled = isCD;
+            Tweener tweener = null;
+            if (!_skillTweenerMap.TryGetValue(image, out tweener))
+            {
+                tweener = DOTween.To(() => 1 - useTime / cd, (value) => { image.fillAmount = value; }, 0f, cd - useTime);
+                tweener.onComplete += () => { button.interactable = true; _skillTweenerMap.Remove(image); };
+                _skillTweenerMap[image] = tweener;
+            }
+            tweener.PlayForward();
+        }
+    }
+
     #endregion
 }

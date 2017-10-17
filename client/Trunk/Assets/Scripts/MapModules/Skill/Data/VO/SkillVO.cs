@@ -3,7 +3,7 @@ using System;
 
 public class SkillVO
 {
-    public long lastUseMiliSceond;
+    public float lastUseMiliSceond;
 
     public SkillMeta meta;
 }

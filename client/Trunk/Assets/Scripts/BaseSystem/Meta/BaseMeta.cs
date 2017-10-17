@@ -1,7 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 
-public abstract class BaseMeta<T> : IMeta where T : new()
+public abstract class BaseMeta<T> : IMeta where T : IMeta,new()
 {
     protected static Dictionary<string, T> map = new Dictionary<string, T>();
     public static T GetMeta(string id)
@@ -19,10 +19,14 @@ public abstract class BaseMeta<T> : IMeta where T : new()
         if (!map.ContainsKey(id))
         {
             T t = new T();
+            t.UpdateForm(properties);
             map.Add(id, t);
         }
     }
 
-    public abstract void UpdateForm(Hashtable properties);
+    public virtual void UpdateForm(Hashtable properties)
+    {
+        this.id = MetaUtil.GetStringValue(properties, "id");
+    }
 
 }

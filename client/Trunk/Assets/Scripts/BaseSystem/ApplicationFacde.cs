@@ -1,6 +1,7 @@
 ﻿using PureMVC.Patterns.Facade;
 using PureMVC.Patterns.Mediator;
 using PureMVC.Patterns.Observer;
+using UnityEngine;
 
 namespace Monster.BaseSystem
 {
@@ -30,6 +31,12 @@ namespace Monster.BaseSystem
         public void ReMoveNotificatiion(string notificationName, Mediator mediator)
         {
             view.RemoveObserver(notificationName, mediator);
+        }
+
+        public override void SendNotification(string notificationName, object body = null, string type = null)
+        {
+            base.SendNotification(notificationName, body, type);
+            Debug.Log("SendNotification: " + notificationName);
         }
     }
 }
