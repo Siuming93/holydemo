@@ -27,7 +27,7 @@ public class LoginController
 
     private void RegisterProto()
     {
-        NetManager.Instance.RegisterMessageHandler(MsgIDDefineDic.ScLogin, OnGetLoginResponse);
+        NetManager.Instance.RegisterMessageHandler(MsgIDDefine.ScLogin, OnGetLoginResponse);
     }
 
     public void Login(string id, string ipAdress)

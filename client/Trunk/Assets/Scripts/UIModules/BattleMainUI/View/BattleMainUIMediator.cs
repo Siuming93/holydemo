@@ -51,16 +51,7 @@ public class BattleMainUIMediator : AbstractMediator
         this._skillImageMap.Add(_proxy.skill2VO.meta.id, _skin.skillCdImage2);
         this._skillImageMap.Add(_proxy.skill3VO.meta.id, _skin.skillCdImage3);
 
-    }
-
-    private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
-    {
-        SendNotification(NotificationConst.PLAYER_MOVE_START);
-    }
-
-    private void OnStickMovementEnd(VirtualStick obj)
-    {
-        SendNotification(NotificationConst.PLAYER_MOVE_END);
+        RefreshSkillArea();
     }
 
     public override void OnRemove()
@@ -78,6 +69,9 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnFixedUpdate()
     {
         if (!_stick.isPressed)
+            return;
+
+        if (_proxy.isUseSkill)
             return;
 
         bool moveX = !Mathf.Approximately(_stick.Coordinates.x, 0);
@@ -112,6 +106,14 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnSkillBtn3Click()
     {
         _proxy.UseSkill(_proxy.skill3VO);
+    }
+    private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
+    {
+        SendNotification(NotificationConst.PLAYER_MOVE_START);
+    }
+    private void OnStickMovementEnd(VirtualStick obj)
+    {
+        SendNotification(NotificationConst.PLAYER_MOVE_END);
     }
     #endregion
 

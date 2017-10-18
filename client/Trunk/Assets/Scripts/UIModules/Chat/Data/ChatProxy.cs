@@ -8,13 +8,13 @@ public class ChatProxy : BaseProxy
     private List<ChatVO> mList;
     public ChatProxy() : base(NAME)
     {
-        RegisterMessageHandler(MsgIDDefineDic.ScTalk, OnScTalkMessage);
+        RegisterMessageHandler(MsgIDDefine.ScTalk, OnScTalkMessage);
         mList = new List<ChatVO>();
     }
 
     public override void OnRemove()
     {
-        UnRegisterMessageHandler(MsgIDDefineDic.ScTalk);
+        UnRegisterMessageHandler(MsgIDDefine.ScTalk);
         base.OnRemove();
     }
 
