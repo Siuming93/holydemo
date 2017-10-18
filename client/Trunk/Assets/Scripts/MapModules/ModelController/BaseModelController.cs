@@ -66,9 +66,14 @@ public abstract class BaseModelController
         animator.SetBool("IsMove", isMove);
     }
 
-    public void PlaySkillAnimation(string trigerName)
+    public void PlaySkillAnimation(SkillAnimationMeta meta)
     {
-        animator.SetTrigger(trigerName);
+        //vp_Timer.In(meta.time, SetAnimiationTrigger, meta.name);
+        animator.SetTrigger(meta.name);
+    }
+    private void SetAnimiationTrigger(object id)
+    {
+        animator.SetTrigger((string)id);
     }
 
     public void PlayDeathAnimation()
