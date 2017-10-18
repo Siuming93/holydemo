@@ -9,6 +9,8 @@ public class SkillProxy : BaseProxy
     public SkillVO skill2VO;
     public SkillVO skill3VO;
 
+    public bool isUseSkill = false;
+
     public SkillProxy()
         : base(NAME)
     {
@@ -17,8 +19,13 @@ public class SkillProxy : BaseProxy
     public void UseSkill(SkillVO vo)
     {
         //todo 给服务器发数据
-        
+
+        if (isUseSkill)
+            return;
+
         vo.lastUseMiliSceond = GameConfig.serverTime;
+        isUseSkill = true;
+        vp_Timer.In(vo.meta.duration, () => { isUseSkill = false; });
 
         SendNotification(NotificationConst.USE_SKILL, vo);
     }
