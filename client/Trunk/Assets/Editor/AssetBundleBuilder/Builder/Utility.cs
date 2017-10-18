@@ -21,6 +21,7 @@ namespace Assets.Editor.AssetBundleBuilder
             ".zip",
             ".tar",
             ".tgz",
+            ".dll",
 			#if UNITY_5_6 || UNITY_5_6_OR_NEWER
 			#else
 			".m4v",
@@ -56,6 +57,12 @@ namespace Assets.Editor.AssetBundleBuilder
         {
             return Path.GetFullPath(path);
         }
+
+        public static bool IsInternalAsset(string path)
+        {
+            return false;
+        }
+
 
     }
 }
