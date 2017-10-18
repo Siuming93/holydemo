@@ -21,18 +21,24 @@ public class WorldPlayerBattleMediator : AbstractMediator
         RegisterNotificationHandler(NotificationConst.PLAYER_MOVE, OnPlayerMove);
         RegisterNotificationHandler(NotificationConst.PLAYER_MOVE_END, OnPlayerMoveEnd);
         RegisterNotificationHandler(NotificationConst.PLAYER_MOVE_START, OnPlayerMoveStart);
+        RegisterNotificationHandler(NotificationConst.USE_SKILL, OnUseSkill);
     }
 
+    #region noti handler
+    private void OnUseSkill(object obj)
+    {
+        SkillVO vo = obj as SkillVO;
+        _playerController.PlayMoveAnimation(false);
+        _playerController.PlaySkillAnimation(vo.meta.animationMeta);
+    }
     private void OnPlayerMoveStart(object obj)
     {
         _playerController.PlayMoveAnimation(true);
     }
-
     private void OnPlayerMoveEnd(object obj)
     {
         _playerController.PlayMoveAnimation(false);
     }
-
     private void OnPlayerMove(object obj)
     {
         ModelMoveVO vo = (ModelMoveVO)obj;
@@ -41,4 +47,5 @@ public class WorldPlayerBattleMediator : AbstractMediator
         _playerController.MoveTo(vo.endPos);
         _playerController.LookAt(vo.dir);
     }
+    #endregion
 }
