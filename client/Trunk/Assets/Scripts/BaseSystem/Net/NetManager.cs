@@ -35,7 +35,7 @@ namespace Monster.Net
         private TcpClient mClient;
         private NetworkStream mStream;
         private bool mRunningShread;
-        private Thread mReciveThread;
+        private Thread mReceiveThread;
         private Thread mSendThread;
         private const int BUFFER_SIZE = 1024;
         private Queue<Protocol> mReceiveBuffer;
@@ -51,7 +51,6 @@ namespace Monster.Net
         }
         public void Init()
         {
-            MsgIDDefine.Initialize();
         }
         public void TryConnect(string server)
         {
@@ -84,8 +83,8 @@ namespace Monster.Net
         public void StartRun()
         {
             mRunningShread = true;
-            mReciveThread = new Thread(ReceiveFunc);
-            mReciveThread.Start();
+            mReceiveThread = new Thread(ReceiveFunc);
+            mReceiveThread.Start();
 
             mSendThread = new Thread(SendFunc);
             mSendThread.Start();
@@ -95,18 +94,54 @@ namespace Monster.Net
         private void ReceiveFunc()
         {
             byte[] bytes = new byte[BUFFER_SIZE];
+            byte[] cacheBytes = new byte[BUFFER_SIZE];
+            int len = 0;
+
 
             while (IsSocketConnected(mClient.Client))
             {
-                int len = mStream.Read(bytes, 0, bytes.Length);
-                if (len > 6)
+                int lenCached = mStream.Read(cacheBytes, 0, cacheBytes.Length);
+
+                if(lenCached == 0)
+                    continue;
+
+                //可以解决两包相连的问题
+                int protoStartLen = 0;
+                if (len < 6)
                 {
-                    int protoLen = (bytes[0] << 8) + (bytes[1]);
-                    int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
-                    MemoryStream stream = new MemoryStream();
-                    stream.Write(bytes, 6, len - 6);
-                    Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
-                    mReceiveBuffer.Enqueue(proto);
+                    int headLen = 6-len;
+                    len += headLen;
+                    Array.Copy(cacheBytes, 0, bytes, len, headLen);
+                    protoStartLen = 6 - len;
+                    if (len < 6)
+                        continue;
+                }
+
+                int protoLen = (bytes[0] << 8) + (bytes[1]);
+                int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
+
+                int extraLen = 0;
+                if (len < protoLen)
+                {
+                    int copyLen = protoLen - len;
+                    len += copyLen;
+                    Array.Copy(cacheBytes, protoStartLen, bytes, len, copyLen);
+                    protoStartLen = copyLen;
+                    extraLen = lenCached - copyLen;
+                    if (len < protoLen)
+                        continue;
+                }
+                len = 0;
+
+                MemoryStream stream = new MemoryStream();
+                stream.Write(bytes, 6, lenCached - 6);
+                Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
+                mReceiveBuffer.Enqueue(proto);
+
+                if (extraLen > 0)
+                {
+                    len = extraLen;
+                    Array.Copy(cacheBytes, protoStartLen, bytes, len, extraLen);
                 }
             }
 
@@ -154,7 +189,7 @@ namespace Monster.Net
         #endregion
         public void SendMessage(global::ProtoBuf.IExtensible msg)
         {
-            var no = MsgIDDefine.GetMsgIDByName(msg.GetType().Name);
+            var no = MsgIDDefineDic.Instance().GetMsgID(msg.GetType());
             var stream = new MemoryStream();
             Serializer.NonGeneric.Serialize(stream, msg);
             stream.Position = 0;
