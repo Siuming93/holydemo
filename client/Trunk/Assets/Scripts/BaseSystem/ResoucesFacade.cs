@@ -1,4 +1,4 @@
-﻿//#define BUNDLE_MODEL
+﻿#define BUNDLE_MODEL
 using Monster.BaseSystem.ResourceManager;
 
 namespace Monster.BaseSystem

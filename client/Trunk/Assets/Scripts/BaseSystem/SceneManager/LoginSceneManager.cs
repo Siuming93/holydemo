@@ -9,29 +9,22 @@ namespace Monster.BaseSystem.SceneManager
     {
         public new const string SCENE_NAME = "Login";
 
-        private GameObject _loginView;
         public override IEnumerator BeforeEnterScene(object data)
         {
-            return null;;
+            return null; ;
         }
 
         public override IEnumerator OnEnterScene(object data)
         {
-            ResourcesFacade.Instance.LoadAsync<GameObject>("Prefab/UI/Login/LoginView", OnLoginViewLoadComplete);
+            ApplicationFacade.Instance.RegisterProxy(new LoginProxy());
+            ApplicationFacade.Instance.RegisterMediator(new LoginMediator());
             return null; ;
-        }
-
-        private void OnLoginViewLoadComplete(IAsyncResourceRequest resourceRequest)
-        {
-            var origin = (resourceRequest as AsyncResourceRequest).asset;
-            _loginView = GameObject.Instantiate(origin) as GameObject;
-            UIManager.Intance.AddChild(_loginView.transform);
         }
 
         public override IEnumerator BeforeLeaveScene(object data)
         {
-            UIManager.Intance.RemoveChild(_loginView.transform);
-            ResourcesFacade.Instance.UnLoadAsset(_loginView);
+            ApplicationFacade.Instance.RemoveMediator(LoginMediator.NAME);
+            ApplicationFacade.Instance.RemoveProxy(LoginProxy.NAME);
             return null; ;
         }
 

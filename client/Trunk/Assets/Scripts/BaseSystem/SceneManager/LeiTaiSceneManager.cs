@@ -32,11 +32,6 @@ namespace Monster.BaseSystem.SceneManager
 
         public override IEnumerator OnEnterScene(object data)
         {
-            GameObject battleMainUI = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/BattleMainUI/BattleMainUIPanel");
-            UIManager.Intance.AddChild(battleMainUI.transform);
-            Transform cameraTransform = GameObject.Find("PlayerCamera").transform;
-
-
             _proxyList = new List<IProxy>()
             {
                 new SkillProxy(),
@@ -44,8 +39,8 @@ namespace Monster.BaseSystem.SceneManager
             RegisterProxy(_proxyList);
 
             _mediatorList = new List<IMediator>() {
-                   new BattleMainUIMediator(battleMainUI),
-                   new WorldPlayerBattleMediator(cameraTransform),
+                   new BattleMainUIMediator(),
+                   new WorldPlayerBattleMediator(),
             };
             RegisterMediator(_mediatorList);
 

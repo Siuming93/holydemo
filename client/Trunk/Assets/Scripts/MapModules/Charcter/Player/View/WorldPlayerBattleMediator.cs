@@ -7,14 +7,14 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private PlayerMoelController _playerController;
     private CameraMovement _cameraMovement;
-    public WorldPlayerBattleMediator(Transform cameraTransform): base(NAME)
+    public WorldPlayerBattleMediator(): base(NAME)
     {
         _playerController = new PlayerMoelController();
         _playerController.LoadModelPrefab(MODEL_PATH);
 
         _cameraMovement = new CameraMovement()
         {
-            cameraTransform = cameraTransform,
+            cameraTransform = GameObject.Find("PlayerCamera").transform,
             player = _playerController.model.transform,
             speed = 10f,
         };

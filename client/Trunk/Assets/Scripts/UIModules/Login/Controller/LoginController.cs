@@ -27,7 +27,6 @@ public class LoginController
 
     private void RegisterProto()
     {
-        NetManager.Instance.RegisterMessageHandler(MsgIDDefine.ScLogin, OnGetLoginResponse);
     }
 
     public void Login(string id, string ipAdress)
@@ -41,12 +40,5 @@ public class LoginController
     public void SendMessageTest(string id)
     {
         NetManager.Instance.SendMessage(new CsLogin() {account = id});
-    }
-
-    public void OnGetLoginResponse(object msg)
-    {
-        PlayerPrefs.SetString("last_ip", _lastIp);
-        PlayerPrefs.Save();
-        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
     }
 }

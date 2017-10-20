@@ -3,27 +3,37 @@ using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
 using Monster.BaseSystem;
+using Monster.BaseSystem.ResourceManager;
 using UnityEngine.UI;
 
 public class BattleMainUIMediator : AbstractMediator
 {
     public new const string NAME = "BattleMainUIMediator";
+    public const string PANEL_PATH = "Prefab/UI/BattleMainUI/BattleMainUIPanel";
 
     private SkillProxy _proxy;
     private VirtualStick _stick;
     private BattleMainUISkin _skin;
+    private GameObject origin;
 
     private Dictionary<string, Button> _skillBtnMap;
     private Dictionary<string, Image> _skillImageMap;
     private Dictionary<Image, Tweener> _skillTweenerMap; 
-    public BattleMainUIMediator(GameObject view)
+    public BattleMainUIMediator()
         : base(NAME)
     {
-
+        this._proxy = ApplicationFacade.Instance.RetrieveProxy(SkillProxy.NAME) as SkillProxy;
+        ResourcesFacade.Instance.LoadAsync<GameObject>(PANEL_PATH, OnPanelLoadComplete);
         RegisterNotificationHandler(NotificationConst.USE_SKILL, OnSkillUse);
 
+    }
+
+    private void OnPanelLoadComplete(IAsyncResourceRequest resourcerequest)
+    {
+
+        origin = (resourcerequest as AsyncResourceRequest).asset as GameObject;
+        var view = GameObject.Instantiate(origin);
         this._skin = view.GetComponent<BattleMainUISkin>();
-        this._proxy = ApplicationFacade.Instance.RetrieveProxy(SkillProxy.NAME) as SkillProxy;
 
         UpdateProxy.Instance.FixedUpdateEvent += OnFixedUpdate;
 
@@ -52,10 +62,15 @@ public class BattleMainUIMediator : AbstractMediator
         this._skillImageMap.Add(_proxy.skill3VO.meta.id, _skin.skillCdImage3);
 
         RefreshSkillArea();
+        UIManager.Intance.AddChild(_skin.transform);
     }
 
     public override void OnRemove()
     {
+        if (_skin == null)
+            return;
+        ResourcesFacade.Instance.UnLoadAsset(origin);
+        UIManager.Intance.RemoveChild(_skin.transform);
         this._skin.attackBtn.onClick.RemoveListener(OnAttackBtnClick);
         this._skin.skillBtn1.onClick.RemoveListener(OnSkillBtn1Click);
         this._skin.skillBtn2.onClick.RemoveListener(OnSkillBtn2Click);
@@ -64,6 +79,8 @@ public class BattleMainUIMediator : AbstractMediator
         UpdateProxy.Instance.FixedUpdateEvent -= OnFixedUpdate;
         this._stick.OnStickMovementEnd -= OnStickMovementEnd;
         this._stick.OnStickMovementStart -= OnStickMovementStart;
+
+        GameObject.Destroy(_skin.gameObject);
     }
 
     private void OnFixedUpdate()
@@ -145,6 +162,8 @@ public class BattleMainUIMediator : AbstractMediator
         if (_skillImageMap.TryGetValue(vo.meta.id, out image))
         {
             image.enabled = isCD;
+            if (!isCD)
+                return;
             Tweener tweener = null;
             if (!_skillTweenerMap.TryGetValue(image, out tweener))
             {

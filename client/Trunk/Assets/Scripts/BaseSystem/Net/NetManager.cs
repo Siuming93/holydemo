@@ -110,22 +110,22 @@ namespace Monster.Net
                 if (len < 6)
                 {
                     int headLen = 6-len;
-                    len += headLen;
                     Array.Copy(cacheBytes, 0, bytes, len, headLen);
                     protoStartLen = 6 - len;
+                    len += headLen;
                     if (len < 6)
                         continue;
                 }
 
-                int protoLen = (bytes[0] << 8) + (bytes[1]);
+                int protoLen = (bytes[0] << 8) + (bytes[1]) + 2;
                 int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
 
                 int extraLen = 0;
                 if (len < protoLen)
                 {
                     int copyLen = protoLen - len;
-                    len += copyLen;
                     Array.Copy(cacheBytes, protoStartLen, bytes, len, copyLen);
+                    len += copyLen;
                     protoStartLen = copyLen;
                     extraLen = lenCached - copyLen;
                     if (len < protoLen)
