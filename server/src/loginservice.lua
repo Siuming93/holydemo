@@ -25,7 +25,7 @@ CMD.dispatch = function(opcode, msg, fd)
 	tb.result = 1
 	--skynet.call("talkservice", "lua", "register", fd, accountId)
 	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
-	return msgpack.pack(message.SCLOGIN, msgbody)
+	return msgpack.pack(message.SCLOGIN, msgbody), accountId
 end
 
 
