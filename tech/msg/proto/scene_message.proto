@@ -12,3 +12,46 @@ message ScEnterScene
 	required int32 id 				= 1;
 	required int32 result			= 2;
 }
+
+message PlayerPosInfo
+{
+	required int64 id 				= 1;
+
+	required float posX				= 2;
+	required float posY				= 3;
+	required float rotX				= 4;
+	required float rotY				= 5;
+
+}
+
+message CsPlayerMove
+{
+	required PlayerPosInfo info  	= 1;
+}
+
+message ScAllPlayerPosInfo
+{
+	repeated  PlayerPosInfo infos 	= 1;
+}
+
+message CsPlayerIsMove
+{
+	required bool  isMove			= 1;
+}
+
+message ScPlayerIsMove
+{
+	required int64 id				= 1;
+	required bool  isMove			= 2;
+}
+
+message CsPlayerUseSkill
+{
+	required int32 skillId			= 1;
+}
+
+message ScPlayerUseSkill
+{
+	required int64 id				= 1;
+	required int32 skillId			= 2;
+}
