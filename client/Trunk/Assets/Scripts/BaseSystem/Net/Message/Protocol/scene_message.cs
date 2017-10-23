@@ -137,10 +137,10 @@ namespace Monster.Protocol
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsPlayerMoveInfo")]
-  public partial class CsPlayerMoveInfo : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsPlayerIsMove")]
+  public partial class CsPlayerIsMove : global::ProtoBuf.IExtensible
   {
-    public CsPlayerMoveInfo() {}
+    public CsPlayerIsMove() {}
     
     private bool _isMove;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"isMove", DataFormat = global::ProtoBuf.DataFormat.Default)]
@@ -154,10 +154,10 @@ namespace Monster.Protocol
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
-  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScPlayerMoveInfo")]
-  public partial class ScPlayerMoveInfo : global::ProtoBuf.IExtensible
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScPlayerIsMove")]
+  public partial class ScPlayerIsMove : global::ProtoBuf.IExtensible
   {
-    public ScPlayerMoveInfo() {}
+    public ScPlayerIsMove() {}
     
     private long _id;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]

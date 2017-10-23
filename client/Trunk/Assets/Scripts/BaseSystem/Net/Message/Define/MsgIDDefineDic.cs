@@ -33,6 +33,18 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(CsEnterScene), 10401);
 		id2msgMap.Add(10402, typeof(ScEnterScene));
 		msg2idMap.Add(typeof(ScEnterScene), 10402);
+		id2msgMap.Add(10403, typeof(CsPlayerMove));
+		msg2idMap.Add(typeof(CsPlayerMove), 10403);
+		id2msgMap.Add(10404, typeof(ScAllPlayerPosInfo));
+		msg2idMap.Add(typeof(ScAllPlayerPosInfo), 10404);
+		id2msgMap.Add(10405, typeof(CsPlayerIsMove));
+		msg2idMap.Add(typeof(CsPlayerIsMove), 10405);
+		id2msgMap.Add(10406, typeof(ScPlayerIsMove));
+		msg2idMap.Add(typeof(ScPlayerIsMove), 10406);
+		id2msgMap.Add(10407, typeof(CsPlayerUseSkill));
+		msg2idMap.Add(typeof(CsPlayerUseSkill), 10407);
+		id2msgMap.Add(10408, typeof(ScPlayerUseSkill));
+		msg2idMap.Add(typeof(ScPlayerUseSkill), 10408);
 	}
 	public Type GetMsgType(int msgID)
 	{
