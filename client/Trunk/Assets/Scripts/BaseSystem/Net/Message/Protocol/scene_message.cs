@@ -58,4 +58,165 @@ namespace Monster.Protocol
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlayerPosInfo")]
+  public partial class PlayerPosInfo : global::ProtoBuf.IExtensible
+  {
+    public PlayerPosInfo() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private float _posX;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float posX
+    {
+      get { return _posX; }
+      set { _posX = value; }
+    }
+    private float _posY;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float posY
+    {
+      get { return _posY; }
+      set { _posY = value; }
+    }
+    private float _rotX;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"rotX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float rotX
+    {
+      get { return _rotX; }
+      set { _rotX = value; }
+    }
+    private float _rotY;
+    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"rotY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float rotY
+    {
+      get { return _rotY; }
+      set { _rotY = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsPlayerMove")]
+  public partial class CsPlayerMove : global::ProtoBuf.IExtensible
+  {
+    public CsPlayerMove() {}
+    
+    private Monster.Protocol.PlayerPosInfo _info;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"info", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Monster.Protocol.PlayerPosInfo info
+    {
+      get { return _info; }
+      set { _info = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScAllPlayerPosInfo")]
+  public partial class ScAllPlayerPosInfo : global::ProtoBuf.IExtensible
+  {
+    public ScAllPlayerPosInfo() {}
+    
+    private readonly global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo> _infos = new global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"infos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo> infos
+    {
+      get { return _infos; }
+    }
+  
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsPlayerMoveInfo")]
+  public partial class CsPlayerMoveInfo : global::ProtoBuf.IExtensible
+  {
+    public CsPlayerMoveInfo() {}
+    
+    private bool _isMove;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"isMove", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool isMove
+    {
+      get { return _isMove; }
+      set { _isMove = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScPlayerMoveInfo")]
+  public partial class ScPlayerMoveInfo : global::ProtoBuf.IExtensible
+  {
+    public ScPlayerMoveInfo() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private bool _isMove;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"isMove", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool isMove
+    {
+      get { return _isMove; }
+      set { _isMove = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsPlayerUseSkill")]
+  public partial class CsPlayerUseSkill : global::ProtoBuf.IExtensible
+  {
+    public CsPlayerUseSkill() {}
+    
+    private int _skillId;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"skillId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int skillId
+    {
+      get { return _skillId; }
+      set { _skillId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScPlayerUseSkill")]
+  public partial class ScPlayerUseSkill : global::ProtoBuf.IExtensible
+  {
+    public ScPlayerUseSkill() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private int _skillId;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"skillId", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int skillId
+    {
+      get { return _skillId; }
+      set { _skillId = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
 }
