@@ -55,7 +55,7 @@ def parse_msgfile(msgid_conf):
 			
 		comment = ""
 		if len(array_info) > 1:
-			comment = "//" + array_info[1].strip().rstrip()
+			comment = "--" + array_info[1].strip().rstrip()
 		msg_info_list.append(MsgInfo(msgid,msgname,comment))
 		
 	return msg_info_list
