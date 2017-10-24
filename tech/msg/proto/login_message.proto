@@ -9,5 +9,5 @@ message CsLogin
 message ScLogin
 {
 	required int32 result 				= 1;
-	required int32 accountid			= 2;
+	required int64 accountid			= 2;
 }

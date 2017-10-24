@@ -22,6 +22,8 @@ message PlayerPosInfo
 	required float rotX				= 4;
 	required float rotY				= 5;
 
+	required bool isMove  			= 6;
+
 }
 
 message CsPlayerMove
@@ -36,18 +38,14 @@ message ScAllPlayerPosInfo
 
 message CsPlayerIsMove
 {
-	required bool  isMove			= 1;
-}
-
-message ScPlayerIsMove
-{
-	required int64 id				= 1;
+	required int64 id 				= 1;
 	required bool  isMove			= 2;
 }
 
 message CsPlayerUseSkill
 {
-	required int32 skillId			= 1;
+	required int64 id 				= 1;
+	required int32 skillId			= 2;
 }
 
 message ScPlayerUseSkill
