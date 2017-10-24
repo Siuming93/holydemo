@@ -11,7 +11,6 @@ message.SCENTERSCENE                                                 	= 10402;
 message.CSPLAYERMOVE                                                 	= 10403; 
 message.SCALLPLAYERPOSINFO                                           	= 10404; --所有玩家位置状态;定期发
 message.CSPLAYERISMOVE                                               	= 10405; 
-message.SCPLAYERISMOVE                                               	= 10406; 
 message.CSPLAYERUSESKILL                                             	= 10407; 
 message.SCPLAYERUSESKILL                                             	= 10408; 
 
