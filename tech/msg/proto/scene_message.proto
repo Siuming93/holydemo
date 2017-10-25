@@ -28,7 +28,12 @@ message PlayerPosInfo
 
 message CsPlayerMove
 {
-	required PlayerPosInfo info  	= 1;
+	required int64 id 				= 1;
+
+	required float posX				= 2;
+	required float posY				= 3;
+	required float rotX				= 4;
+	required float rotY				= 5;
 }
 
 message ScAllPlayerPosInfo
