@@ -29,7 +29,7 @@
 CsPlayerIsMove
 
 id (
-isMove ("/
+isMove ("/
 CsPlayerUseSkill
 
 id (
