@@ -30,10 +30,10 @@ message CsPlayerMove
 {
 	required int64 id 				= 1;
 
-	required float posX				= 2;
-	required float posY				= 3;
-	required float rotX				= 4;
-	required float rotY				= 5;
+	optional float posX				= 2;
+	optional float posY				= 3;
+	optional float rotX				= 4;
+	optional float rotY				= 5;
 }
 
 message ScAllPlayerPosInfo
