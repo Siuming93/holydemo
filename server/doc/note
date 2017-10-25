@@ -1,0 +1,2 @@
+1.use protobuf need to point out proto's full name which include package name  
+2.don't copy from .bp file cause of some symbol is not seen

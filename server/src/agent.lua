@@ -11,8 +11,12 @@ local host
 local CMD = {}
 local client_fd = {}
 local player_info = {}
-local function send_response(package)
+
+local agentInterface ={}
+
+function send_response(package)
 	print("package",package)
+	print("client_fd",client_fd)
 	socket.write(client_fd, netpack.pack(package))
 end
 
@@ -26,16 +30,18 @@ skynet.register_protocol {
 		print("------------client dispacth-----------")
 		
 		data = msgpack.unpack(msg)
+		print("msgno", data.msgno)
 		module = math.floor(data.msgno / 100)	
 		opcode = data.msgno%100
 		local ok, result
 		--login
 		if msgId[module] == "loginservice" then
-			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg, client_fd)
+			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg)
 			if ok then
 				player_info.id = playerId
-				--send_response(result)
+				send_response(result)
 				print("playerid:",player_info.id)
+				agentInterface.player_info = player_info
 				return
 			end
 			return
@@ -46,8 +52,14 @@ skynet.register_protocol {
 			return
 		end
 
+		if msgId[module] == "leitaiservice" then
+			print("self",agentInterface)
+			pcall(skynet.call, "leitaiservice", "lua", "dispatch", opcode, data.msg, agentInterface)
+			return
+		end
+
 		if msgId[module] then
-			ok, result = pcall(skynet.call, msgId[module], "lua", "dispatch", opcode, data.msg, player_info)
+			ok, result = pcall(skynet.call, msgId[module], "lua", "dispatch", opcode, data.msg, agentInterface)
 			if ok then
 				send_response(result)
 			else
@@ -61,12 +73,14 @@ skynet.register_protocol {
 
 function CMD.start(gate, fd, proto)
 	client_fd = fd
+	agentInterface.client_fd = fd;
 	print("start")
 	skynet.call(gate, "lua", "forward", fd)
 end
 
 function CMD.disconect()
 	print("----a client disconnect")
+	pcall(skynet.call, "leitaiservice", "lua", "disconect", agentInterface)
 	skynet.exit()
 end
 

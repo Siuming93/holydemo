@@ -43,15 +43,10 @@ function updatePos(id, data)
 
 	local tb = {}
 	tb.id = 2017
-	local dataf = protobuf.encode("Monster.Protocol.CsPlayerMove", tb)
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerMove", dataf)
+	local msg = protobuf.decode("Monster.Protocol.CsPlayerMove", data)
 
-	local has = protobuf.check("Monster.Protocol.;")
-	print("has",has)
-	print("id",id)
-	print("msg",msg)
-	print("data",data)
-	print("dataf",dataf)
+	local has = protobuf.check("Monster.Protocol.CsPlayerMove;")
+
 
 	local info = player_table[id]
 	info.posX = msg.info.posX;
@@ -63,10 +58,6 @@ end
 function updateIsMove(id, data)
 	local msg = protobuf.decode("Monster.Protocol.CsPlayerIsMove", data)
 	local info = player_table[id]
-	print("id",id)
-	print("msg",msg)
-	print("data",data)
-	print("isMove", msg.isMove)
 	info.isMove = msg.isMove
 end
 
@@ -136,24 +127,6 @@ skynet.start(function(...)
 	protobuf.register_file "../proto/scene_message.pb"
 
 	skynet.register "leitaiservice"
-
-	local tb = {}
-	tb.id = 2017
-	local data = protobuf.encode("Monster.Protocol.CsPlayerMove", tb)
-	local msg 	=  	protobuf.decode("Monster.Protocol.CsPlayerMove", data)
-	local msg1 	= 	protobuf.decode("Monster.Protocol.CsPlayerMove", data)
-
-	local has = protobuf.check("Monster.Protocol.CsPlayerMove")
-	print("has",has)
 	
-
-	local tb1 = {}
-	tb1.id = 2017
-	local data1 = protobuf.encode("Monster.Protocol.CsPlayerMove", tb1)
-	
-	
-	print("msg", msg)
-	print("msg1", msg1)
-
 	skynet.fork(fixedUpdate)
 end)
