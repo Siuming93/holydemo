@@ -44,7 +44,7 @@ message ScAllPlayerPosInfo
 message CsPlayerIsMove
 {
 	required int64 id 				= 1;
-	required bool  isMove			= 2;
+	optional bool  isMove			= 2;
 }
 
 message CsPlayerUseSkill
