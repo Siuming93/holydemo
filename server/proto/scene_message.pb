@@ -1,5 +1,5 @@
 
-–
+Þ
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -16,14 +16,10 @@
 posY (
 rotX (
 rotY (
-isMove ("R
+isMove ("
 CsPlayerMove
 
-id (
-posX (
-posY (
-rotX (
-rotY ("D
+id ("D
 ScAllPlayerPosInfo.
 infos (2.Monster.Protocol.PlayerPosInfo",
 CsPlayerIsMove
