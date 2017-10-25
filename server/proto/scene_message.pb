@@ -20,10 +20,10 @@
 CsPlayerMove
 
 id (
-posX (
-posY (
-rotX (
-rotY ("D
+posX (
+posY (
+rotX (
+rotY ("D
 ScAllPlayerPosInfo.
 infos (2.Monster.Protocol.PlayerPosInfo",
 CsPlayerIsMove
