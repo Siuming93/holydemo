@@ -1,5 +1,5 @@
 
-–
+ò
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -16,24 +16,24 @@
 posY (
 rotX (
 rotY (
-isMove ("R
-CsPlayerMove
-
-id (
-posX (
-posY (
-rotX (
-rotY ("D
+isMove ("F
+CsPlayerMove
+posX (
+posY (
+rotX (
+rotY ("D
 ScAllPlayerPosInfo.
-infos (2.Monster.Protocol.PlayerPosInfo",
-CsPlayerIsMove
-
-id (
-isMove ("/
-CsPlayerUseSkill
-
-id (
-skillId ("/
+infos (2.Monster.Protocol.PlayerPosInfo"
+CsPlayerStartMove"I
+CsPlayerEndMove
+posX (
+posY (
+rotX (
+rotY ("@
+ScPlayerEndMove-
+info (2.Monster.Protocol.PlayerPosInfo"#
+CsPlayerUseSkill
+skillId ("/
 ScPlayerUseSkill
 
 id (
