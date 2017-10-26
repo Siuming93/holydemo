@@ -41,6 +41,7 @@ message ScAllPlayerPosInfo
 
 message CsPlayerStartMove
 {
+	required int64 id 				= 1;
 }
 
 message CsPlayerEndMove
