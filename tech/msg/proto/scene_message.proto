@@ -28,12 +28,10 @@ message PlayerPosInfo
 
 message CsPlayerMove
 {
-	required int64 id 				= 1;
-
-	optional float posX				= 2;
-	optional float posY				= 3;
-	optional float rotX				= 4;
-	optional float rotY				= 5;
+	optional float posX				= 1;
+	optional float posY				= 2;
+	optional float rotX				= 3;
+	optional float rotY				= 4;
 }
 
 message ScAllPlayerPosInfo
@@ -41,16 +39,26 @@ message ScAllPlayerPosInfo
 	repeated  PlayerPosInfo infos 	= 1;
 }
 
-message CsPlayerIsMove
+message CsPlayerStartMove
 {
-	required int64 id 				= 1;
-	optional bool  isMove			= 2;
+}
+
+message CsPlayerEndMove
+{
+	optional float posX				= 1;
+	optional float posY				= 2;
+	optional float rotX				= 3;
+	optional float rotY				= 4;
+}
+
+message ScPlayerEndMove
+{
+	optional PlayerPosInfo info		= 1;
 }
 
 message CsPlayerUseSkill
 {
-	required int64 id 				= 1;
-	required int32 skillId			= 2;
+	required int32 skillId			= 1;
 }
 
 message ScPlayerUseSkill
