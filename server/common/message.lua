@@ -13,7 +13,8 @@ message.SCALLPLAYERPOSINFO                                           	= 10404; -
 message.CSPLAYERSTARTMOVE                                            	= 10405; 
 message.CSPLAYERENDMOVE                                              	= 10406; 
 message.SCPLAYERENDMOVE                                              	= 10407; 
-message.CSPLAYERUSESKILL                                             	= 10408; 
-message.SCPLAYERUSESKILL                                             	= 10409; 
+message.CSPLAYERENDMOVEPOS                                           	= 10408; 
+message.CSPLAYERUSESKILL                                             	= 10409; 
+message.SCPLAYERUSESKILL                                             	= 10410; 
 
 return message
