@@ -27,12 +27,13 @@ skynet.register_protocol {
 		return skynet.tostring(msg,sz)
 	end,
 	dispatch = function(_, _, msg)
-		print("------------client dispacth-----------")
+		--print("------------client dispacth-----------")
 		
 		data = msgpack.unpack(msg)
-		print("msgno", data.msgno)
+		--print("msgno", data.msgno)
 		module = math.floor(data.msgno / 100)	
-		opcode = data.msgno%100
+		opcode = data.msgno%10000
+		print("msgno",data.msgno)
 		local ok, result
 		--login
 		if msgId[module] == "loginservice" then
@@ -53,7 +54,6 @@ skynet.register_protocol {
 		end
 
 		if msgId[module] == "leitaiservice" then
-			print("self",agentInterface)
 			pcall(skynet.call, "leitaiservice", "lua", "dispatch", opcode, data.msg, agentInterface)
 			return
 		end
