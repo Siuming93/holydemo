@@ -14,6 +14,6 @@ public class LoginProxy : BaseProxy
     {
         ScLogin loginMsg = msg as ScLogin;
         if (loginMsg.result == 1)
-            SendNotification(NotificationConst.LOGIN_SUCCESS);
+            SendNotification(NotificationConst.LOGIN_SUCCESS, loginMsg.accountid);
     }
 }

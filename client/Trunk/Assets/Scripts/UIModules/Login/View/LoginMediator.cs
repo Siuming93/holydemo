@@ -42,6 +42,7 @@ public class LoginMediator : AbstractMediator
     {
         PlayerPrefs.SetString("last_ip", _skin.ipAddressInputField.text);
         PlayerPrefs.Save();
+        PlayerProperty.ID = (long)obj;
         UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
     }
     #endregion

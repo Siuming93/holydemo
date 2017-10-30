@@ -4,6 +4,8 @@ using System.Collections.Generic;
 using DG.Tweening;
 using Monster.BaseSystem;
 using Monster.BaseSystem.ResourceManager;
+using Monster.Net;
+using Monster.Protocol;
 using UnityEngine.UI;
 
 public class BattleMainUIMediator : AbstractMediator
@@ -25,7 +27,6 @@ public class BattleMainUIMediator : AbstractMediator
         this._proxy = ApplicationFacade.Instance.RetrieveProxy(SkillProxy.NAME) as SkillProxy;
         ResourcesFacade.Instance.LoadAsync<GameObject>(PANEL_PATH, OnPanelLoadComplete);
         RegisterNotificationHandler(NotificationConst.USE_SKILL, OnSkillUse);
-
     }
 
     private void OnPanelLoadComplete(IAsyncResourceRequest resourcerequest)
@@ -34,8 +35,6 @@ public class BattleMainUIMediator : AbstractMediator
         origin = (resourcerequest as AsyncResourceRequest).asset as GameObject;
         var view = GameObject.Instantiate(origin);
         this._skin = view.GetComponent<BattleMainUISkin>();
-
-        UpdateProxy.Instance.FixedUpdateEvent += OnFixedUpdate;
 
         this._skin.attackBtn.onClick.AddListener(OnAttackBtnClick);
         this._skin.skillBtn1.onClick.AddListener(OnSkillBtn1Click);
@@ -47,6 +46,7 @@ public class BattleMainUIMediator : AbstractMediator
         this._stick = _skin.stick;
         this._stick.OnStickMovementEnd += OnStickMovementEnd;
         this._stick.OnStickMovementStart += OnStickMovementStart;
+        this._stick.OnJoystickMovement += OnStickMovement;
 
         this._skillBtnMap = new Dictionary<string, Button>();
         this._skillImageMap = new Dictionary<string, Image>();
@@ -76,35 +76,12 @@ public class BattleMainUIMediator : AbstractMediator
         this._skin.skillBtn2.onClick.RemoveListener(OnSkillBtn2Click);
         this._skin.skillBtn3.onClick.RemoveListener(OnSkillBtn3Click);
 
-        UpdateProxy.Instance.FixedUpdateEvent -= OnFixedUpdate;
         this._stick.OnStickMovementEnd -= OnStickMovementEnd;
         this._stick.OnStickMovementStart -= OnStickMovementStart;
+        this._stick.OnJoystickMovement -= OnStickMovement;
+
 
         GameObject.Destroy(_skin.gameObject);
-    }
-
-    private void OnFixedUpdate()
-    {
-        if (!_stick.isPressed)
-            return;
-
-        if (_proxy.isUseSkill)
-            return;
-
-        bool moveX = !Mathf.Approximately(_stick.Coordinates.x, 0);
-        bool moveY = !Mathf.Approximately(_stick.Coordinates.y, 0);
-
-        if (!moveX && !moveY)
-            return;
-
-        //todo 给后端发送消息;
-
-        Vector2 delta = _stick.Coordinates * PlayerProperty.RunSpeed * Time.fixedDeltaTime;
-        Vector2 endPos = delta + PlayerProperty.Postion;
-        endPos.x = Mathf.Clamp(endPos.x, -12, 15.4f);
-        endPos.y = Mathf.Clamp(endPos.y, -22, 5.0f);
-
-        SendNotification(NotificationConst.PLAYER_MOVE, new ModelMoveVO() { dir = _stick.Coordinates, endPos = endPos, });
     }
 
     #region component callBack
@@ -126,11 +103,35 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
     {
-        SendNotification(NotificationConst.PLAYER_MOVE_START);
+        NetManager.Instance.SendMessage(new CsPlayerStartMove() { id = PlayerProperty.ID });
+
     }
     private void OnStickMovementEnd(VirtualStick obj)
     {
-        SendNotification(NotificationConst.PLAYER_MOVE_END);
+        NetManager.Instance.SendMessage(new CsPlayerEndMove() { id = PlayerProperty.ID, });
+    }
+
+    private Vector2 _lastDir;
+    private void OnStickMovement(VirtualStick arg1, Vector2 arg2)
+    {
+        if (_lastDir == Vector2.zero)
+        {
+            _lastDir = arg2;
+            SendUpdateMoveDirMsg(arg2);
+            return;
+        }
+
+        var angle = Vector2.Angle(_lastDir, arg2);
+        if (Mathf.Abs(angle) > 30)
+        {
+            _lastDir = arg2;
+            SendUpdateMoveDirMsg(arg2);
+        }
+    }
+
+    private void SendUpdateMoveDirMsg(Vector2 dir)
+    {
+        NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir() {dirX = dir.x, dirY = dir.y});
     }
     #endregion
 

@@ -51,6 +51,11 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         var handleOffset = GetJoystickOffset(eventData);
         this.Coordinates = handleOffset.normalized;
         this.stickHandlerRectTransform.anchoredPosition = handleOffset;
+
+        if (OnJoystickMovement != null)
+        {
+            OnJoystickMovement.Invoke(this, Coordinates);
+        }
     }
 
     private Vector2 GetJoystickOffset(PointerEventData eventData)
