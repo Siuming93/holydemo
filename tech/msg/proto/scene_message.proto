@@ -44,10 +44,7 @@ message CsPlayerStartMove
 
 message ScPlayerStartMove
 {
-	optional float posX				= 1;
-	optional float posY				= 2;
-	optional float dirX				= 3;
-	optional float dirY				= 4;
+	required int64 id 				= 1;
 }
 
 message CsPlayerEndMove
