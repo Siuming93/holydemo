@@ -19,8 +19,8 @@ message PlayerPosInfo
 
 	required float posX				= 2;
 	required float posY				= 3;
-	required float rotX				= 4;
-	required float rotY				= 5;
+	required float dirX				= 4;
+	required float dirY				= 5;
 
 	required bool isMove  			= 6;
 
@@ -28,8 +28,8 @@ message PlayerPosInfo
 
 message CsPlayerMove
 {
-	optional float rotX				= 3;
-	optional float rotY				= 4;
+	optional float dirX				= 3;
+	optional float dirY				= 4;
 }
 
 message ScAllPlayerPosInfo
@@ -42,22 +42,42 @@ message CsPlayerStartMove
 	required int64 id 				= 1;
 }
 
+message ScPlayerStartMove
+{
+	optional float posX				= 1;
+	optional float posY				= 2;
+	optional float dirX				= 3;
+	optional float dirY				= 4;
+}
+
 message CsPlayerEndMove
 {
-	required int64 id 				= 1;
+	optional int64 id 				= 1;
 }
 
 message ScPlayerEndMove
 {
-	optional PlayerPosInfo info		= 1;
+	optional int64 id 				= 1;
+}
+
+message CsPlayerUpdateMoveDir
+{
+	optional float dirX				= 1;
+	optional float dirY				= 2;
+}
+
+message ScPlayerUpdateMoveDir
+{
+	optional float dirX				= 1;
+	optional float dirY				= 2;
 }
 
 message CsPlayerEndMovePos
 {
 	optional float posX				= 1;
 	optional float posY				= 2;
-	optional float rotX				= 3;
-	optional float rotY				= 4;
+	optional float dirX				= 3;
+	optional float dirY				= 4;
 }
 
 message CsPlayerUseSkill
