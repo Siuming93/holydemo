@@ -34,15 +34,18 @@ namespace Monster.BaseSystem.SceneManager
         {
             _proxyList = new List<IProxy>()
             {
+                new LeitaiCharcterProxy(),
                 new SkillProxy(),
             };
             RegisterProxy(_proxyList);
 
             _mediatorList = new List<IMediator>() {
+                   new LeitaiWorldMapMediator(),
                    new BattleMainUIMediator(),
                    new WorldPlayerBattleMediator(),
             };
             RegisterMediator(_mediatorList);
+
 
             yield return 0;
         }
