@@ -13,6 +13,9 @@ public abstract class BaseModelController
 
     public Animator animator { protected set; get; }
 
+    public Vector2 pos { get { return new Vector2(model.transform.localPosition.x, model.transform.localPosition.z); } }
+    public Vector2 dir { get { return moveDir; } }
+
     #region public funcs
     #region load
     public void LoadModelPrefabAsync(string path)
@@ -39,12 +42,60 @@ public abstract class BaseModelController
         }
     }
 
-    public void MoveTo(Vector2 pos)
+    protected bool addListener = false;
+    public void StartMove(Vector2 dir)
+    {
+        isMove = true;
+        moveDir = dir;
+        if (!addListener)
+        {
+            addListener = true;
+            UpdateProxy.Instance.UpdateEvent += Update;
+        }
+    }
+
+    public void UpdateMoveDir(Vector2 dir)
+    {
+        moveDir = dir;
+    }
+
+    protected bool isMove;
+    protected Vector2 moveDir;
+    protected void Update()
     {
         if (model != null)
         {
-            Vector3 endPos = new Vector3(pos.x, 0f, pos.y);
-            model.transform.localPosition = endPos;
+            if (isMove)
+            {
+                Vector3 delta = new Vector3(moveDir.x, 0f, moveDir.y) * PlayerProperty.RunSpeed * Time.deltaTime;
+                Debug.Log(Time.deltaTime);
+                Vector3 endPos = model.transform.localPosition + delta;
+                model.transform.localPosition = endPos;
+            }
+        }
+    }
+
+    public void EndMove()
+    {
+        isMove = false;
+        if (addListener)
+        {
+            UpdateProxy.Instance.UpdateEvent -= Update;
+            addListener = false;
+        }
+    }
+
+    protected Tweener moveTweener;
+    public void MoveTo(Vector3 pos)
+    {
+        if (model != null)
+        {
+            float distance = (pos - model.transform.localPosition).magnitude;
+            Debug.Log(distance);
+            if (moveTweener != null)
+                moveTweener.Kill();
+            moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
+
         }
     }
 

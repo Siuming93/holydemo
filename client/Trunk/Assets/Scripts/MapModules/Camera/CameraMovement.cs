@@ -14,7 +14,7 @@ public enum CameraState
 public class CameraMovement
 {
     public Transform cameraTransform;
-    public float speed = 10f;
+    public float speed = 1f;
 
     /// <summary>
     /// 玩家位置
@@ -45,6 +45,7 @@ public class CameraMovement
     private void Update()
     {
         SmoothMovement();
+        //SmoothLookAt();
     }
 
     /// <summary>

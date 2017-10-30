@@ -1,8 +1,11 @@
-﻿public class CityWorldMapMediator : AbstractMediator
+﻿using Monster.Net;
+using Monster.Protocol;
+
+public class LeitaiWorldMapMediator : AbstractMediator
 {
     public new const string NAME = "WorldMapMediator";
-    public CityWorldMapMediator(string mediatorName)
-        : base(mediatorName)
+    public LeitaiWorldMapMediator(): base(NAME)
     {
+        NetManager.Instance.SendMessage(new CsEnterScene() { id = 0, name = "leitai" });
     }
 }
