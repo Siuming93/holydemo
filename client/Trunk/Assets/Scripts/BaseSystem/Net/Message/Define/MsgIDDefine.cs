@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using Monster.Protocol;
@@ -14,8 +14,13 @@ public class MsgIDDefine
 	public const int ScEnterScene = 10402; 
 	public const int CsPlayerMove = 10403; 
 	public const int ScAllPlayerPosInfo = 10404; //所有玩家位置状态;定期发
-	public const int CsPlayerIsMove = 10405; 
-	public const int ScPlayerIsMove = 10406; 
-	public const int CsPlayerUseSkill = 10407; 
-	public const int ScPlayerUseSkill = 10408; 
+	public const int CsPlayerStartMove = 10405; 
+	public const int CsPlayerEndMove = 10406; 
+	public const int ScPlayerEndMove = 10407; 
+	public const int CsPlayerEndMovePos = 10408; 
+	public const int CsPlayerUseSkill = 10409; 
+	public const int ScPlayerUseSkill = 10410; 
+	public const int CsPlayerUpdateMoveDir = 10411; 
+	public const int ScPlayerUpdateMoveDir = 10412; 
+	public const int ScPlayerStartMove = 10413; 
 }

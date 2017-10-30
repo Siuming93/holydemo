@@ -106,43 +106,48 @@ namespace Monster.Net
                     continue;
 
                 //可以解决两包相连的问题
-                int protoStartLen = 0;
-                if (len < 6)
-                {
-                    int headLen = 6-len;
-                    Array.Copy(cacheBytes, 0, bytes, len, headLen);
-                    protoStartLen = 6 - len;
-                    len += headLen;
-                    if (len < 6)
-                        continue;
-                }
+                //int protoStartLen = 0;
+                //if (len < 6)
+                //{
+                //    int headLen = 6-len;
+                //    Array.Copy(cacheBytes, 0, bytes, len, headLen);
+                //    protoStartLen = 6 - len;
+                //    len += headLen;
+                //    if (len < 6)
+                //        continue;
+                //}
 
-                int protoLen = (bytes[0] << 8) + (bytes[1]) + 2;
-                int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
+                //int protoLen = (bytes[0] << 8) + (bytes[1]) + 2;
+                //int msgNo = (bytes[2] << 24) + (bytes[3] << 16) + (bytes[4] << 8) + (bytes[5]);
 
-                int extraLen = 0;
-                if (len < protoLen)
-                {
-                    int copyLen = protoLen - len;
-                    Array.Copy(cacheBytes, protoStartLen, bytes, len, copyLen);
-                    len += copyLen;
-                    protoStartLen = copyLen;
-                    extraLen = lenCached - copyLen;
-                    if (len < protoLen)
-                        continue;
-                }
-                len = 0;
+                //int extraLen = 0;
+                //if (len < protoLen)
+                //{
+                //    int copyLen = protoLen - len;
+                //    Array.Copy(cacheBytes, protoStartLen, bytes, len, copyLen);
+                //    len += copyLen;
+                //    protoStartLen = copyLen;
+                //    extraLen = lenCached - copyLen;
+                //    if (len < protoLen)
+                //        continue;
+                //}
+                //len = 0;
 
+                int protoLen = (cacheBytes[0] << 8) + (cacheBytes[1]) + 2;
+                int msgNo = (cacheBytes[2] << 24) + (cacheBytes[3] << 16) + (cacheBytes[4] << 8) + (cacheBytes[5]);
+
+                Debug.Log(protoLen + "msgNo" + msgNo);
                 MemoryStream stream = new MemoryStream();
-                stream.Write(bytes, 6, lenCached - 6);
+                //stream.Write(bytes, 6, lenCached - 6);
+                stream.Write(cacheBytes, 6, lenCached - 6);
                 Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
                 mReceiveBuffer.Enqueue(proto);
 
-                if (extraLen > 0)
-                {
-                    len = extraLen;
-                    Array.Copy(cacheBytes, protoStartLen, bytes, len, extraLen);
-                }
+                //if (extraLen > 0)
+                //{
+                //    len = extraLen;
+                //    Array.Copy(cacheBytes, protoStartLen, bytes, len, extraLen);
+                //}
             }
 
             Debug.LogError("接收  结  结束了~~");
@@ -193,6 +198,11 @@ namespace Monster.Net
             var stream = new MemoryStream();
             Serializer.NonGeneric.Serialize(stream, msg);
             stream.Position = 0;
+
+            var s = Serializer.NonGeneric.Deserialize(msg.GetType(),stream);
+            Debug.Log(s);
+            stream.Position = 0;
+
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
         }
         public void RegisterMessageHandler(int msgNo, MessageHandler handler)

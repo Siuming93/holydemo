@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using ProtoBuf;
 namespace Monster.Net
 {
-    public delegate void MessageHandler(object msg);
+    public delegate void MessageHandler(object data);
 
     internal class NetDispatcher
     {
