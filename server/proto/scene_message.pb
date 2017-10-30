@@ -1,5 +1,5 @@
 
-˜
+ì
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -24,12 +24,10 @@
 infos (2.Monster.Protocol.PlayerPosInfo"
 CsPlayerStartMove
 
-id ("K
-ScPlayerStartMove
-posX (
-posY (
-dirX (
-dirY ("
+id ("
+ScPlayerStartMove
+
+id ("
 CsPlayerEndMove
 
 id ("
