@@ -175,37 +175,12 @@ namespace Monster.Protocol
   {
     public ScPlayerStartMove() {}
     
-    private float _posX = default(float);
-    [global::ProtoBuf.ProtoMember(1, IsRequired = false, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    [global::System.ComponentModel.DefaultValue(default(float))]
-    public float posX
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
     {
-      get { return _posX; }
-      set { _posX = value; }
-    }
-    private float _posY = default(float);
-    [global::ProtoBuf.ProtoMember(2, IsRequired = false, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    [global::System.ComponentModel.DefaultValue(default(float))]
-    public float posY
-    {
-      get { return _posY; }
-      set { _posY = value; }
-    }
-    private float _dirX = default(float);
-    [global::ProtoBuf.ProtoMember(3, IsRequired = false, Name=@"dirX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    [global::System.ComponentModel.DefaultValue(default(float))]
-    public float dirX
-    {
-      get { return _dirX; }
-      set { _dirX = value; }
-    }
-    private float _dirY = default(float);
-    [global::ProtoBuf.ProtoMember(4, IsRequired = false, Name=@"dirY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    [global::System.ComponentModel.DefaultValue(default(float))]
-    public float dirY
-    {
-      get { return _dirY; }
-      set { _dirY = value; }
+      get { return _id; }
+      set { _id = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)

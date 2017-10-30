@@ -56,9 +56,7 @@ public class LeitaiCharcterProxy : BaseProxy
 
     private void OnPlayerStartMove(object data)
     {
-        var msg = data as ScPlayerStartMove;
-        playerInfo.Update(msg.posX, msg.posY, msg.dirX, msg.dirY);
-
+        playerInfo.UpdateDir(0, 0);
         SendNotification(NotificationConst.PLAYER_START_MOVE);
     }
 

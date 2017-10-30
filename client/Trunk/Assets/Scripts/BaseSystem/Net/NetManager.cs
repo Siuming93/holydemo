@@ -136,7 +136,6 @@ namespace Monster.Net
                 int protoLen = (cacheBytes[0] << 8) + (cacheBytes[1]) + 2;
                 int msgNo = (cacheBytes[2] << 24) + (cacheBytes[3] << 16) + (cacheBytes[4] << 8) + (cacheBytes[5]);
 
-                Debug.Log(protoLen + "msgNo" + msgNo);
                 MemoryStream stream = new MemoryStream();
                 //stream.Write(bytes, 6, lenCached - 6);
                 stream.Write(cacheBytes, 6, lenCached - 6);

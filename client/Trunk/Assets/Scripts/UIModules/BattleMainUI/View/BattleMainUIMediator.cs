@@ -108,12 +108,17 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnStickMovementEnd(VirtualStick obj)
     {
+        _lastDir = Vector2.zero;
         NetManager.Instance.SendMessage(new CsPlayerEndMove() { id = PlayerProperty.ID, });
     }
 
     private Vector2 _lastDir;
     private void OnStickMovement(VirtualStick arg1, Vector2 arg2)
     {
+        SendUpdateMoveDirMsg(arg2);
+        return;
+
+        //暂时不做限制
         if (_lastDir == Vector2.zero)
         {
             _lastDir = arg2;

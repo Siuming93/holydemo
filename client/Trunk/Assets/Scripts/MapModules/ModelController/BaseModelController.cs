@@ -68,7 +68,6 @@ public abstract class BaseModelController
             if (isMove)
             {
                 Vector3 delta = new Vector3(moveDir.x, 0f, moveDir.y) * PlayerProperty.RunSpeed * Time.deltaTime;
-                Debug.Log(Time.deltaTime);
                 Vector3 endPos = model.transform.localPosition + delta;
                 model.transform.localPosition = endPos;
             }
