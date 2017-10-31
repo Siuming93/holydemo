@@ -6,6 +6,7 @@ using System.Text;
 using LitJson;
 using Monster.BaseSystem.ResourceManager;
 using UnityEditor;
+using Object = UnityEngine.Object;
 
 namespace Assets.Editor.AssetBundleBuilder
 {
@@ -91,15 +92,19 @@ namespace Assets.Editor.AssetBundleBuilder
                 rootPathSet.Add(path);
             }
 
+            var rootObjectList = new List<Object>();
+
             foreach (var path in rootList)
             {
-                foreach (var depPath in AssetDatabase.GetDependencies(path))
+                rootObjectList.Add(AssetDatabase.LoadAssetAtPath(path, typeof (Object)));
+            }
+            foreach (var depObject in EditorUtility.CollectDependencies(rootObjectList.ToArray()))
+            {
+                var depPath = AssetDatabase.GetAssetPath(depObject);
+                if (!listPathSet.Contains(depPath) && !rootPathSet.Contains(depPath))
                 {
-                    if (!listPathSet.Contains(depPath) && !rootPathSet.Contains(depPath))
-                    {
-                        if (Utility.IsLoadingAsset(Utility.GetExtension(depPath)))
-                            listPathSet.Add(depPath);
-                    }
+                    if (Utility.IsLoadingAsset(Utility.GetExtension(depPath)))
+                        listPathSet.Add(depPath);
                 }
             }
             return listPathSet.ToList();
@@ -128,13 +133,18 @@ namespace Assets.Editor.AssetBundleBuilder
             {
                 var path = pair.Key;
                 var curNode = pair.Value;
+                var nodeObj = AssetDatabase.LoadAssetAtPath(path, typeof (Object));
+                var depObjs = EditorUtility.CollectDependencies(new Object[] {nodeObj});
 
-                foreach (var depPath in AssetDatabase.GetDependencies(path))
+                foreach (var depObj in depObjs)
                 {
+                    var depPath = AssetDatabase.GetAssetPath(depObj);
                     if (map.ContainsKey(depPath) && path != depPath)
                     {
-                        curNode.depence.Add(depPath);
-                        map[depPath].depenceOnMe.Add(path);
+                        if (!curNode.depence.Contains(depPath))
+                            curNode.depence.Add(depPath);
+                        if (!map[depPath].depenceOnMe.Contains(path))
+                            map[depPath].depenceOnMe.Add(path);
                     }
                 }
             }
@@ -177,7 +187,7 @@ namespace Assets.Editor.AssetBundleBuilder
                 {
                     node.depence.Remove(depPath);
                     var depNode = map[depPath];
-                    depNode.depenceOnMe.Remove(depPath);
+                    depNode.depenceOnMe.Remove(path);
                 }
                 foreach (var depPath in node.depence)
                 {
@@ -200,38 +210,50 @@ namespace Assets.Editor.AssetBundleBuilder
             {
                 rootQueue.Enqueue(path);
             }
-            while (rootQueue.Count > 0)
-            {
-                var nodePath = rootQueue.Dequeue();
-                var node = map[nodePath];
-                hasSearchSet.Add(nodePath);
-                var depQueue = new Queue<string>(node.depence);
-                while (depQueue.Count > 0)
+           
+                while (rootQueue.Count > 0)
                 {
-                    var depNodePath = depQueue.Dequeue();
-                    var depNode = map[depNodePath];
-                    if (depNode.depenceOnMe.Count == 1)
+                    var nodePath = rootQueue.Dequeue();
+
+                    AssetRefrenceNode node;
+                    try
                     {
-                        node.depence.Remove(depNodePath);
-                        map.Remove(depNodePath);
-                        node.incluedDepReference.Add(depNodePath);
-                        foreach (var dep2Path in depNode.depence)
+                        node = map[nodePath];
+                    }
+                    catch (Exception e)
+                    {
+                        throw e;
+                    }
+                    hasSearchSet.Add(nodePath);
+                    var depQueue = new Queue<string>(node.depence);
+                    while (depQueue.Count > 0)
+                    {
+                        var depNodePath = depQueue.Dequeue();
+                        var depNode = map[depNodePath];
+                        if (depNode.depenceOnMe.Count == 1)
                         {
-                            node.depence.Add(dep2Path);
-                            depQueue.Enqueue(dep2Path);
-                            var dep2Node = map[dep2Path];
-                            dep2Node.depenceOnMe.Remove(depNodePath);
-                            dep2Node.depenceOnMe.Add(nodePath);
+                            node.depence.Remove(depNodePath);
+                            map.Remove(depNodePath);
+                            node.incluedDepReference.Add(depNodePath);
+                            foreach (var dep2Path in depNode.depence)
+                            {
+                                node.depence.Add(dep2Path);
+                                depQueue.Enqueue(dep2Path);
+                                var dep2Node = map[dep2Path];
+                                dep2Node.depenceOnMe.Remove(depNodePath);
+                                dep2Node.depenceOnMe.Add(nodePath);
+                            }
+                        }
+                        else if (depNode.depenceOnMe.Count > 1)
+                        {
+                            if (!rootQueue.Contains(depNodePath) && !hasSearchSet.Contains(depNodePath))
+                                rootQueue.Enqueue(depNodePath);
                         }
                     }
-                    else if (depNode.depenceOnMe.Count > 1)
-                    {
-                        if (!rootQueue.Contains(depNodePath) && !hasSearchSet.Contains(depNodePath))
-                            rootQueue.Enqueue(depNodePath);
-                    }
+                    list.Add(node);
                 }
-                list.Add(node);
-            }
+          
+           
 
             return list;
         }
@@ -278,7 +300,7 @@ namespace Assets.Editor.AssetBundleBuilder
             }
 
             var json = JsonMapper.ToJson(map);
-            var configPath = exportPath + "/" + BundleConfig.CONFIG_FILE_NAME;
+            var configPath = exportPath + "/" + Monster.BaseSystem.ResourceManager.BundleConfig.CONFIG_FILE_NAME;
             if (File.Exists(configPath))
             {
                 File.Delete(configPath);

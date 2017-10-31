@@ -1,0 +1,89 @@
+package Monster.Protocol;
+
+message CsEnterScene 
+{
+	required int32 id				= 1;
+	required string name			= 2;
+}
+
+
+message ScEnterScene
+{
+	required int32 id 				= 1;
+	required int32 result			= 2;
+}
+
+message PlayerPosInfo
+{
+	required int64 id 				= 1;
+
+	required float posX				= 2;
+	required float posY				= 3;
+	required float dirX				= 4;
+	required float dirY				= 5;
+
+	required bool isMove  			= 6;
+
+}
+
+message CsPlayerMove
+{
+	optional float dirX				= 3;
+	optional float dirY				= 4;
+}
+
+message ScAllPlayerPosInfo
+{
+	repeated  PlayerPosInfo infos 	= 1;
+}
+
+message CsPlayerStartMove
+{
+	required int64 id 				= 1;
+}
+
+message ScPlayerStartMove
+{
+	required int64 id 				= 1;
+}
+
+message CsPlayerEndMove
+{
+	optional int64 id 				= 1;
+}
+
+message ScPlayerEndMove
+{
+	optional int64 id 				= 1;
+}
+
+message CsPlayerUpdateMoveDir
+{
+	optional float dirX				= 1;
+	optional float dirY				= 2;
+}
+
+message ScPlayerUpdateMoveDir
+{
+	optional float dirX				= 1;
+	optional float dirY				= 2;
+}
+
+message CsPlayerEndMovePos
+{
+	optional float posX				= 1;
+	optional float posY				= 2;
+	optional float dirX				= 3;
+	optional float dirY				= 4;
+}
+
+message CsPlayerUseSkill
+{
+	required int32 skillId			= 1;
+}
+
+message ScPlayerUseSkill
+{
+	required int64 id				= 1;
+	required int32 skillId			= 2;
+}

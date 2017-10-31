@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using ProtoBuf;
 namespace Monster.Net
 {
-    public delegate void MessageHandler(object msg);
+    public delegate void MessageHandler(object data);
 
     internal class NetDispatcher
     {
@@ -28,7 +28,7 @@ namespace Monster.Net
         public void Dispatch(Protocol proto)
         {
             proto.stream.Position = 0;
-            object msg = Serializer.NonGeneric.Deserialize(MsgIDDef.Instance().GetMsgType(proto.msgNo), proto.stream);
+            object msg = Serializer.NonGeneric.Deserialize(MsgIDDefineDic.Instance().GetMsgType(proto.msgNo), proto.stream);
             Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
 
             if (mHandlerMap.ContainsKey(proto.msgNo))

@@ -39,9 +39,9 @@ namespace Monster.Protocol
       get { return _result; }
       set { _result = value; }
     }
-    private int _accountid;
+    private long _accountid;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"accountid", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int accountid
+    public long accountid
     {
       get { return _accountid; }
       set { _accountid = value; }

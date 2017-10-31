@@ -6,6 +6,7 @@ skynet.start(function()
 	print("----server start----")
 	skynet.newservice("dbservice")
 	skynet.newservice("loginservice")
+	skynet.newservice("leitaiservice")
 
 	local watchdog = skynet.newservice("watchdog")
 	skynet.newservice("helloWorld")

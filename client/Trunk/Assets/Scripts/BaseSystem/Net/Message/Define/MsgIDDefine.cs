@@ -4,39 +4,23 @@ using System.Text;
 using Monster.Protocol;
 public class MsgIDDefine
 {
-	static Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();
-	static Dictionary<string, int> msgname2msgid = new Dictionary<string, int>();
-	public static void Initialize()
-	{
-		msgid2msgname[10001] = "CsLogin";
-		msgname2msgid["CsLogin"] = 10001;
-		msgid2msgname[10002] = "ScLogin";
-		msgname2msgid["ScLogin"] = 10002;
-		msgid2msgname[10201] = "CsHelloWorld";
-		msgname2msgid["CsHelloWorld"] = 10201;
-		msgid2msgname[10202] = "ScHelloWorld";
-		msgname2msgid["ScHelloWorld"] = 10202;
-		msgid2msgname[10301] = "CsTalk";
-		msgname2msgid["CsTalk"] = 10301;
-		msgid2msgname[10302] = "ScTalk";
-		msgname2msgid["ScTalk"] = 10302;
-	}
-	public static string GetMsgNameByID(int msgid)
-	{
-		string msgname = null;
-		if (msgid2msgname.TryGetValue(msgid,out msgname))
-		{
-			return msgname;
-		}
-		return "";
-	}
-	public static int GetMsgIDByName(string msgname)
-	{
-		int msgid = 0;
-		if (msgname2msgid.TryGetValue(msgname,out msgid))
-		{
-			return msgid;
-		}
-		return 0;
-	}
+	public const int CsLogin = 10001; 
+	public const int ScLogin = 10002; 
+	public const int CsHelloWorld = 10201; 
+	public const int ScHelloWorld = 10202; 
+	public const int CsTalk = 10301; 
+	public const int ScTalk = 10302; 
+	public const int CsEnterScene = 10401; 
+	public const int ScEnterScene = 10402; 
+	public const int CsPlayerMove = 10403; 
+	public const int ScAllPlayerPosInfo = 10404; //所有玩家位置状态;定期发
+	public const int CsPlayerStartMove = 10405; 
+	public const int CsPlayerEndMove = 10406; 
+	public const int ScPlayerEndMove = 10407; 
+	public const int CsPlayerEndMovePos = 10408; 
+	public const int CsPlayerUseSkill = 10409; 
+	public const int ScPlayerUseSkill = 10410; 
+	public const int CsPlayerUpdateMoveDir = 10411; 
+	public const int ScPlayerUpdateMoveDir = 10412; 
+	public const int ScPlayerStartMove = 10413; 
 }

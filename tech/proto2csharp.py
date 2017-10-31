@@ -15,6 +15,7 @@ def compile_proto(proto_dir,target_dir):
 			continue
 		target_file = f.replace(".proto",".cs")
 		os.system(".\\tools\\protogen.exe -w:" + proto_dir + " -i:" + f + " -o:" + target_dir + target_file)
+		print(target_file)
 
 
 compile_proto(msg_dir, target_dir)
@@ -28,7 +29,59 @@ class MsgInfo(object):
 	msgid = ""
 	msgname = ""
 	comment = ""
+	
+def ParseMsgIDDefineDic(fs,msgidList):
+	fs.writelines("using System;");
+	fs.writelines("using System.Collections.Generic;");
+	fs.writelines("using System.Text;");
+	fs.writelines("using "+msg_namespace+";");
+	fs.writelines("public class MsgIDDefineDic");
+	fs.writelines("{");
 
+	fs.writelines("\tprivate Dictionary<int, Type> id2msgMap = new Dictionary<int, Type>();");
+	fs.writelines("\tprivate Dictionary<Type, int> msg2idMap = new Dictionary<Type, int>();");
+	fs.writelines("\tprivate static MsgIDDefineDic instance;");
+	fs.writelines("\tpublic static MsgIDDefineDic Instance()");
+
+	fs.writelines("\t{");
+
+	fs.writelines("\t\tif (null == instance)");
+	fs.writelines("\t\t{");
+	fs.writelines("\t\t\tinstance = new MsgIDDefineDic();");
+	fs.writelines("\t\t}");
+	fs.writelines("\t\treturn instance;");
+	fs.writelines("\t}");
+
+
+	fs.writelines("\tprivate MsgIDDefineDic()");
+	fs.writelines("\t{");
+	for _msgDef in msgidList:
+		tmpMsgName = _msgDef.msgname;
+		fs.writelines("\t\tid2msgMap.Add(%s, typeof(%s));"% (_msgDef.msgid, tmpMsgName));
+		fs.writelines("\t\tmsg2idMap.Add(typeof(%s), %s);"% (tmpMsgName, _msgDef.msgid));
+
+	fs.writelines("\t}");
+	fs.writelines("\tpublic Type GetMsgType(int msgID)");
+	fs.writelines("\t{");
+	fs.writelines("\t\tType msgType = null;");
+	fs.writelines("\t\tid2msgMap.TryGetValue(msgID, out msgType);");
+	fs.writelines("\t\tif (msgType==null)");
+	fs.writelines("\t\t{");
+	fs.writelines("\t\t\treturn null;");
+	fs.writelines("\t\t}");
+	fs.writelines("\t\treturn msgType;");
+	fs.writelines("\t}");
+
+	fs.writelines("\tpublic int GetMsgID(Type type)");
+	fs.writelines("\t{");
+	fs.writelines("\t\tint msgID = 0;");
+	fs.writelines("\t\tmsg2idMap.TryGetValue(type, out msgID);");
+	fs.writelines("\t\treturn msgID;");
+	fs.writelines("\t}");
+	fs.writelines("}");
+
+	fs.flush();
+	fs.close();
 
 def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("using System;");
@@ -36,90 +89,6 @@ def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("using System.Text;");
 	fs.writelines("using "+msg_namespace+";");
 	fs.writelines("public class MsgIDDefine");
-	fs.writelines("{");
-	fs.writelines("\tstatic Dictionary<int, string> msgid2msgname = new Dictionary<int, string>();");
-	fs.writelines("\tstatic Dictionary<string, int> msgname2msgid = new Dictionary<string, int>();");
-	fs.writelines("\tpublic static void Initialize()");
-	fs.writelines("\t{");
-
-	for _msgDef  in msgidList:
-		fs.writelines("\t\tmsgid2msgname[%s] = \"%s\";" % (_msgDef.msgid, _msgDef.msgname));
-		fs.writelines("\t\tmsgname2msgid[\"%s\"] = %s;" % (_msgDef.msgname, _msgDef.msgid));
-	fs.writelines("\t}");
-	fs.writelines("\tpublic static string GetMsgNameByID(int msgid)");
-	fs.writelines("\t{");
-	fs.writelines("\t\tstring msgname = null;");
-	fs.writelines("\t\tif (msgid2msgname.TryGetValue(msgid,out msgname))");
-	fs.writelines("\t\t{");
-	fs.writelines("\t\t\treturn msgname;");
-	fs.writelines("\t\t}");
-	fs.writelines("\t\treturn \"\";");
-	fs.writelines("\t}");
-
-	fs.writelines("\tpublic static int GetMsgIDByName(string msgname)");
-	fs.writelines("\t{");
-	fs.writelines("\t\tint msgid = 0;");
-	fs.writelines("\t\tif (msgname2msgid.TryGetValue(msgname,out msgid))");
-	fs.writelines("\t\t{");
-	fs.writelines("\t\t\treturn msgid;");
-	fs.writelines("\t\t}");
-	fs.writelines("\t\treturn 0;");
-	fs.writelines("\t}");
-	fs.writelines("}");
-	fs.flush();
-
-	fs.close();
-	
-def ParseMsgIDDef(fs,msgidList):
-	fs.writelines("using System;");
-	fs.writelines("using System.Collections.Generic;");
-	fs.writelines("using System.Text;");
-	fs.writelines("using "+msg_namespace+";");
-	fs.writelines("public class MsgIDDef");
-	fs.writelines("{");
-
-	fs.writelines("\tprivate Dictionary<int, Type> sc_msg_dic = new Dictionary<int, Type>();");
-	fs.writelines("\tprivate static MsgIDDef instance;");
-	fs.writelines("\tpublic static MsgIDDef Instance()");
-
-	fs.writelines("\t{");
-
-	fs.writelines("\t\tif (null == instance)");
-	fs.writelines("\t\t{");
-	fs.writelines("\t\t\tinstance = new MsgIDDef();");
-	fs.writelines("\t\t}");
-	fs.writelines("\t\treturn instance;");
-	fs.writelines("\t}");
-
-
-	fs.writelines("\tprivate MsgIDDef()");
-	fs.writelines("\t{");
-	for _msgDef in msgidList:
-		tmpMsgName = _msgDef.msgname;
-		fs.writelines("\t\tsc_msg_dic.Add(%s,typeof(%s));"% (_msgDef.msgid, tmpMsgName));
-
-	fs.writelines("\t}");
-	fs.writelines("\tpublic Type GetMsgType(int msgID)");
-	fs.writelines("\t{");
-	fs.writelines("\t\tType msgType = null;");
-	fs.writelines("\t\tsc_msg_dic.TryGetValue(msgID, out msgType);");
-	fs.writelines("\t\tif (msgType==null)");
-	fs.writelines("\t\t{");
-	fs.writelines("\t\t\treturn null;");
-	fs.writelines("\t\t}");
-	fs.writelines("\t\treturn msgType;");
-	fs.writelines("\t}");
-	fs.writelines("}");
-
-	fs.flush();
-	fs.close();
-
-def ParseMsgIDDefineDic(fs,msgidList):
-	fs.writelines("using System;");
-	fs.writelines("using System.Collections.Generic;");
-	fs.writelines("using System.Text;");
-	fs.writelines("using "+msg_namespace+";");
-	fs.writelines("public class MsgIDDefineDic");
 	fs.writelines("{");
 
 	for _msgDef in msgidList:
@@ -140,10 +109,9 @@ def parse_msgfile(msgid_conf):
 		array_info = line.split("=")
 		msgid = array_info[0].strip().rstrip()	#MSGID
 		
-		array_info = array_info[1].split(',')	#MSGNAME
+		array_info = array_info[1].split("#")	#MSGNAME
 		msgname = array_info[0].strip().rstrip()
 		
-		array_info = array_info[1].split("#")		
 		comment = ""
 		if len(array_info) > 1:
 			comment = "//" + array_info[1].strip().rstrip()
@@ -166,15 +134,11 @@ l=parse_msgfile(msgid_conf)
 
 targetMsgIDPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDefineDic.cs";
 targetCSPath = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDefine.cs";
-targetCSPath2 = "../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Define/MsgIDDef.cs";
-
-f = WrapFile(open(targetCSPath,"w+"))
-ParseMsgIDDefine(f,l)
-
-f = WrapFile(open(targetCSPath2,"w+"))
-ParseMsgIDDef(f,l)
 
 f = WrapFile(open(targetMsgIDPath,"w+"))
 ParseMsgIDDefineDic(f,l)
+
+f = WrapFile(open(targetCSPath,"w+"))
+ParseMsgIDDefine(f,l)
 
 os.system("pause")

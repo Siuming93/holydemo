@@ -5,6 +5,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trunk.CSharp.Plugins", "Tru
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trunk.CSharp", "Trunk.CSharp.csproj", "{756C3E2D-FDFC-755D-C541-3DC708081959}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trunk.CSharp.Editor.Plugins", "Trunk.CSharp.Editor.Plugins.csproj", "{B778B579-291F-F07C-52CD-8AD8B11DF13D}"
+EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Trunk.CSharp.Editor", "Trunk.CSharp.Editor.csproj", "{949A80FA-05B8-38D2-C64F-9C569D15F0EB}"
 EndProject
 Global
@@ -21,6 +23,10 @@ Global
 		{756C3E2D-FDFC-755D-C541-3DC708081959}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{756C3E2D-FDFC-755D-C541-3DC708081959}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{756C3E2D-FDFC-755D-C541-3DC708081959}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B778B579-291F-F07C-52CD-8AD8B11DF13D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B778B579-291F-F07C-52CD-8AD8B11DF13D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B778B579-291F-F07C-52CD-8AD8B11DF13D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B778B579-291F-F07C-52CD-8AD8B11DF13D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{949A80FA-05B8-38D2-C64F-9C569D15F0EB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{949A80FA-05B8-38D2-C64F-9C569D15F0EB}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{949A80FA-05B8-38D2-C64F-9C569D15F0EB}.Release|Any CPU.ActiveCfg = Release|Any CPU

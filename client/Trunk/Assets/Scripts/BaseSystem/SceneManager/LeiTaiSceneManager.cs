@@ -32,23 +32,21 @@ namespace Monster.BaseSystem.SceneManager
 
         public override IEnumerator OnEnterScene(object data)
         {
-            GameObject battleMainUI = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/BattleMainUI/BattleMainUIPanel");
-            UIManager.Intance.AddChild(battleMainUI.transform);
-            Transform cameraTransform = GameObject.Find("PlayerCamera").transform;
-
-
             _proxyList = new List<IProxy>()
             {
+                new LeitaiCharcterProxy(),
+                new SkillProxy(),
             };
-            _mediatorList = new List<IMediator>() {
-                   new BattleMainUIMediator(battleMainUI),
-                   new WorldPlayerBattleMediator(cameraTransform),
-            };
-
-
-
             RegisterProxy(_proxyList);
+
+            _mediatorList = new List<IMediator>() {
+                   new LeitaiWorldMapMediator(),
+                   new BattleMainUIMediator(),
+                   new WorldPlayerBattleMediator(),
+            };
             RegisterMediator(_mediatorList);
+
+
             yield return 0;
         }
 

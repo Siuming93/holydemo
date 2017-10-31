@@ -10,7 +10,6 @@ local protobuf = {}
 CMD.dispatch = function(opcode, msg, fd)
 	local data = protobuf.decode("Monster.Protocol.CsLogin", msg)
 	local accountId = data.account
-	print("-------------------------------------------------loginId:",accountId)
 	
 	local sql = "select * from table tb_account where id = '"..accountId.."' "
 	local ok, result = pcall(skynet.call, "dbservice", "lua", "query", sql)	
@@ -20,11 +19,13 @@ CMD.dispatch = function(opcode, msg, fd)
 			createplayer(accountId)
 		end
 	end
+	
 	local tb = {}
 	tb.accountid = accountId
-	skynet.call("talkservice", "lua", "register", fd, accountId)
+	tb.result = 1
+	--skynet.call("talkservice", "lua", "register", fd, accountId)
 	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
-	return msgpack.pack(message.SCLOGIN, msgbody)
+	return msgpack.pack(message.SCLOGIN, msgbody), accountId
 end
 
 

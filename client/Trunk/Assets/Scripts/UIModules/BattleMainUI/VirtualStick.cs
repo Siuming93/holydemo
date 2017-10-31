@@ -10,9 +10,9 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     public float radius = 40.0f;
     public bool isPressed { get; private set; }
 
-    public event Action<VirtualStick, Vector2> OnStartJoystickMovement;
+    public event Action<VirtualStick, Vector2> OnStickMovementStart;
     public event Action<VirtualStick, Vector2> OnJoystickMovement;
-    public event Action<VirtualStick> OnEndJoystickMovement;
+    public event Action<VirtualStick> OnStickMovementEnd;
 
     private RectTransform _selfRect;
     public RectTransform stickRectTransform;
@@ -33,8 +33,8 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         this.stickRectTransform.anchoredPosition = pointP;
         isPressed = true;
         this.stickRectTransform.gameObject.SetActive(true);
-        if (OnStartJoystickMovement != null)
-            OnStartJoystickMovement(this, Coordinates);
+        if (OnStickMovementStart != null)
+            OnStickMovementStart(this, Coordinates);
     }
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
@@ -43,14 +43,19 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         this.stickRectTransform.gameObject.SetActive(false);
         this.stickHandlerRectTransform.anchoredPosition = Vector2.zero;
         this.Coordinates = Vector2.zero;
-        if (OnEndJoystickMovement != null)
-            OnEndJoystickMovement(this);
+        if (OnStickMovementEnd != null)
+            OnStickMovementEnd(this);
     }
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
         var handleOffset = GetJoystickOffset(eventData);
         this.Coordinates = handleOffset.normalized;
         this.stickHandlerRectTransform.anchoredPosition = handleOffset;
+
+        if (OnJoystickMovement != null)
+        {
+            OnJoystickMovement.Invoke(this, Coordinates);
+        }
     }
 
     private Vector2 GetJoystickOffset(PointerEventData eventData)
