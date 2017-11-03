@@ -36,7 +36,7 @@ namespace Monster.BaseSystem
         public override void SendNotification(string notificationName, object body = null, string type = null)
         {
             base.SendNotification(notificationName, body, type);
-            Debug.Log("SendNotification: " + notificationName);
+            //Debug.Log("SendNotification: " + notificationName);
         }
     }
 }

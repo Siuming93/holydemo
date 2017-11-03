@@ -84,7 +84,7 @@ namespace Monster.BaseSystem.ResourceManager
         {
             base.DoTrik();
 
-            DebugLog();
+            //DebugLog();
         }
 
         private void DebugLog()

@@ -198,8 +198,7 @@ namespace Monster.Net
             Serializer.NonGeneric.Serialize(stream, msg);
             stream.Position = 0;
 
-            var s = Serializer.NonGeneric.Deserialize(msg.GetType(),stream);
-            Debug.Log(s);
+            Serializer.NonGeneric.Deserialize(msg.GetType(),stream);
             stream.Position = 0;
 
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });

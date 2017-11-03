@@ -29,7 +29,7 @@ namespace Monster.Net
         {
             proto.stream.Position = 0;
             object msg = Serializer.NonGeneric.Deserialize(MsgIDDefineDic.Instance().GetMsgType(proto.msgNo), proto.stream);
-            Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
+            //Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
 
             if (mHandlerMap.ContainsKey(proto.msgNo))
             {
