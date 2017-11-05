@@ -1,0 +1,320 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProductVersion>10.0.20506</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <RootNamespace></RootNamespace>
+    <ProjectGuid>{0286343F-4FF4-3482-6433-D9F6AED32C88}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <AssemblyName>Assembly-CSharp-firstpass</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <BaseDirectory>Assets</BaseDirectory>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>Temp\bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE;UNITY_5_3_OR_NEWER;UNITY_5_4_OR_NEWER;UNITY_5_4_3;UNITY_5_4;UNITY_5;ENABLE_NEW_BUGREPORTER;ENABLE_AUDIO;ENABLE_CACHING;ENABLE_CLOTH;ENABLE_EDITOR_RETINA;ENABLE_RETINA_GUISTYLES;ENABLE_FRAME_DEBUGGER;ENABLE_GENERICS;ENABLE_HOME_SCREEN;ENABLE_IMAGEEFFECTS;ENABLE_LIGHT_PROBES_LEGACY;ENABLE_MICROPHONE;ENABLE_MULTIPLE_DISPLAYS;ENABLE_PHYSICS;ENABLE_PLUGIN_INSPECTOR;ENABLE_SHADOWS;ENABLE_SPRITERENDERER_FLIPPING;ENABLE_SPRITES;ENABLE_SPRITE_POLYGON;ENABLE_TERRAIN;ENABLE_RAKNET;ENABLE_UNET;ENABLE_UNITYEVENTS;ENABLE_VR;ENABLE_WEBCAM;ENABLE_WWW;ENABLE_CLOUD_SERVICES;ENABLE_CLOUD_SERVICES_COLLAB;ENABLE_CLOUD_SERVICES_ADS;ENABLE_CLOUD_HUB;ENABLE_CLOUD_PROJECT_ID;ENABLE_CLOUD_SERVICES_CRASH_REPORTING;ENABLE_CLOUD_SERVICES_PURCHASING;ENABLE_CLOUD_SERVICES_ANALYTICS;ENABLE_CLOUD_SERVICES_UNET;ENABLE_CLOUD_SERVICES_BUILD;ENABLE_CLOUD_LICENSE;ENABLE_EDITOR_METRICS;ENABLE_EDITOR_METRICS_CACHING;INCLUDE_DYNAMIC_GI;INCLUDE_GI;INCLUDE_IL2CPP;INCLUDE_DIRECTX12;PLATFORM_SUPPORTS_MONO;INCLUDE_PUBNUB;ENABLE_LOCALIZATION;ENABLE_ANDROID_ATLAS_ETC1_COMPRESSION;ENABLE_EDITOR_TESTS_RUNNER;UNITY_ANDROID;UNITY_ANDROID_API;ENABLE_SUBSTANCE;ENABLE_TEXTUREID_MAP;ENABLE_EGL;ENABLE_NETWORK;ENABLE_RUNTIME_GI;ENABLE_CRUNCH_TEXTURE_COMPRESSION;ENABLE_UNITYWEBREQUEST;PLATFORM_SUPPORTS_ADS_ID;UNITY_CAN_SHOW_SPLASH_SCREEN;ENABLE_UNITYADS_RUNTIME;UNITY_UNITYADS_API;ENABLE_MONO;ENABLE_PROFILER;UNITY_ASSERTIONS;UNITY_EDITOR;UNITY_EDITOR_64;UNITY_EDITOR_WIN;UNITY_TEAM_LICENSE;HOTFIX_ENABLE;/unsafe</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>Temp\bin\Release\</OutputPath>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <NoWarn>0169</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.XML" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="UnityEngine">
+      <HintPath>D:/Program Files/Unity/Editor/Data/Managed/UnityEngine.dll</HintPath>
+    </Reference>
+    <Reference Include="UnityEditor">
+      <HintPath>D:/Program Files/Unity/Editor/Data/Managed/UnityEditor.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+     <Compile Include="Assets\Plugins\AutoQualityChooser\AutoQualityChooser.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Code\AutoQualityChooserSettings.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Code\FramerateCounter.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Code\QualityChanger.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Code\Singleton.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Example\Benchmark code\BenchmarkSummaryText.cs" />
+     <Compile Include="Assets\Plugins\AutoQualityChooser\Example\Benchmark code\ParticleAmountIncreaser.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\BlendAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\CrossFadeAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\PlayAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\RewindAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\SampleAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animation\StopAnimationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\CrossFadeAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\LookAtTarget.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\MatchTargetEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\PlayAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetBoolAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetFloatAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetIKPositionAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetIKPositionWeightAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetIKRotationAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetIKRotationWeightAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetIntegerAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetLayerWeightAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetLookAtPositionAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetLookAtWeightAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetTargetAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Animator\SetTriggerAnimatorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\AudioSource\PauseAudioEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\AudioSource\PlayAudioEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\AudioSource\PlayOneShotAudioEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\AudioSource\StopAudioEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\DisableBehaviour.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\DisableGameObject.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\EnableBehaviour.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\EnableGameObject.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\EnableGameObjectAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\GameObject\SendMessageGameObject.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Light\SetColorLight.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Light\SetIntensityLight.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Navigation\SetDestinationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Particles\PauseParticleSystemEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Particles\PlayParticleSystemEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Particles\StopParticleSystemEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\ApplyForceEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\ApplyTorqueEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\RigidbodySleepEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\RigidbodyWakeUpEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\SetMassEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Rigidbody\ToggleGravityEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\AttachChildrenEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\DetachChildrenEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\SetParent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\SetPositionEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\SetTransformEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\Transform\TransformLookAtAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\uGUI\CanvasCameraSwitchEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\uGUI\ColorChange.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\uGUI\SetIsInteractable.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\uGUI\TextDegenerationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Actor Items\uGUI\TextGenerationEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Core\CinemaAudio.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Core\CinemaShot.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\AudioSource\PlayClipAtPointAudioEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Cutscene\PauseCutscene.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Cutscene\PlayCutscene.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Cutscene\StopCutscene.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Debug\DebugLogErrorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Debug\DebugLogMessageEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Debug\DebugLogWarningEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\GUITexture\FadeTexture.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\GameObject\DisableGameObjectGlobal.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\GameObject\EnableGameObjectGlobal.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Time\SetTimeScaleEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Time\TimeScaleCurveAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Transitions\ColorTransition.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Transitions\FadeFromBlack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Transitions\FadeFromWhite.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Transitions\FadeToBlack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Transitions\FadeToWhite.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Utility\LoadLevelEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Utility\MassDisabler.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Cutscene Items\Global Items\Utility\StoryboardEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\Example Cutscene Items\ExampleShrinkAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Common\Reflection\ReflectionHelper.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Cutscene.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Enums\CutsceneItemGenre.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Enums\PlaybackMode.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Enums\PropertyTypeInfo.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Enums\RevertMode.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Enums\TimelineTrackGenre.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\AnimationCurveHelper.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\CutsceneQueue.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\CutsceneTrigger.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\DirectorRuntimeHelper.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\IBakeable.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\IOptimizable.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\IRevertable.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\RevertInfo.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\Helpers\ScreenshotCapture.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\CinemaClipCurve.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\CinemaTween.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\CutsceneItemAttribute.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\MemberClipCurveData.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\TimelineAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\TimelineActionFixed.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\Base\TimelineItem.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaActorAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaActorClipCurve.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaActorEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaGlobalAction.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaGlobalEvent.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineItems\CinemaMultiActorCurveClip.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\ActorItemTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\AudioTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\Base\IActorTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\Base\IMultiActorTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\Base\TimelineTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\Base\TimelineTrackAttribute.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\CurveTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\DialogueTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\GlobalItemTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\MecanimTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\MultiCurveTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\ShotTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TimelineTracks\TransformTrack.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\ActorTrackGroup.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\Base\TrackGroup.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\Base\TrackGroupAttribute.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\CharacterTrackGroup.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\DirectorGroup.cs" />
+     <Compile Include="Assets\Plugins\Cinema Suite\Cinema Director\System\Runtime\TrackGroups\MultiActorTrackGroup.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Core\Controller.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Core\Model.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Core\View.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\ICommand.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IController.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IFacade.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IMediator.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IModel.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\INotification.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\INotifier.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IObserver.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IProxy.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Interfaces\IView.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Command\MacroCommand.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Command\SimpleCommand.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Facade\Facade.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Mediator\Mediator.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Observer\Notification.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Observer\Notifier.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Observer\Observer.cs" />
+     <Compile Include="Assets\Plugins\PureMVC\Patterns\Proxy\Proxy.cs" />
+     <Compile Include="Assets\Plugins\VisionTimer\vp_TimeUtility.cs" />
+     <Compile Include="Assets\Plugins\VisionTimer\vp_Timer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\BclHelpers.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\BufferExtension.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\BufferPool.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\CallbackAttributes.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Compiler\CompilerContext.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Compiler\CompilerDelegates.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Compiler\Local.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\DataFormat.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Extensible.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ExtensibleUtil.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\GlobalSuppressions.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Helpers.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\IExtensible.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\IExtension.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ImplicitFields.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\KeyValuePairProxy.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\AttributeMap.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\BasicList.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\CallbackSet.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\MetaType.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\RuntimeTypeModel.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\SubType.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\TypeFormatEventArgs.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\TypeModel.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Meta\ValueMember.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\NetObjectCache.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\PrefixStyle.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Properties\AssemblyInfo.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoContractAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoEnumAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoException.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoIgnoreAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoIncludeAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoMemberAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoReader.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ProtoWriter.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\SerializationContext.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ArrayDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\BlobSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\BooleanSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ByteSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\CharSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\CompiledSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\DateTimeSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\DecimalSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\DefaultValueDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\DoubleSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\EnumSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\FieldDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\GuidSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\IProtoSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\IProtoTypeSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ISerializerProxy.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ImmutableCollectionDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\Int16Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\Int32Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\Int64Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\KeyValuePairDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ListDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\MemberSpecifiedDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\NetObjectSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\NullDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ParseableSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\PropertyDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\ProtoDecoratorBase.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\SByteSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\SingleSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\StringSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\SubItemSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\SurrogateSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\SystemTypeSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\TagDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\TimeSpanSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\TupleSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\TypeSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\UInt16Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\UInt32Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\UInt64Serializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\Serializers\UriDecorator.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ServiceModel\ProtoBehaviorAttribute.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ServiceModel\ProtoBehaviorExtensionElement.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ServiceModel\ProtoEndpointBehavior.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ServiceModel\ProtoOperationBehavior.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\ServiceModel\XmlProtoSerializer.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\SubItemToken.cs" />
+     <Compile Include="Assets\Plugins\protobuf-net\WireType.cs" />
+     <None Include="Assets\Plugins\Cinema Suite\Cinema Director\Example Scenes\Shaders\Additive.shader" />
+     <None Include="Assets\Plugins\Cinema Suite\Cinema Director\ReadMe.txt" />
+     <None Include="Assets\Plugins\Cinema Suite\Cinema Director\link.xml" />
+     <None Include="Assets\Plugins\AutoQualityChooser\Read Me.txt" />
+     <None Include="Assets\Plugins\DOTween\readme.txt" />
+     <None Include="Assets\Plugins\protobuf-net\Web\TODO.txt" />
+     <None Include="Assets\Plugins\Cinema Suite\Cinema Director\ChangeLog.txt" />
+ <Reference Include="UnityEngine.UI">
+ <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/GUISystem/UnityEngine.UI.dll</HintPath>
+ </Reference>
+ <Reference Include="UnityEngine.Networking">
+ <HintPath>D:/Program Files/Unity/Editor/Data/UnityExtensions/Unity/Networking/UnityEngine.Networking.dll</HintPath>
+ </Reference>
+ <Reference Include="LitJson">
+ <HintPath>E:/WorkSpace/arpg/client/Trunk/Assets/Plugins/LitJson.dll</HintPath>
+ </Reference>
+ <Reference Include="DOTween">
+ <HintPath>E:/WorkSpace/arpg/client/Trunk/Assets/Plugins/DOTween/DOTween.dll</HintPath>
+ </Reference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+  
+</Project>
