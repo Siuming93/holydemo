@@ -45,7 +45,7 @@ public class CameraMovement
     private void Update()
     {
         SmoothMovement();
-        //SmoothLookAt();
+        SmoothLookAt();
     }
 
     /// <summary>
