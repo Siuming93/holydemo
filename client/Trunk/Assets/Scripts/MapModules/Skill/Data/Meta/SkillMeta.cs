@@ -13,9 +13,9 @@ public class SkillMeta : BaseMeta<SkillMeta>
         base.UpdateForm(properties);
         this.cd = MetaUtil.GetFloatValue(properties, "cd");
         this.duration = MetaUtil.GetFloatValue(properties, "duration");
-        this.damageMeta = SkillDamageMeta.GetMeta(MetaUtil.GetStringValue(properties, "damageId"));
-        this.effectMeta = SkillEffectMeta.GetMeta(MetaUtil.GetStringValue(properties, "effectId"));
-        this.animationMeta = SkillAnimationMeta.GetMeta(MetaUtil.GetStringValue(properties, "animationId"));
+        this.damageMeta = SkillDamageMeta.GetMeta(MetaUtil.GetIntValue(properties, "damageId"));
+        this.effectMeta = SkillEffectMeta.GetMeta(MetaUtil.GetIntValue(properties, "effectId"));
+        this.animationMeta = SkillAnimationMeta.GetMeta(MetaUtil.GetIntValue(properties, "animationId"));
     }
 
     public static List<KeyValuePair<string, Hashtable>> FakeMeta()

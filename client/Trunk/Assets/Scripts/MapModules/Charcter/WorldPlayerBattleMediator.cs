@@ -42,6 +42,12 @@ public class WorldPlayerBattleMediator : AbstractMediator
         _proxy = ApplicationFacade.Instance.RetrieveProxy(LeitaiCharcterProxy.NAME) as LeitaiCharcterProxy; ;
     }
 
+    public override void OnRemove()
+    {
+        _cameraMovement.Dispose();
+        base.OnRemove();
+    }
+
     #region noti handler
     private void OnUseSkill(object obj)
     {

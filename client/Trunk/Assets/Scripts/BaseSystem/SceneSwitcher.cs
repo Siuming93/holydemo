@@ -23,7 +23,6 @@ namespace Monster.BaseSystem
             _managerMap = new Dictionary<string, BaseSceneManager>();
 
             _managerMap.Add(LoginSceneManager.SCENE_NAME, new LoginSceneManager());
-            _managerMap.Add(CitySceneManager.SCENE_NAME, new CitySceneManager());
             _managerMap.Add(LeiTaiSceneManager.SCENE_NAME, new LeiTaiSceneManager());
         }
 

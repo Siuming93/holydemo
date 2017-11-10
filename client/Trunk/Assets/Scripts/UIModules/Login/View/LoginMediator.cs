@@ -12,11 +12,9 @@ public class LoginMediator : AbstractMediator
 
     private LoginUI _skin;
     private GameObject _view;
-    private LoginProxy _proxy;
 
     public LoginMediator(): base(NAME)
     {
-        _proxy = ApplicationFacade.Instance.RetrieveProxy(LoginProxy.NAME) as LoginProxy;
         RegisterNotificationHandler(NotificationConst.LOGIN_SUCCESS, OnLoginSuccess);
         _view = ResourcesFacade.Instance.LoadPrefab(PANEL_PATH);
         UIManager.Intance.AddChild(_view.transform);

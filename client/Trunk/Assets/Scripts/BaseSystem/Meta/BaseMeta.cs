@@ -3,19 +3,19 @@ using System.Collections.Generic;
 
 public abstract class BaseMeta<T> : IMeta where T : IMeta,new()
 {
-    protected static Dictionary<string, T> map = new Dictionary<string, T>();
-    public static T GetMeta(string id)
+    protected static Dictionary<int, T> map = new Dictionary<int, T>();
+    public static T GetMeta(int id)
     {
         T t;
         map.TryGetValue(id, out t);
         return t;
     }
 
-    public string id;
+    public int id;
 
     public static void AddMeta(Hashtable properties)
     {
-        string id = MetaUtil.GetStringValue(properties, "id");
+        int id = MetaUtil.GetIntValue(properties, "id");
         if (!map.ContainsKey(id))
         {
             T t = new T();
@@ -26,7 +26,7 @@ public abstract class BaseMeta<T> : IMeta where T : IMeta,new()
 
     public virtual void UpdateForm(Hashtable properties)
     {
-        this.id = MetaUtil.GetStringValue(properties, "id");
+        this.id = MetaUtil.GetIntValue(properties, "id");
     }
 
 }

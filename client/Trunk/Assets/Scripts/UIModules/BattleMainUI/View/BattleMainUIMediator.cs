@@ -18,8 +18,8 @@ public class BattleMainUIMediator : AbstractMediator
     private BattleMainUISkin _skin;
     private GameObject origin;
 
-    private Dictionary<string, Button> _skillBtnMap;
-    private Dictionary<string, Image> _skillImageMap;
+    private Dictionary<int, Button> _skillBtnMap;
+    private Dictionary<int, Image> _skillImageMap;
     private Dictionary<Image, Tweener> _skillTweenerMap; 
     public BattleMainUIMediator()
         : base(NAME)
@@ -48,8 +48,8 @@ public class BattleMainUIMediator : AbstractMediator
         this._stick.OnStickMovementStart += OnStickMovementStart;
         this._stick.OnJoystickMovement += OnStickMovement;
 
-        this._skillBtnMap = new Dictionary<string, Button>();
-        this._skillImageMap = new Dictionary<string, Image>();
+        this._skillBtnMap = new Dictionary<int, Button>();
+        this._skillImageMap = new Dictionary<int, Image>();
         this._skillTweenerMap = new Dictionary<Image, Tweener>();
 
         this._skillBtnMap.Add(_proxy.attackVO.meta.id, _skin.attackBtn);

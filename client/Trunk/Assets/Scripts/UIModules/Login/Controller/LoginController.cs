@@ -18,7 +18,6 @@ public class LoginController
             return _instance;
         }
     }
-    private string _lastIp;
 
     public LoginController()
     {
@@ -33,7 +32,6 @@ public class LoginController
     {
         NetManager.Instance.Close();
         NetManager.Instance.TryConnect(ipAdress);
-        _lastIp = ipAdress;
         NetManager.Instance.SendMessage(new CsLogin() { account = id });
     }
 
