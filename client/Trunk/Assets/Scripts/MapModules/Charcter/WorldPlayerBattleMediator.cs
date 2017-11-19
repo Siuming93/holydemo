@@ -60,9 +60,9 @@ public class WorldPlayerBattleMediator : AbstractMediator
     {
         foreach (var controller in controllers.Values)
         {
-            controller.model.gameObject.SetActive(false);
             controllerPool.Push(controller);
         }
+        controllers.Clear();
         var list = _proxy.otherPlayerList;
         foreach (WorldPlayerInfoVO vo in list)
         {
@@ -79,6 +79,11 @@ public class WorldPlayerBattleMediator : AbstractMediator
             controllers.Add(vo.id, controller);
             controller.model.gameObject.SetActive(true);
             controller.Async(vo);
+        }
+
+        foreach (var controller in controllerPool)
+        {
+            controller.model.gameObject.SetActive(false);
         }
     }
     private void OnPlayerStartMove(object obj)

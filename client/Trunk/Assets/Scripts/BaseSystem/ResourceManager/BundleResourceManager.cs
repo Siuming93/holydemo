@@ -170,7 +170,8 @@ namespace Monster.BaseSystem.ResourceManager
             }
             HintIncreaseRefCount(hint);
             var asset = instantiate ? Object.Instantiate(hint.mainAsset) : hint.mainAsset;
-            loadedAssetHintMap.Add(asset.GetInstanceID(), hint);
+            if(!loadedAssetHintMap.ContainsKey(asset.GetInstanceID()))
+                loadedAssetHintMap.Add(asset.GetInstanceID(), hint);
             return asset;
         }
         private void HintLoadAssetBundle(AssetBundleHint hint)

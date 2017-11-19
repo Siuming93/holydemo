@@ -1,52 +1,30 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.UI;
-
+ 
 /// <summary>
 /// 通知信息的UI管理器
 /// </summary>
 public class MessageUIManger : MonoBehaviour
 {
- #if !UNITY_EDITOR
-    public Text MessageText;
 
+#if DEVELOPMENT_BUILD
     public static MessageUIManger Instance { get; private set; }
 
-    private List<string> _printList = new List<string>();
 
     private void Awake()
     {
         Instance = this;
+        Application.logMessageReceived += OnLogReceived;
     }
 
-    public void Print(string message)
+    private void OnLogReceived(string condition, string stacktrace, LogType type)
     {
-        _printList.Add(message);
+        _printList.Add(condition);
     }
 
-    /// <summary>
-    /// 设定通知信息
-    /// </summary>
-    /// <param name="message"></param>
-    /// <param name="timer">存留时间</param>
-    public void SetMessage(string message, float timer = 2f)
-    {
-        MessageText.text = message;
-        StartCoroutine(ClearMessage(timer));
-    }
+    private List<string> _printList = new List<string>();
 
-    /// <summary>
-    /// 到时间后清空信息
-    /// </summary>
-    /// <param name="timer"></param>
-    /// <returns></returns>
-    private IEnumerator ClearMessage(float timer)
-    {
-        yield return new WaitForSeconds(timer);
-
-        MessageText.text = "";
-    }
 
     private void OnGUI()
     {
@@ -59,5 +37,7 @@ public class MessageUIManger : MonoBehaviour
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
     }
+#else
+
 #endif
 }

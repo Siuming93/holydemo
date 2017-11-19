@@ -25,6 +25,10 @@ public class LoginMediator : AbstractMediator
         {
             _skin.ipAddressInputField.text = PlayerPrefs.GetString("last_ip");
         }
+        if (PlayerPrefs.HasKey("last_id"))
+        {
+            _skin.acountInputField.text = PlayerPrefs.GetString("last_id");
+        }
         _skin.StartCoroutine(ChcekState());
     }
 
@@ -38,6 +42,7 @@ public class LoginMediator : AbstractMediator
     #region noti handler
     private void OnLoginSuccess(object obj)
     {
+        PlayerPrefs.SetString("last_id", _skin.acountInputField.text);
         PlayerPrefs.SetString("last_ip", _skin.ipAddressInputField.text);
         PlayerPrefs.Save();
         PlayerProperty.ID = (long)obj;
