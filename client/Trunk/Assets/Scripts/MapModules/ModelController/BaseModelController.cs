@@ -5,16 +5,27 @@ using UnityEngine;
 
 public abstract class BaseModelController
 {
-    public GameObject model { protected set; get; }
+    private bool _visible;
+    public virtual bool visible
+    {
+        get { return _visible; }
+        set
+        {
+            _visible = value;
+            if (model != null)
+            {
+                model.gameObject.SetActive(_visible);
+            }
+        }
+    }
+    protected GameObject model { set; get; }
 
-    public Transform root { protected set; get; }
+    protected Transform root { set; get; }
 
-    public RectTransform uiRoot { protected set; get; }
+    protected RectTransform uiRoot {  set; get; }
 
-    public Animator animator { protected set; get; }
+    protected Animator animator { set; get; }
 
-    public Vector2 pos { get { return new Vector2(model.transform.localPosition.x, model.transform.localPosition.z); } }
-    public Vector2 dir { get { return moveDir; } }
 
     #region public funcs
     #region load
@@ -30,84 +41,7 @@ public abstract class BaseModelController
     }
     #endregion
 
-    #region move
-    public void Move(Vector2 delta)
-    {
-        if (model != null)
-        {
-            Vector3 endPos = model.transform.localPosition + new Vector3(delta.x, 0, delta.y);
-            Vector3 worldPos = model.transform.localToWorldMatrix * endPos;
-            model.transform.localPosition = endPos;
-            model.transform.LookAt(worldPos, Vector3.up);
-        }
-    }
-
-    protected bool addListener = false;
-    public void StartMove(Vector2 dir)
-    {
-        isMove = true;
-        moveDir = dir;
-        if (!addListener)
-        {
-            addListener = true;
-            UpdateProxy.Instance.UpdateEvent += Update;
-        }
-    }
-
-    public void UpdateMoveDir(Vector2 dir)
-    {
-        moveDir = dir;
-    }
-
-    protected bool isMove;
-    protected Vector2 moveDir;
-    protected void Update()
-    {
-        if (model != null)
-        {
-            if (isMove)
-            {
-                Vector3 delta = new Vector3(moveDir.x, 0f, moveDir.y) * PlayerProperty.RunSpeed * Time.deltaTime;
-                Vector3 endPos = model.transform.localPosition + delta;
-                model.transform.localPosition = endPos;
-            }
-        }
-    }
-
-    public void EndMove()
-    {
-        isMove = false;
-        if (addListener)
-        {
-            UpdateProxy.Instance.UpdateEvent -= Update;
-            addListener = false;
-        }
-    }
-
-    protected Tweener moveTweener;
-    public void MoveTo(Vector3 pos)
-    {
-        if (model != null)
-        {
-            float distance = (pos - model.transform.localPosition).magnitude;
-            Debug.Log(distance);
-            if (moveTweener != null)
-                moveTweener.Kill();
-            moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
-
-        }
-    }
-
-    public void LookAt(Vector2 dir)
-    {
-        if (model != null)
-        {
-            Vector3 endPos = model.transform.localPosition +  new Vector3(dir.x, 0, dir.y);
-            Vector3 worldPos = endPos;
-            model.transform.LookAt(worldPos, Vector3.up);
-        }
-    }
-    #endregion
+  
 
     #region animation
 
@@ -152,7 +86,8 @@ public abstract class BaseModelController
     {
         this.origin = origin;
         this.model = Object.Instantiate(origin);
-        this.animator = model.transform.GetComponentInChildren<Animator>();
+        this.model.SetActive(_visible);
+        this.animator = model.transform.GetComponentInChildren<Animator>(true);
     }
 
     protected virtual void Dispose()

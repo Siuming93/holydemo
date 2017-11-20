@@ -58,6 +58,44 @@ namespace Monster.Protocol
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
   }
   
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PosInfo")]
+  public partial class PosInfo : global::ProtoBuf.IExtensible
+  {
+    public PosInfo() {}
+    
+    private float _posX;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float posX
+    {
+      get { return _posX; }
+      set { _posX = value; }
+    }
+    private float _posY;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float posY
+    {
+      get { return _posY; }
+      set { _posY = value; }
+    }
+    private float _dirX;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"dirX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float dirX
+    {
+      get { return _dirX; }
+      set { _dirX = value; }
+    }
+    private float _dirY;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"dirY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float dirY
+    {
+      get { return _dirY; }
+      set { _dirY = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
   [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"PlayerPosInfo")]
   public partial class PlayerPosInfo : global::ProtoBuf.IExtensible
   {
@@ -70,41 +108,47 @@ namespace Monster.Protocol
       get { return _id; }
       set { _id = value; }
     }
-    private float _posX;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float posX
+    private Monster.Protocol.PosInfo _posInfo;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posInfo", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Monster.Protocol.PosInfo posInfo
     {
-      get { return _posX; }
-      set { _posX = value; }
+      get { return _posInfo; }
+      set { _posInfo = value; }
     }
-    private float _posY;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float posY
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsAsyncPlayerPos")]
+  public partial class CsAsyncPlayerPos : global::ProtoBuf.IExtensible
+  {
+    public CsAsyncPlayerPos() {}
+    
+    private Monster.Protocol.PosInfo _posInfo;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"posInfo", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Monster.Protocol.PosInfo posInfo
     {
-      get { return _posY; }
-      set { _posY = value; }
+      get { return _posInfo; }
+      set { _posInfo = value; }
     }
-    private float _dirX;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"dirX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float dirX
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScAsyncPlayerPos")]
+  public partial class ScAsyncPlayerPos : global::ProtoBuf.IExtensible
+  {
+    public ScAsyncPlayerPos() {}
+    
+    private readonly global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo> _infos = new global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo>();
+    [global::ProtoBuf.ProtoMember(1, Name=@"infos", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public global::System.Collections.Generic.List<Monster.Protocol.PlayerPosInfo> infos
     {
-      get { return _dirX; }
-      set { _dirX = value; }
+      get { return _infos; }
     }
-    private float _dirY;
-    [global::ProtoBuf.ProtoMember(5, IsRequired = true, Name=@"dirY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float dirY
-    {
-      get { return _dirY; }
-      set { _dirY = value; }
-    }
-    private bool _isMove;
-    [global::ProtoBuf.ProtoMember(6, IsRequired = true, Name=@"isMove", DataFormat = global::ProtoBuf.DataFormat.Default)]
-    public bool isMove
-    {
-      get { return _isMove; }
-      set { _isMove = value; }
-    }
+  
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
