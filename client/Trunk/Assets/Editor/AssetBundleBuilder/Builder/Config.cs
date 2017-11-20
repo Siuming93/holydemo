@@ -9,6 +9,6 @@ namespace Assets.Editor.AssetBundleBuilder
         public string ExportPath = Application.dataPath.Replace("Assets","") + "Bundles";
 
         public BuildAssetBundleOptions options = BuildAssetBundleOptions.None;
-        public BuildTarget target = BuildTarget.StandaloneWindows;
+        public BuildTarget target = BuildTarget.Android;
     }
 }

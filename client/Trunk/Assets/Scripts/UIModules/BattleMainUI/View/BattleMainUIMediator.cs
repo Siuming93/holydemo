@@ -31,8 +31,10 @@ public class BattleMainUIMediator : AbstractMediator
 
     private void OnPanelLoadComplete(IAsyncResourceRequest resourcerequest)
     {
-
         origin = (resourcerequest as AsyncResourceRequest).asset as GameObject;
+
+        Debug.Log(origin);
+
         var view = GameObject.Instantiate(origin);
         this._skin = view.GetComponent<BattleMainUISkin>();
 
