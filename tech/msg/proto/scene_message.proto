@@ -13,17 +13,28 @@ message ScEnterScene
 	required int32 result			= 2;
 }
 
+message PosInfo
+{
+	required float posX				= 1;
+	required float posY				= 2;
+	required float dirX				= 3;
+	required float dirY				= 4;
+}
+
 message PlayerPosInfo
 {
 	required int64 id 				= 1;
+	required PosInfo posInfo 		= 2;
+}
 
-	required float posX				= 2;
-	required float posY				= 3;
-	required float dirX				= 4;
-	required float dirY				= 5;
+message CsAsyncPlayerPos
+{
+	required PosInfo posInfo 		= 1;
+}
 
-	required bool isMove  			= 6;
-
+message ScAsyncPlayerPos
+{
+	repeated  PlayerPosInfo infos 	= 1;
 }
 
 message CsPlayerMove
