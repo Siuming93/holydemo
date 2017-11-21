@@ -4,7 +4,7 @@ public static class PlayerProperty
 {
     public static long ID;
 
-    public static float RunSpeed = 10f;
+    public static float RunSpeed = 6f;
 
     public static Vector2 Postion;
 
