@@ -25,6 +25,7 @@ message PlayerPosInfo
 {
 	required int64 id 				= 1;
 	required PosInfo posInfo 		= 2;
+	required bool isMove 			= 3;
 }
 
 message CsAsyncPlayerPos
