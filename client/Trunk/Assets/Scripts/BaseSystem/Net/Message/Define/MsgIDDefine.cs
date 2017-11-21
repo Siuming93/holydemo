@@ -23,4 +23,6 @@ public class MsgIDDefine
 	public const int CsPlayerUpdateMoveDir = 10411; 
 	public const int ScPlayerUpdateMoveDir = 10412; 
 	public const int ScPlayerStartMove = 10413; 
+	public const int CsAsyncPlayerPos = 10414; 
+	public const int ScAsyncPlayerPos = 10415; 
 }

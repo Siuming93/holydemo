@@ -55,6 +55,10 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(ScPlayerUpdateMoveDir), 10412);
 		id2msgMap.Add(10413, typeof(ScPlayerStartMove));
 		msg2idMap.Add(typeof(ScPlayerStartMove), 10413);
+		id2msgMap.Add(10414, typeof(CsAsyncPlayerPos));
+		msg2idMap.Add(typeof(CsAsyncPlayerPos), 10414);
+		id2msgMap.Add(10415, typeof(ScAsyncPlayerPos));
+		msg2idMap.Add(typeof(ScAsyncPlayerPos), 10415);
 	}
 	public Type GetMsgType(int msgID)
 	{
