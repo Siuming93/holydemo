@@ -3,6 +3,7 @@ using DG.Tweening;
 using Monster.Net;
 using Monster.Protocol;
 using UnityEngine;
+using System.Collections.Generic;
 
 public class PlayerMoelController : BaseModelController
 {
@@ -63,10 +64,10 @@ public class PlayerMoelController : BaseModelController
             {
                 _lastPos = pos;
                 _lastEuler = eular;
-               /* NetManager.Instance.SendMessage(new CsAsyncPlayerPos()
+                NetManager.Instance.SendMessage(new CsAsyncPlayerPos()
                 {
                     posInfo = new PosInfo() { dirX = eular.y, dirY = eular.y, posX =  pos.x, posY = pos.z},
-                });*/
+                });
             }
             yield return waitor;
         }
@@ -120,18 +121,37 @@ public class PlayerMoelController : BaseModelController
 public class OtherPlayerMoelController : BaseModelController
 {
     protected Tweener moveTweener;
-    public void MoveTo(Vector3 pos)
+
+    protected Queue<Vector3> targetList = new Queue<Vector3>();
+    protected Vector3 _lastPos;
+    protected void MoveTo(Vector3 pos)
     {
         if (model != null)
         {
             float distance = (pos - model.transform.localPosition).magnitude;
-            //Debug.Log(distance);
-            if (moveTweener != null && moveTweener.IsPlaying())
-                moveTweener.Kill();
-            moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
+
+            if (!Mathf.Approximately(_lastPos.x, pos.x) || !Mathf.Approximately(_lastPos.z, pos.z))
+                targetList.Enqueue(pos);
+
+            if (targetList.Count > 3)
+            {
+                moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
+                moveTweener.onComplete += OnMoveComplete;                
+            }
         }
     }
-    public void LookAt(float angle)
+
+    private void OnMoveComplete()
+    {
+        if (targetList.Count == 0)
+            return;
+        var pos = targetList.Dequeue();
+        float distance = (pos - model.transform.localPosition).magnitude;
+        moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
+        moveTweener.onComplete += OnMoveComplete;    
+    }
+
+    protected void LookAt(float angle)
     {
         if (model != null)
         {
@@ -139,9 +159,11 @@ public class OtherPlayerMoelController : BaseModelController
         }
     }
 
+
     public void Async(WorldPlayerInfoVO vo)
     {
         MoveTo(vo.pos);
         LookAt(vo.dir.x);
+        PlayMoveAnimation(vo.isMove);
     }
 }

@@ -45,9 +45,14 @@ public abstract class BaseModelController
 
     #region animation
 
+    protected bool _isMove;
     public void PlayMoveAnimation(bool isMove)
     {
-        animator.SetBool("IsMove", isMove);
+        if (isMove != _isMove)
+        {
+            animator.SetBool("IsMove", isMove);
+            _isMove = isMove;
+        }
     }
 
     public void PlaySkillAnimation(SkillAnimationMeta meta)

@@ -12,7 +12,7 @@ public class WorldPlayerInfoVO
         this.id = info.id;
         this.pos = new Vector3(info.posInfo.posX, 0f, info.posInfo.posY);
         this.dir = new Vector2(info.posInfo.dirX, info.posInfo.dirY);
-        //this.isMove = info.posInfo.isMove;
+        this.isMove = info.isMove;
     }
 
     public void Update(float posX, float posY, float dirX, float dirY)
