@@ -140,8 +140,9 @@ function playerInfoMsg()
 		playerPosInfo.posInfo.posY = v.posY;
 		playerPosInfo.posInfo.dirX = v.dirX;
 		playerPosInfo.posInfo.dirY = v.dirY;
-		--playerPosInfo.isMove = v.isMove;
+		playerPosInfo.isMove = v.isMove;
 		scAllPlayerInfo.infos[index] = playerPosInfo
+		index = index + 1
 	end
 
 	local msgbody = protobuf.encode("Monster.Protocol.ScAllPlayerPosInfo", scAllPlayerInfo)
@@ -175,7 +176,7 @@ function fixedUpdate()
 	local i = 0
 	while (true)
 	do 
-		skynet.sleep(50)	
+		skynet.sleep(100)	
 		broadcastpackage(playerInfoMsg())
 	end
 end
