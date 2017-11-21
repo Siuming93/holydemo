@@ -32,6 +32,9 @@ CMD.dispatch = function (opcode, msg, agent, ...)
 	if opcode == message.CSPLAYERUPDATEMOVEDIR%10000 then
 		playerUpdateMoveDir(id, msg, client_fd)
 	end
+	if opcode == message.CSASYNCPLAYERPOS%10000 then
+		playerAsyncPosAndDir(id, msg)
+	end
 end
 
 CMD.disconect = function (agent)
@@ -114,18 +117,30 @@ function playerUpdateMoveDir(id, data, client_fd)
 	end
 end
 
+function playerAsyncPosAndDir(id, data)
+	local msg = protobuf.decode("Monster.Protocol.CsAsyncPlayerPos", data)
+	if msg then
+		local info = player_table[id]
+		info.dirX = msg.posInfo.dirX;
+		info.dirY = msg.posInfo.dirY;
+		info.posX = msg.posInfo.posX;
+		info.posY = msg.posInfo.posY;
+	end
+end
+
 function playerInfoMsg()
 	local scAllPlayerInfo = {infos = {}}
 	local index = 1
 
 	for k,v in pairs(player_table) do
 		local playerPosInfo = {}
+		playerPosInfo.posInfo = {}
 		playerPosInfo.id = k;
-		playerPosInfo.posX = v.posX;
-		playerPosInfo.posY = v.posY;
-		playerPosInfo.dirX = v.dirX;
-		playerPosInfo.dirY = v.dirY;
-		playerPosInfo.isMove = v.isMove;
+		playerPosInfo.posInfo.posX = v.posX;
+		playerPosInfo.posInfo.posY = v.posY;
+		playerPosInfo.posInfo.dirX = v.dirX;
+		playerPosInfo.posInfo.dirY = v.dirY;
+		--playerPosInfo.isMove = v.isMove;
 		scAllPlayerInfo.infos[index] = playerPosInfo
 	end
 
