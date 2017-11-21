@@ -64,6 +64,6 @@ public class CameraMovement
     {
         Quaternion targetRotation = Quaternion.LookRotation(player.position - cameraTransform.position, Vector3.up);
 
-        cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetRotation, Time.deltaTime * speed);
+        cameraTransform.rotation = Quaternion.Slerp(cameraTransform.rotation, targetRotation, Time.deltaTime * speed /10);
     }
 }

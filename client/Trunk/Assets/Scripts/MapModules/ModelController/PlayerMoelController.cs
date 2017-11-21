@@ -1,10 +1,14 @@
 ﻿using System.Collections;
 using DG.Tweening;
+using Monster.Net;
+using Monster.Protocol;
 using UnityEngine;
 
 public class PlayerMoelController : BaseModelController
 {
-    protected IEnumerator _asyncItor; 
+    protected IEnumerator _asyncItor;
+
+    public Transform modelTransform { get { return model.transform; }}
 
     #region move
     public void Move(Vector2 delta)
@@ -49,6 +53,7 @@ public class PlayerMoelController : BaseModelController
         WaitForSeconds waitor = new WaitForSeconds(1/10f);
         while (true)
         {
+           // Debug.Log("AsyncMoveState");
             Vector3 pos = model.transform.localPosition;
             Vector3 eular = model.transform.localEulerAngles;
             if (!Mathf.Approximately(pos.x, _lastPos.x) || !Mathf.Approximately(pos.y, _lastPos.y) ||
@@ -58,7 +63,10 @@ public class PlayerMoelController : BaseModelController
             {
                 _lastPos = pos;
                 _lastEuler = eular;
-
+               /* NetManager.Instance.SendMessage(new CsAsyncPlayerPos()
+                {
+                    posInfo = new PosInfo() { dirX = eular.y, dirY = eular.y, posX =  pos.x, posY = pos.z},
+                });*/
             }
             yield return waitor;
         }
@@ -111,18 +119,29 @@ public class PlayerMoelController : BaseModelController
 
 public class OtherPlayerMoelController : BaseModelController
 {
+    protected Tweener moveTweener;
+    public void MoveTo(Vector3 pos)
+    {
+        if (model != null)
+        {
+            float distance = (pos - model.transform.localPosition).magnitude;
+            //Debug.Log(distance);
+            if (moveTweener != null && moveTweener.IsPlaying())
+                moveTweener.Kill();
+            moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
+        }
+    }
+    public void LookAt(float angle)
+    {
+        if (model != null)
+        {
+            model.transform.localEulerAngles = new Vector3(0f, angle);
+        }
+    }
+
     public void Async(WorldPlayerInfoVO vo)
     {
-        //model.transform.position = vo.pos;
-        //UpdateMoveDir(vo.dir);
-        //LookAt(vo.dir);
-        //if (vo.isMove && !isMove)
-        //{
-        //    StartMove(vo.dir);
-        //}
-        //if (!vo.isMove && isMove)
-        //{
-        //    EndMove();
-        //}
+        MoveTo(vo.pos);
+        LookAt(vo.dir.x);
     }
 }
