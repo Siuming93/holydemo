@@ -115,6 +115,13 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
+    private bool _isMove;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"isMove", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public bool isMove
+    {
+      get { return _isMove; }
+      set { _isMove = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
