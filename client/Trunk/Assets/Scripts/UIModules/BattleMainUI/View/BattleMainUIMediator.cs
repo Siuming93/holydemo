@@ -90,6 +90,7 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnAttackBtnClick()
     {
         _proxy.UseSkill(_proxy.attackVO);
+        CommonUtil.ReStart();
     }
     private void OnSkillBtn1Click()
     {
@@ -160,7 +161,7 @@ public class BattleMainUIMediator : AbstractMediator
     private void RefreshSkillBtn(SkillVO vo)
     {
         float cd = vo.meta.cd;
-        float useTime = GameConfig.serverTime - vo.lastUseMiliSceond;
+        float useTime = GameConfig.ServerTime - vo.lastUseMiliSceond;
         bool isCD = useTime < vo.meta.cd;
         var button = _skillBtnMap[vo.meta.id];
 
