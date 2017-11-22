@@ -10,41 +10,45 @@ namespace Monster.BaseSystem.CoroutineTask
 {
     public class PreLoadTask : BaseCoroutineTask
     {
+        public static bool first = true;
 
         public override IEnumerator Run()
         {
             int step = 0;
-            Init();
-            for (int i = 0, count = mCoroutineTasks.Count; i < count; i++)
+            if (first)
             {
-                BaseCoroutineTask task = mCoroutineTasks[i].Key;
-                while (!task.IsCompleted)
+                Init();
+                for (int i = 0, count = mCoroutineTasks.Count; i < count; i++)
                 {
-                    this.Description = task.Description;
-                    this.Progress = mCoroutineTasks[i].Value;
-                    yield return task.Run();
+                    BaseCoroutineTask task = mCoroutineTasks[i].Key;
+                    while (!task.IsCompleted)
+                    {
+                        this.Description = task.Description;
+                        this.Progress = mCoroutineTasks[i].Value;
+                        yield return task.Run();
+                    }
                 }
+                yield return step++;
+
+                ResourcesFacade.Instance.Init(null);
+                UpdateProxy.Instance.UpdateEvent += ResourcesFacade.Instance.Trik;
+                yield return step++;
+
+                MetaManager metaManager = new MetaManager();
+                metaManager.AddMeta(MetaManager.FakeMeta());
+                yield return step++;
+
+                NetManager.Instance.Init();
+                yield return step++;
+
+                new UIManager(GameObject.Find("Canvas").transform);
+                GameObject preloadView = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/Preload/PreloadPanel");
+                UIManager.Intance.AddChild(preloadView.transform);
+                yield return step++;
+
+                yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
+                ResourcesFacade.Instance.UnLoadAsset(preloadView);
             }
-            yield return step++;
-
-            ResourcesFacade.Instance.Init(null);
-            UpdateProxy.Instance.UpdateEvent += ResourcesFacade.Instance.Trik;
-            yield return step++;
-
-            MetaManager metaManager = new MetaManager();
-            metaManager.AddMeta(MetaManager.FakeMeta());
-            yield return step++;
-
-            NetManager.Instance.Init();
-            yield return step++;
-
-            new UIManager(GameObject.Find("Canvas").transform);
-            GameObject preloadView = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/Preload/PreloadPanel");
-            UIManager.Intance.AddChild(preloadView.transform);
-            yield return step++;
-
-            yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
-            ResourcesFacade.Instance.UnLoadAsset(preloadView);
             yield return step++;
         }
 

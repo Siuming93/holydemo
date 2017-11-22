@@ -4,14 +4,17 @@ namespace Monster.BaseSystem.SceneManager
 {
     class PreloadSceneManager : BaseSceneManager
     {
+        public const string SCENE_NAME = "Preload";
+        public static bool isFirstLoad = false;
+
         public override IEnumerator BeforeEnterScene(object data)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public override IEnumerator OnEnterScene(object data)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
 
         public override IEnumerator BeforeLeaveScene(object data)
@@ -22,7 +25,7 @@ namespace Monster.BaseSystem.SceneManager
 
         public override IEnumerator AfterLeaveScene(object data)
         {
-            throw new System.NotImplementedException();
+            return null;
         }
     }
 }

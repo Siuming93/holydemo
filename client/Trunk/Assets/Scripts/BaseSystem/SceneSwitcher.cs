@@ -22,6 +22,7 @@ namespace Monster.BaseSystem
         {
             _managerMap = new Dictionary<string, BaseSceneManager>();
 
+            _managerMap.Add(PreloadSceneManager.SCENE_NAME, new PreloadSceneManager());
             _managerMap.Add(LoginSceneManager.SCENE_NAME, new LoginSceneManager());
             _managerMap.Add(LeiTaiSceneManager.SCENE_NAME, new LeiTaiSceneManager());
         }
@@ -39,7 +40,7 @@ namespace Monster.BaseSystem
             {
                 if (oldSceneName != null && _managerMap.TryGetValue(oldSceneName, out oldManager))
                 {
-                    oldManager.BeforeLeaveScene(null);
+                     yield return oldManager.BeforeLeaveScene(null);
                 }
                 AsyncOperation operation = UnityEngine.SceneManagement.SceneManager.LoadSceneAsync(sceneName, LoadSceneMode.Single);
                 while (!operation.isDone)

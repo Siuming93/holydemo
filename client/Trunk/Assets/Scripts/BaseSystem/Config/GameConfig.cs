@@ -18,8 +18,8 @@ namespace Monster.BaseSystem
         /// <summary>
         /// milisceond
         /// </summary>
-        public static float serverTime {
-            get { return Time.time; }
+        public static long ServerTime {
+            get { return TimeProxy.Time; }
         }
     }
 }
