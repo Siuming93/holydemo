@@ -14,7 +14,7 @@ message ScLogin
 
 message CsAsyncTime
 {
-	optional int32 id 				= 1;
+	required int32 id 				= 1;
 }
 
 message ScAsyncTime
