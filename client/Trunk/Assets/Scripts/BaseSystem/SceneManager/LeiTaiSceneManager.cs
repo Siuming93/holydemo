@@ -36,6 +36,7 @@ namespace Monster.BaseSystem.SceneManager
             {
                 new LeitaiCharcterProxy(),
                 new SkillProxy(),
+                new TimeProxy(),
             };
             RegisterProxy(_proxyList);
 
