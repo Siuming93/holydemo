@@ -2,6 +2,8 @@ local message = {}
 
 message.CSLOGIN                                                      	= 10001; 
 message.SCLOGIN                                                      	= 10002; 
+message.CSASYNCTIME                                                  	= 10003; 
+message.CSASYNCTIME                                                  	= 10004; 
 message.CSHELLOWORLD                                                 	= 10201; 
 message.SCHELLOWORLD                                                 	= 10202; 
 message.CSTALK                                                       	= 10301; 
