@@ -19,5 +19,5 @@ message CsAsyncTime
 
 message ScAsyncTime
 {
-	required int32 time 			= 1;
+	required float time 			= 1;
 }
