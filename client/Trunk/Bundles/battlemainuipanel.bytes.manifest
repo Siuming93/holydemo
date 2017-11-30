@@ -1,0 +1,44 @@
+ManifestFileVersion: 0
+CRC: 858752606
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 613cd4e68553e8163226ed321901a51c
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: 8eae90b81caabab633b9fd4f107e7e54
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 114
+  Script: {fileID: 1392445389, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -765806418, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: -900027084, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 708705254, guid: f5f67c52d1564df4a8936ccd202a3bd8, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 7e68692a7ed7e224395e2d5373ee9b3a, type: 3}
+- Class: 114
+  Script: {fileID: 11500000, guid: 70d91b6a4ab9ba246a24b718f1816f37, type: 3}
+- Class: 115
+  Script: {instanceID: 0}
+- Class: 128
+  Script: {instanceID: 0}
+- Class: 213
+  Script: {instanceID: 0}
+- Class: 222
+  Script: {instanceID: 0}
+- Class: 224
+  Script: {instanceID: 0}
+Assets:
+- Assets/BundleResources/Resourcesss/Prefab/UI/BattleMainUI/BattleMainUIPanel.prefab
+Dependencies: []

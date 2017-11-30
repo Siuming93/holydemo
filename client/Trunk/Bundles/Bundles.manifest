@@ -1,0 +1,27 @@
+ManifestFileVersion: 0
+CRC: 4172282937
+AssetBundleManifest:
+  AssetBundleInfos:
+    Info_0:
+      Name: talkcanvas.bytes
+      Dependencies: {}
+    Info_1:
+      Name: preloadpanel.bytes
+      Dependencies:
+        Dependency_0: pigu.bytes
+    Info_2:
+      Name: loginview.bytes
+      Dependencies: {}
+    Info_3:
+      Name: chatitem.bytes
+      Dependencies:
+        Dependency_0: pigu.bytes
+    Info_4:
+      Name: battlemainuipanel.bytes
+      Dependencies: {}
+    Info_5:
+      Name: boy.bytes
+      Dependencies: {}
+    Info_6:
+      Name: pigu.bytes
+      Dependencies: {}

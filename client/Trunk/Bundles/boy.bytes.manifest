@@ -1,0 +1,53 @@
+ManifestFileVersion: 0
+CRC: 3027800267
+Hashes:
+  AssetFileHash:
+    serializedVersion: 2
+    Hash: 76ffdd954c2d1c281c68f1fb586d891d
+  TypeTreeHash:
+    serializedVersion: 2
+    Hash: d1ad4fec2bbf06ad54dddea8c065b9c7
+HashAppended: 0
+ClassTypes:
+- Class: 1
+  Script: {instanceID: 0}
+- Class: 4
+  Script: {instanceID: 0}
+- Class: 21
+  Script: {instanceID: 0}
+- Class: 28
+  Script: {instanceID: 0}
+- Class: 43
+  Script: {instanceID: 0}
+- Class: 48
+  Script: {instanceID: 0}
+- Class: 54
+  Script: {instanceID: 0}
+- Class: 65
+  Script: {instanceID: 0}
+- Class: 74
+  Script: {instanceID: 0}
+- Class: 90
+  Script: {instanceID: 0}
+- Class: 91
+  Script: {instanceID: 0}
+- Class: 95
+  Script: {instanceID: 0}
+- Class: 137
+  Script: {instanceID: 0}
+Assets:
+- Assets/Model/Boy/Animation/StoneKing@Attack4.FBX
+- Assets/Model/Boy/Animation/BoyPlayer.controller
+- Assets/Model/Boy/Materials/StoneKing.mat
+- Assets/Model/Boy/Animation/StoneKing@Attack1.FBX
+- Assets/Model/Boy/Animation/StoneKing@Attack3-3.FBX
+- Assets/Model/Boy/Animation/StoneKing@Attack2.FBX
+- Assets/Model/Boy/Animation/StoneKing@Attack3-1.FBX
+- Assets/BundleResources/Resourcesss/Prefab/Model/Charcter/Boy.prefab
+- Assets/Model/Boy/Animation/StoneKing@Run.FBX
+- Assets/Model/Boy/Animation/StoneKing@Death.FBX
+- Assets/Model/Boy/Animation/StoneKing@Attack3-2.FBX
+- Assets/Model/Boy/Materials/StoneKing.tga
+- Assets/Model/Boy/StoneKing.FBX
+- Assets/Model/Boy/Animation/StoneKing@AttackReady.FBX
+Dependencies: []
