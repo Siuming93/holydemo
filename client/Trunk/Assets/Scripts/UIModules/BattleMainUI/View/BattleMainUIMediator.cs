@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
@@ -65,6 +66,8 @@ public class BattleMainUIMediator : AbstractMediator
 
         RefreshSkillArea();
         UIManager.Intance.AddChild(_skin.transform);
+
+        UpdateProxy.Instance.UpdateEvent += UpdateTime;
     }
 
     public override void OnRemove()
@@ -82,6 +85,7 @@ public class BattleMainUIMediator : AbstractMediator
         this._stick.OnStickMovementStart -= OnStickMovementStart;
         this._stick.OnJoystickMovement -= OnStickMovement;
 
+        UpdateProxy.Instance.UpdateEvent -= UpdateTime;
 
         GameObject.Destroy(_skin.gameObject);
     }
@@ -161,7 +165,7 @@ public class BattleMainUIMediator : AbstractMediator
     private void RefreshSkillBtn(SkillVO vo)
     {
         float cd = vo.meta.cd;
-        float useTime = GameConfig.ServerTime - vo.lastUseMiliSceond;
+        float useTime = (float)GameConfig.Time - vo.lastUseMiliSceond;
         bool isCD = useTime < vo.meta.cd;
         var button = _skillBtnMap[vo.meta.id];
 
@@ -184,5 +188,19 @@ public class BattleMainUIMediator : AbstractMediator
         }
     }
 
+    #endregion
+
+    #region self funcs
+
+    private double _lastTime;
+    private void UpdateTime()
+    {
+        double time = GameConfig.Time;
+        if (time - _lastTime > 1)
+        {
+            _skin.timeText.text = TimeUtil.ToLongTimeString(GameConfig.Time);
+            _lastTime = time;
+        }
+    }
     #endregion
 }

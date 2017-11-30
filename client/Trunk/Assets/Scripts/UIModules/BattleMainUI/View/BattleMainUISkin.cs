@@ -12,4 +12,6 @@ public class BattleMainUISkin : MonoBehaviour {
     public Image skillCdImage1;
     public Image skillCdImage2;
     public Image skillCdImage3;
+
+    public Text timeText;
 }

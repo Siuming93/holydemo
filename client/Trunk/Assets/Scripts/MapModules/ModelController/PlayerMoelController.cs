@@ -23,7 +23,7 @@ public class PlayerMoelController : BaseModelController
         }
     }
 
-    protected bool addListener = false;
+    protected bool addListener = true;
     public void StartMove(Vector2 dir)
     {
         isMove = true;

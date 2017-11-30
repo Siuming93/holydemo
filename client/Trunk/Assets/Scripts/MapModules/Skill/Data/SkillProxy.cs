@@ -23,7 +23,7 @@ public class SkillProxy : BaseProxy
     {
         ScPlayerUseSkill msg = data as ScPlayerUseSkill;;
         var vo = GetSkillVO(msg.skillId);
-        vo.lastUseMiliSceond = GameConfig.ServerTime;
+        //vo.lastUseMiliSceond = GameConfig.Time;
         isUseSkill = true;
         vp_Timer.In(vo.meta.duration, () => { isUseSkill = false; });
 
