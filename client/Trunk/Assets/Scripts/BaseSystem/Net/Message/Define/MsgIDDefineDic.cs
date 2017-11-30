@@ -21,6 +21,10 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(CsLogin), 10001);
 		id2msgMap.Add(10002, typeof(ScLogin));
 		msg2idMap.Add(typeof(ScLogin), 10002);
+		id2msgMap.Add(10003, typeof(CsAsyncTime));
+		msg2idMap.Add(typeof(CsAsyncTime), 10003);
+		id2msgMap.Add(10004, typeof(ScAsyncTime));
+		msg2idMap.Add(typeof(ScAsyncTime), 10004);
 		id2msgMap.Add(10201, typeof(CsHelloWorld));
 		msg2idMap.Add(typeof(CsHelloWorld), 10201);
 		id2msgMap.Add(10202, typeof(ScHelloWorld));

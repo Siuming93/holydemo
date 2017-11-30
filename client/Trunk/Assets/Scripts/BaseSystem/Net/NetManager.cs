@@ -99,7 +99,7 @@ namespace Monster.Net
             {
                 int len = mStream.Read(bytes, 0, bytes.Length);
 
-                if(len == 0)
+                if (len == 0)
                     continue;
 
                 UnPackage(bytes, len);
@@ -109,12 +109,12 @@ namespace Monster.Net
         }
 
         private int curLen = 0;
-        private byte[] curBytes = new byte[BUFFER_SIZE*2];
+        private byte[] curBytes = new byte[BUFFER_SIZE * 2];
         private void UnPackage(byte[] newBytes, int len)
         {
             for (int i = 0; i < len; i++)
             {
-                curBytes[curLen] = newBytes[i]; 
+                curBytes[curLen] = newBytes[i];
                 curLen++;
             }
 
@@ -126,6 +126,7 @@ namespace Monster.Net
                 return;
 
             int msgNo = (curBytes[2] << 24) + (curBytes[3] << 16) + (curBytes[4] << 8) + (curBytes[5]);
+
             MemoryStream stream = new MemoryStream();
             stream.Write(curBytes, 6, needLen - 6);
             Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
@@ -181,11 +182,12 @@ namespace Monster.Net
         public void SendMessage(global::ProtoBuf.IExtensible msg)
         {
             var no = MsgIDDefineDic.Instance().GetMsgID(msg.GetType());
+            //Debug.LogWarning("Send Message :" + msg.GetType());
             var stream = new MemoryStream();
             Serializer.NonGeneric.Serialize(stream, msg);
             stream.Position = 0;
 
-            Serializer.NonGeneric.Deserialize(msg.GetType(),stream);
+            Serializer.NonGeneric.Deserialize(msg.GetType(), stream);
             stream.Position = 0;
 
             mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
@@ -223,7 +225,7 @@ namespace Monster.Net
                     case ConnectState.TryConnecting:
                         break;
                     case ConnectState.Connected:
-                        if(!isConnected)
+                        if (!isConnected)
                             connectState = ConnectState.ConnectedBreak;
                         break;
                     case ConnectState.ConnectingOutTime:
