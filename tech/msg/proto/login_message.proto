@@ -11,3 +11,13 @@ message ScLogin
 	required int32 result 				= 1;
 	required int64 accountid			= 2;
 }
+
+message CsAsyncTime
+{
+	optional int32 id 				= 1;
+}
+
+message ScAsyncTime
+{
+	required int32 time 			= 1;
+}
