@@ -18,7 +18,6 @@ public class LeitaiCharcterProxy : BaseProxy
         RegisterMessageHandler(MsgIDDefine.ScPlayerEndMove, OnPlayerEndMove);
         RegisterMessageHandler(MsgIDDefine.ScPlayerUpdateMoveDir, OnPlayerUpdateMoveDir);
         RegisterMessageHandler(MsgIDDefine.ScPlayerStartMove, OnPlayerStartMove);
-        RegisterMessageHandler(MsgIDDefine.ScAsyncPlayerPos, OnAsyncPlayerPos);
         playerInfo = new WorldPlayerInfoVO();
     }
 
@@ -58,32 +57,11 @@ public class LeitaiCharcterProxy : BaseProxy
 
     private void OnPlayerStartMove(object data)
     {
-        playerInfo.UpdateDir(0, 0);
+        //playerInfo.UpdateDir(0, 0);
         SendNotification(NotificationConst.PLAYER_START_MOVE);
     }
     private void OnAsyncPlayerPos(object data)
     {
-        ScAsyncPlayerPos msg = data as ScAsyncPlayerPos;
-        foreach (var playerPosInfo in msg.infos)
-        {
-            if (playerPosInfo.id == PlayerProperty.ID)
-            {
-                playerInfo.Update(playerPosInfo);
-                PlayerProperty.Postion = new Vector2(playerPosInfo.posInfo.posX, playerPosInfo.posInfo.posY);
-            }
-            else
-            {
-                WorldPlayerInfoVO vo;
-                if (!map.ContainsKey(playerPosInfo.id))
-                {
-                    vo = new WorldPlayerInfoVO();
-                    map.Add(playerPosInfo.id, vo);
-                }
-                vo = map[playerPosInfo.id];
-                vo.Update(playerPosInfo);
-                otherPlayerList.Add(vo);
-            }
-        }
 
         SendNotification(NotificationConst.ALL_OTHER_PLAYER_INFO_UPDATE);
     }
@@ -91,8 +69,9 @@ public class LeitaiCharcterProxy : BaseProxy
     private void OnPlayerUpdateMoveDir(object data)
     {
         var msg = data as ScPlayerUpdateMoveDir;
-        playerInfo.UpdateDir(msg.dirX, msg.dirY);
 
         SendNotification(NotificationConst.PLAYER_UPDATE_MOVE_DIR);
     }
+
+
 }

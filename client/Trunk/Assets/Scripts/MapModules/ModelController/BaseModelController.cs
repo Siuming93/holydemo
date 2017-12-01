@@ -41,8 +41,6 @@ public abstract class BaseModelController
     }
     #endregion
 
-  
-
     #region animation
 
     protected bool _isMove;
@@ -70,6 +68,28 @@ public abstract class BaseModelController
         animator.SetTrigger("Death");
     }
     #endregion
+    /// <summary>
+    /// 模型正方向为顺时针方向,0度角为向上 与笛卡尔坐标系不同
+    /// </summary>
+    public ModelPosVO posInfo
+    {
+        get
+        {
+            return new ModelPosVO()
+            {
+                posX = model.transform.localPosition.x,
+                posY = model.transform.localPosition.z,
+                angle =  -(model.transform.localEulerAngles.y - 90),
+            };
+        }
+    }
+    public void LookAt(float angle)
+    {
+        if (model != null)
+        {
+            model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
+        }
+    }
 
     #endregion
 

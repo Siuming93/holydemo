@@ -9,6 +9,8 @@ public class WorldPlayerBattleMediator : AbstractMediator
     public new const string NAME = "WorldPlayerBattleMediator";
     public const string MODEL_PATH = "Prefab/Model/Charcter/Boy";
 
+    public PlayerMoelController playerMoelController { get { return _playerController; }}
+
     private PlayerMoelController _playerController;
     private CameraMovement _cameraMovement;
 
@@ -88,37 +90,24 @@ public class WorldPlayerBattleMediator : AbstractMediator
     }
     private void OnPlayerStartMove(object obj)
     {
-        var vo = _proxy.playerInfo;
+        var angle = (float)obj;
         var controller = _playerController;
 
-        controller.StartMove(vo.dir);
-        controller.LookAt(vo.dir);
+        controller.StartMove(angle);
         controller.PlayMoveAnimation(true);
     }
 
     private void OnUpdatePlayerMoveDir(object obj)
     {
-        var vo = _proxy.playerInfo;
-        var dir = vo.dir;
+        var angle = (float)obj;
         var controller = _playerController;
-        controller.LookAt(dir);
-        controller.UpdateMoveDir(dir);
+        controller.UpdateMoveDir(angle);
     }
 
     private void OnPlayerEndMove(object obj)
     {
-        var vo = _proxy.playerInfo;
         var controller = _playerController;
         controller.EndMove();
-        //NetManager.Instance.SendMessage(new CsPlayerEndMovePos()
-        //{
-        //    //posX = controller.pos.x,
-        //    //posY = controller.pos.y,
-        //    //dirX = controller.dir.x,
-        //    //dirY = controller.dir.y
-        //});
-        controller.LookAt(vo.dir);
-        controller.PlayMoveAnimation(false);
     }
 
     #endregion

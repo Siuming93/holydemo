@@ -7,8 +7,6 @@ using System.Collections.Generic;
 
 public class PlayerMoelController : BaseModelController
 {
-    protected IEnumerator _asyncItor;
-
     public Transform modelTransform { get { return model.transform; }}
 
     #region move
@@ -23,17 +21,17 @@ public class PlayerMoelController : BaseModelController
         }
     }
 
-    protected bool addListener = true;
-    public void StartMove(Vector2 dir)
+    protected bool addListener = false;
+    public void StartMove(float angle)
     {
         isMove = true;
-        moveDir = dir;
+        moveDir = MathUtil.GetCoordinate(angle);
+        LookAt(angle);
+        PlayMoveAnimation(true);
         if (!addListener)
         {
-            _asyncItor = AsyncMoveState();
             addListener = true;
             UpdateProxy.Instance.UpdateEvent += Update;
-            UpdateProxy.Instance.StartCoroutine(_asyncItor);
         }
     }
     public void EndMove()
@@ -41,41 +39,16 @@ public class PlayerMoelController : BaseModelController
         isMove = false;
         if (addListener)
         {
-            UpdateProxy.Instance.StopCoroutine(_asyncItor);
             UpdateProxy.Instance.UpdateEvent -= Update;
             addListener = false;
         }
+        PlayMoveAnimation(false);
     }
 
-    private Vector3 _lastPos;
-    private Vector3 _lastEuler;
-    private IEnumerator AsyncMoveState()
+    public void UpdateMoveDir(float angle)
     {
-        WaitForSeconds waitor = new WaitForSeconds(1/10f);
-        while (true)
-        {
-           // Debug.Log("AsyncMoveState");
-            Vector3 pos = model.transform.localPosition;
-            Vector3 eular = model.transform.localEulerAngles;
-            if (!Mathf.Approximately(pos.x, _lastPos.x) || !Mathf.Approximately(pos.y, _lastPos.y) ||
-                !Mathf.Approximately(pos.z, _lastPos.z)
-                || !Mathf.Approximately(eular.x, _lastEuler.x) || !Mathf.Approximately(eular.y, _lastEuler.y) ||
-                !Mathf.Approximately(eular.z, _lastEuler.z))
-            {
-                _lastPos = pos;
-                _lastEuler = eular;
-                NetManager.Instance.SendMessage(new CsAsyncPlayerPos()
-                {
-                    posInfo = new PosInfo() { dirX = eular.y, dirY = eular.y, posX =  pos.x, posY = pos.z},
-                });
-            }
-            yield return waitor;
-        }
-    }
-
-    public void UpdateMoveDir(Vector2 dir)
-    {
-        moveDir = dir;
+        moveDir = MathUtil.GetCoordinate(angle);
+        LookAt(angle);
     }
 
     protected bool isMove;
@@ -103,16 +76,6 @@ public class PlayerMoelController : BaseModelController
             if (moveTweener != null && moveTweener.IsPlaying())
                 moveTweener.Kill();
             moveTweener = model.transform.DOLocalMove(pos, distance / PlayerProperty.RunSpeed).SetEase(Ease.Linear);
-        }
-    }
-
-    public void LookAt(Vector2 dir)
-    {
-        if (model != null)
-        {
-            Vector3 endPos = model.transform.localPosition + new Vector3(dir.x, 0, dir.y);
-            Vector3 worldPos = endPos;
-            model.transform.LookAt(worldPos, Vector3.up);
         }
     }
     #endregion
@@ -162,8 +125,8 @@ public class OtherPlayerMoelController : BaseModelController
 
     public void Async(WorldPlayerInfoVO vo)
     {
-        MoveTo(vo.pos);
-        LookAt(vo.dir.x);
+        //MoveTo(vo.pos);
+        //LookAt(vo.dir.x);
         PlayMoveAnimation(vo.isMove);
     }
 }
