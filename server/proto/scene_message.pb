@@ -1,5 +1,5 @@
 
-§
+§
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -8,49 +8,47 @@
 ScEnterScene
 
 id (
-result ("A
+result ("4
 PosInfo
 posX (
-posY (
-dirX (
-dirY ("W
+posY (
+angle ("W
 PlayerPosInfo
 
 id (*
 posInfo (2.Monster.Protocol.PosInfo
-isMove (">
-CsAsyncPlayerPos*
-posInfo (2.Monster.Protocol.PosInfo"B
-ScAsyncPlayerPos.
-infos (2.Monster.Protocol.PlayerPosInfo"*
-CsPlayerMove
-dirX (
-dirY ("D
+isMove ("D
 ScAllPlayerPosInfo.
-infos (2.Monster.Protocol.PlayerPosInfo"
+infos (2.Monster.Protocol.PlayerPosInfo"h
 CsPlayerStartMove
 
-id ("
+id (
+time (*
+posInfo (2.Monster.Protocol.PosInfo
+speed ("Y
 ScPlayerStartMove
 
-id ("
-CsPlayerEndMove
-
-id ("
+id (
+time (*
+posInfo (2.Monster.Protocol.PosInfo"=
+CsPlayerEndMove*
+posInfo (2.Monster.Protocol.PosInfo"I
 ScPlayerEndMove
 
-id ("3
-CsPlayerUpdateMoveDir
-dirX (
-dirY ("3
-ScPlayerUpdateMoveDir
-dirX (
-dirY ("L
-CsPlayerEndMovePos
-posX (
-posY (
-dirX (
-dirY ("#
+id (*
+posInfo (2.Monster.Protocol.PosInfo"C
+CsPlayerUpdateMoveDir*
+posInfo (2.Monster.Protocol.PosInfo"O
+ScPlayerUpdateMoveDir
+
+id (*
+posInfo (2.Monster.Protocol.PosInfo"@
+CsPlayerEndMovePos*
+posInfo (2.Monster.Protocol.PosInfo"L
+ScPlayerEndMovePos
+
+id (*
+posInfo (2.Monster.Protocol.PosInfo"#
 CsPlayerUseSkill
 skillId ("/
 ScPlayerUseSkill
