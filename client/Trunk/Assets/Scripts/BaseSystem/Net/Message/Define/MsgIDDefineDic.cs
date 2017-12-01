@@ -37,8 +37,6 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(CsEnterScene), 10401);
 		id2msgMap.Add(10402, typeof(ScEnterScene));
 		msg2idMap.Add(typeof(ScEnterScene), 10402);
-		id2msgMap.Add(10403, typeof(CsPlayerMove));
-		msg2idMap.Add(typeof(CsPlayerMove), 10403);
 		id2msgMap.Add(10404, typeof(ScAllPlayerPosInfo));
 		msg2idMap.Add(typeof(ScAllPlayerPosInfo), 10404);
 		id2msgMap.Add(10405, typeof(CsPlayerStartMove));
@@ -47,8 +45,6 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(CsPlayerEndMove), 10406);
 		id2msgMap.Add(10407, typeof(ScPlayerEndMove));
 		msg2idMap.Add(typeof(ScPlayerEndMove), 10407);
-		id2msgMap.Add(10408, typeof(CsPlayerEndMovePos));
-		msg2idMap.Add(typeof(CsPlayerEndMovePos), 10408);
 		id2msgMap.Add(10409, typeof(CsPlayerUseSkill));
 		msg2idMap.Add(typeof(CsPlayerUseSkill), 10409);
 		id2msgMap.Add(10410, typeof(ScPlayerUseSkill));
@@ -59,10 +55,6 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(ScPlayerUpdateMoveDir), 10412);
 		id2msgMap.Add(10413, typeof(ScPlayerStartMove));
 		msg2idMap.Add(typeof(ScPlayerStartMove), 10413);
-		id2msgMap.Add(10414, typeof(CsAsyncPlayerPos));
-		msg2idMap.Add(typeof(CsAsyncPlayerPos), 10414);
-		id2msgMap.Add(10415, typeof(ScAsyncPlayerPos));
-		msg2idMap.Add(typeof(ScAsyncPlayerPos), 10415);
 	}
 	public Type GetMsgType(int msgID)
 	{
