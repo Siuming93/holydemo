@@ -10,15 +10,18 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     public float radius = 40.0f;
     public bool isPressed { get; private set; }
 
+    public float Angle = 0f;
+
     public event Action<VirtualStick, Vector2> OnStickMovementStart;
     public event Action<VirtualStick, Vector2> OnJoystickMovement;
     public event Action<VirtualStick> OnStickMovementEnd;
+    public event Action OnStickMovement; 
 
     private RectTransform _selfRect;
     public RectTransform stickRectTransform;
     public RectTransform stickHandlerRectTransform;
 
-
+    private bool _notifyStart;
 
     public Vector2 Coordinates
     {
@@ -32,9 +35,9 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         RectTransformUtility.ScreenPointToLocalPointInRectangle(_selfRect, eventData.position, eventData.enterEventCamera, out pointP);
         this.stickRectTransform.anchoredPosition = pointP;
         isPressed = true;
+        _notifyStart = false;
         this.stickRectTransform.gameObject.SetActive(true);
-        if (OnStickMovementStart != null)
-            OnStickMovementStart(this, Coordinates);
+       
     }
 
     void IPointerUpHandler.OnPointerUp(PointerEventData eventData)
@@ -49,8 +52,22 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     void IDragHandler.OnDrag(PointerEventData eventData)
     {
         var handleOffset = GetJoystickOffset(eventData);
-        this.Coordinates = handleOffset.normalized;
         this.stickHandlerRectTransform.anchoredPosition = handleOffset;
+        this.Coordinates = handleOffset.normalized;
+
+        if (handleOffset.sqrMagnitude >= 0.1f && !_notifyStart)
+        {
+            if (OnStickMovementStart != null)
+                OnStickMovementStart(this, Coordinates);
+            _notifyStart = true;
+            return;
+        }
+        if (!_notifyStart)
+        {
+            return;
+        }
+
+        Angle = Mathf.Atan2(Coordinates.y, Coordinates.x) * 180 / Mathf.PI;
 
         if (OnJoystickMovement != null)
         {

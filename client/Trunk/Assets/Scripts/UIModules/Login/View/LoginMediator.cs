@@ -53,6 +53,9 @@ public class LoginMediator : AbstractMediator
     #region component callback
     private void OnLoginBtnClick()
     {
+        //todo test
+        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
+        return;
         var ipAdress = _skin.ipAddressInputField.text;
         var id = _skin.acountInputField.text;
         NetManager.Instance.Close();

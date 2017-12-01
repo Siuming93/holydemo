@@ -110,41 +110,48 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
     {
-        NetManager.Instance.SendMessage(new CsPlayerStartMove() { id = PlayerProperty.ID });
+        var pos = GetPlayerPosInfo();
+        float angle = arg1.Angle;
+        NetManager.Instance.SendMessage(new CsPlayerStartMove()
+        {
+            id = PlayerProperty.ID,
+            time = GameConfig.Time,
+            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
+            speed = PlayerProperty.RunSpeed,
+        });
+        _lastAngle = angle;
 
+        SendNotification(NotificationConst.PLAYER_START_MOVE, angle);
     }
     private void OnStickMovementEnd(VirtualStick obj)
     {
-        _lastDir = Vector2.zero;
-        NetManager.Instance.SendMessage(new CsPlayerEndMove() { id = PlayerProperty.ID, });
+        var pos = GetPlayerPosInfo();
+        NetManager.Instance.SendMessage(new CsPlayerEndMove() { posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = pos.angle } });
+
+        SendNotification(NotificationConst.PLAYER_END_MOVE);
     }
 
-    private Vector2 _lastDir;
+    private float _lastAngle;
     private void OnStickMovement(VirtualStick arg1, Vector2 arg2)
     {
-        SendUpdateMoveDirMsg(arg2);
-        return;
-
-        //暂时不做限制
-        if (_lastDir == Vector2.zero)
+        float angle = arg1.Angle;
+        //if (Mathf.Abs(angle - _lastAngle) < 30)
+        //    return;
+        var pos = GetPlayerPosInfo();
+        NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir()
         {
-            _lastDir = arg2;
-            SendUpdateMoveDirMsg(arg2);
-            return;
-        }
+            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
+        });
+        _lastAngle = angle;
 
-        var angle = Vector2.Angle(_lastDir, arg2);
-        if (Mathf.Abs(angle) > 30)
-        {
-            _lastDir = arg2;
-            SendUpdateMoveDirMsg(arg2);
-        }
+        SendNotification(NotificationConst.PLAYER_UPDATE_MOVE_DIR, angle);
     }
 
-    private void SendUpdateMoveDirMsg(Vector2 dir)
+    private ModelPosVO GetPlayerPosInfo()
     {
-        NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir() {dirX = dir.x, dirY = dir.y});
+        return (ApplicationFacade.Instance.RetrieveMediator(WorldPlayerBattleMediator.NAME) as WorldPlayerBattleMediator).playerMoelController.posInfo;
     }
+
     #endregion
 
     #region noti funcs
