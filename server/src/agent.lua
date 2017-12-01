@@ -30,13 +30,13 @@ skynet.register_protocol {
 		--print("------------client dispacth-----------")
 		
 		data = msgpack.unpack(msg)
-		--print("msgno", data.msgno)
+		print("msgno", data.msgno)
 		module = math.floor(data.msgno / 100)	
 		opcode = data.msgno%10000
 		print("msgno",data.msgno)
 		local ok, result
 		--login
-		if msgId[module] == "loginservice" then
+		if data.msgno == message.CSLOGIN then
 			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg)
 			if ok then
 				player_info.id = playerId

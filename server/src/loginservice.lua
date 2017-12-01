@@ -8,6 +8,16 @@ local CMD = {}
 local protobuf = {}
 
 CMD.dispatch = function(opcode, msg, fd)
+	if opcode == message.CSLOGIN % 10000 then
+		return OnCsLogin(msg, fd)
+	end
+	print ("code"..opcode)
+	if opcode == message.CSASYNCTIME % 10000 then
+		return OnAsyncTime(msg)
+	end
+end
+
+function OnCsLogin (msg, fd)
 	local data = protobuf.decode("Monster.Protocol.CsLogin", msg)
 	local accountId = data.account
 	
@@ -23,9 +33,17 @@ CMD.dispatch = function(opcode, msg, fd)
 	local tb = {}
 	tb.accountid = accountId
 	tb.result = 1
-	--skynet.call("talkservice", "lua", "register", fd, accountId)
+
 	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
 	return msgpack.pack(message.SCLOGIN, msgbody), accountId
+end
+
+function OnAsyncTime(msg)
+	local tb = {}
+	tb.time = skynet.time()
+	print("-----------OnAsyncTime")
+	local msgbody = protobuf.encode("Monster.Protocol.ScAsyncTime", tb)
+	return msgpack.pack(message.SCASYNCTIME, msgbody)
 end
 
 
