@@ -17,8 +17,7 @@ message PosInfo
 {
 	required float posX				= 1;
 	required float posY				= 2;
-	required float dirX				= 3;
-	required float dirY				= 4;
+	required float angle			= 3;
 }
 
 message PlayerPosInfo
@@ -26,22 +25,6 @@ message PlayerPosInfo
 	required int64 id 				= 1;
 	required PosInfo posInfo 		= 2;
 	required bool isMove 			= 3;
-}
-
-message CsAsyncPlayerPos
-{
-	required PosInfo posInfo 		= 1;
-}
-
-message ScAsyncPlayerPos
-{
-	repeated  PlayerPosInfo infos 	= 1;
-}
-
-message CsPlayerMove
-{
-	optional float dirX				= 3;
-	optional float dirY				= 4;
 }
 
 message ScAllPlayerPosInfo
@@ -52,41 +35,49 @@ message ScAllPlayerPosInfo
 message CsPlayerStartMove
 {
 	required int64 id 				= 1;
+	required double time 			= 2;
+	required PosInfo posInfo 		= 3;
+	required float speed  			= 4;
 }
 
 message ScPlayerStartMove
 {
 	required int64 id 				= 1;
+	required double time 			= 2;
+	required PosInfo posInfo 		= 3;
 }
 
 message CsPlayerEndMove
 {
-	optional int64 id 				= 1;
+	required PosInfo posInfo 		= 1;
 }
 
 message ScPlayerEndMove
 {
-	optional int64 id 				= 1;
+	required int64 id 				= 1;
+	required PosInfo posInfo 		= 2;
 }
 
 message CsPlayerUpdateMoveDir
 {
-	optional float dirX				= 1;
-	optional float dirY				= 2;
+	required PosInfo posInfo 		= 1;
 }
 
 message ScPlayerUpdateMoveDir
 {
-	optional float dirX				= 1;
-	optional float dirY				= 2;
+	required int64 id 				= 1;
+	required PosInfo posInfo 		= 2;
 }
 
 message CsPlayerEndMovePos
 {
-	optional float posX				= 1;
-	optional float posY				= 2;
-	optional float dirX				= 3;
-	optional float dirY				= 4;
+	required PosInfo posInfo 		= 1;
+}
+
+message ScPlayerEndMovePos
+{
+	required int64 id 				= 1;
+	required PosInfo posInfo 		= 2;
 }
 
 message CsPlayerUseSkill
