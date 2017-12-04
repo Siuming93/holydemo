@@ -60,6 +60,7 @@ message ScPlayerStartMove
 	required int64 id 				= 1;
 	required double time 			= 2;
 	required PosInfo posInfo 		= 3;
+	required float speed  			= 4;
 }
 
 message CsPlayerEndMove
@@ -76,12 +77,14 @@ message ScPlayerEndMove
 message CsPlayerUpdateMoveDir
 {
 	required PosInfo posInfo 		= 1;
+	required double time 			= 2;
 }
 
 message ScPlayerUpdateMoveDir
 {
 	required int64 id 				= 1;
 	required PosInfo posInfo 		= 2;
+	required double time 			= 3;
 }
 
 message CsPlayerEndMovePos
