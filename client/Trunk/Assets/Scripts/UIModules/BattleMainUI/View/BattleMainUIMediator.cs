@@ -114,21 +114,21 @@ public class BattleMainUIMediator : AbstractMediator
         float angle = arg1.Angle;
         NetManager.Instance.SendMessage(new CsPlayerStartMove()
         {
-            id = PlayerProperty.ID,
+            id = RoleProperty.ID,
             time = GameConfig.Time,
             posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
-            speed = PlayerProperty.RunSpeed,
+            speed = RoleProperty.RunSpeed,
         });
         _lastAngle = angle;
 
-        SendNotification(NotificationConst.PLAYER_START_MOVE, angle);
+        SendNotification(NotificationConst.SELF_START_MOVE, angle);
     }
     private void OnStickMovementEnd(VirtualStick obj)
     {
         var pos = GetPlayerPosInfo();
         NetManager.Instance.SendMessage(new CsPlayerEndMove() { posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = pos.angle } });
 
-        SendNotification(NotificationConst.PLAYER_END_MOVE);
+        SendNotification(NotificationConst.SELF_END_MOVE);
     }
 
     private float _lastAngle;
@@ -141,10 +141,11 @@ public class BattleMainUIMediator : AbstractMediator
         NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir()
         {
             posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
+            time = GameConfig.Time,
         });
         _lastAngle = angle;
 
-        SendNotification(NotificationConst.PLAYER_UPDATE_MOVE_DIR, angle);
+        SendNotification(NotificationConst.SELF_UPDATE_MOVE_DIR, angle);
     }
 
     private ModelPosVO GetPlayerPosInfo()

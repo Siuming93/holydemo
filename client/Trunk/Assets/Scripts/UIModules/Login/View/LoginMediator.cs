@@ -45,7 +45,7 @@ public class LoginMediator : AbstractMediator
         PlayerPrefs.SetString("last_id", _skin.acountInputField.text);
         PlayerPrefs.SetString("last_ip", _skin.ipAddressInputField.text);
         PlayerPrefs.Save();
-        PlayerProperty.ID = (long)obj;
+        RoleProperty.ID = (long)obj;
         UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
     }
     #endregion
@@ -53,9 +53,9 @@ public class LoginMediator : AbstractMediator
     #region component callback
     private void OnLoginBtnClick()
     {
-        //todo test
-        UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
-        return;
+        ////todo test
+        //UpdateProxy.Instance.StartCoroutine(SceneSwitcher.Instance.LoadScene(LeiTaiSceneManager.SCENE_NAME));
+        //return;
         var ipAdress = _skin.ipAddressInputField.text;
         var id = _skin.acountInputField.text;
         NetManager.Instance.Close();
