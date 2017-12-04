@@ -1,27 +1,16 @@
-﻿using System.Collections;
-using DG.Tweening;
-using Monster.Net;
-using Monster.Protocol;
-using UnityEngine;
-using System.Collections.Generic;
+﻿using UnityEngine;
 
-public class PlayerMoelController : BaseModelController
+public class OtherRoleMoelController : BaseModelController
 {
-    public Transform modelTransform { get { return model.transform; }}
+    protected bool addListener = false;
+    protected bool isMove;
+    protected Vector2 moveDir;
 
-    #region move
-    public void Move(Vector2 delta)
+    public void Init(WorldRoleInfoVO roleInfo)
     {
-        if (model != null)
-        {
-            Vector3 endPos = model.transform.localPosition + new Vector3(delta.x, 0, delta.y);
-            Vector3 worldPos = model.transform.localToWorldMatrix * endPos;
-            model.transform.localPosition = endPos;
-            model.transform.LookAt(worldPos, Vector3.up);
-        }
+        Async(roleInfo);
     }
 
-    protected bool addListener = false;
     public void StartMove(float angle)
     {
         isMove = true;
@@ -34,6 +23,7 @@ public class PlayerMoelController : BaseModelController
             UpdateProxy.Instance.UpdateEvent += Update;
         }
     }
+
     public void EndMove()
     {
         isMove = false;
@@ -44,15 +34,11 @@ public class PlayerMoelController : BaseModelController
         }
         PlayMoveAnimation(false);
     }
-
     public void UpdateMoveDir(float angle)
     {
         moveDir = MathUtil.GetCoordinate(angle);
         LookAt(angle);
     }
-
-    protected bool isMove;
-    protected Vector2 moveDir;
     protected void Update()
     {
         if (model != null)
@@ -66,18 +52,17 @@ public class PlayerMoelController : BaseModelController
         }
     }
 
-    protected Tweener moveTweener;
     public void MoveTo(Vector3 pos)
     {
         if (model != null)
         {
-            float distance = (pos - model.transform.localPosition).magnitude;
-            Debug.Log(distance);
-            if (moveTweener != null && moveTweener.IsPlaying())
-                moveTweener.Kill();
-            moveTweener = model.transform.DOLocalMove(pos, distance / RoleProperty.RunSpeed).SetEase(Ease.Linear);
+            model.transform.localPosition = pos;
         }
     }
-    #endregion
-}
 
+    public void Async(WorldRoleInfoVO vo)
+    {
+        LookAt(vo.posInfo.angle);
+        MoveTo(new Vector3(vo.posInfo.posX, 0f, vo.posInfo.posY));
+    }
+}

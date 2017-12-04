@@ -14,15 +14,14 @@ public class WorldPlayerBattleMediator : AbstractMediator
     private PlayerMoelController _playerController;
     private CameraMovement _cameraMovement;
 
-    private Dictionary<long, OtherPlayerMoelController> controllers;
-    private Stack<OtherPlayerMoelController> controllerPool;
+    private Dictionary<long, OtherRoleMoelController> controllerMaps;
 
     private LeitaiCharcterProxy _proxy;
     public WorldPlayerBattleMediator()
         : base(NAME)
     {
         _playerController = new PlayerMoelController();
-        PlayerProperty.ModelController = _playerController;
+        RoleProperty.ModelController = _playerController;
         _playerController.LoadModelPrefab(MODEL_PATH);
         _playerController.visible = true;
 
@@ -32,14 +31,18 @@ public class WorldPlayerBattleMediator : AbstractMediator
             player = _playerController.modelTransform,
             speed = 10f,
         };
-
-        RegisterNotificationHandler(NotificationConst.ALL_OTHER_PLAYER_INFO_UPDATE, OnOtherPlayerPosUpdate);
-        RegisterNotificationHandler(NotificationConst.PLAYER_START_MOVE, OnPlayerStartMove);
-        RegisterNotificationHandler(NotificationConst.PLAYER_END_MOVE, OnPlayerEndMove);
-        RegisterNotificationHandler(NotificationConst.PLAYER_UPDATE_MOVE_DIR, OnUpdatePlayerMoveDir);
+        RegisterNotificationHandler(NotificationConst.GET_SCENE_ROLE_INFO_LIST, OnGetSceneRoleList);
         RegisterNotificationHandler(NotificationConst.USE_SKILL, OnUseSkill);
-        controllers = new Dictionary<long, OtherPlayerMoelController>();
-        controllerPool = new Stack<OtherPlayerMoelController>();
+
+        RegisterNotificationHandler(NotificationConst.SELF_START_MOVE, OnSelfStartMove);
+        RegisterNotificationHandler(NotificationConst.SELF_END_MOVE, OnSelfEndMove);
+        RegisterNotificationHandler(NotificationConst.SELF_UPDATE_MOVE_DIR, OnSelfUpdateMoveDir);
+
+        RegisterNotificationHandler(NotificationConst.OTHER_ROLE_START_MOVE, OnOtherRoleStartMove);
+        RegisterNotificationHandler(NotificationConst.OTHER_ROLE_END_MOVE, OnOtherRoleEndMove);
+        RegisterNotificationHandler(NotificationConst.OTHER_ROLE_UPDATE_MOVE_DIR, OnOtherRoleUpdateMoveDir);
+        RegisterNotificationHandler(NotificationConst.OTHER_ROLE_ENTER_SCENE, OnOtherRoleEnterScene);
+        controllerMaps = new Dictionary<long, OtherRoleMoelController>();
 
         _proxy = ApplicationFacade.Instance.RetrieveProxy(LeitaiCharcterProxy.NAME) as LeitaiCharcterProxy; ;
     }
@@ -58,57 +61,81 @@ public class WorldPlayerBattleMediator : AbstractMediator
         _playerController.PlaySkillAnimation(vo.meta.animationMeta);
     }
 
-    private void OnOtherPlayerPosUpdate(object obj)
+    private void OnSelfUpdateMoveDir(object obj)
     {
-        foreach (var controller in controllers.Values)
-        {
-            controllerPool.Push(controller);
-        }
-        controllers.Clear();
-        var list = _proxy.otherPlayerList;
-        foreach (WorldPlayerInfoVO vo in list)
-        {
-            OtherPlayerMoelController controller;
-            if (controllerPool.Count > 0)
-            {
-                controller = controllerPool.Pop();
-            }
-            else
-            {
-                controller = new OtherPlayerMoelController();
-                controller.LoadModelPrefab(MODEL_PATH);
-            }
-            controllers.Add(vo.id, controller);
-            controller.visible = true;
-            controller.Async(vo);
-        }
-
-        foreach (var controller in controllerPool)
-        {
-            controller.visible = false;
-        }
-    }
-    private void OnPlayerStartMove(object obj)
-    {
-        var angle = (float)obj;
-        var controller = _playerController;
-
-        controller.StartMove(angle);
-        controller.PlayMoveAnimation(true);
+        _playerController.StartMove((float)obj);
     }
 
-    private void OnUpdatePlayerMoveDir(object obj)
+    private void OnSelfEndMove(object obj)
     {
-        var angle = (float)obj;
-        var controller = _playerController;
-        controller.UpdateMoveDir(angle);
+        _playerController.EndMove();
     }
 
-    private void OnPlayerEndMove(object obj)
+    private void OnSelfStartMove(object obj)
     {
-        var controller = _playerController;
+        _playerController.UpdateMoveDir((float)obj);
+    }
+
+    private void OnOtherRoleStartMove(object obj)
+    {
+        var roleVO = obj as WorldRoleInfoVO;
+        OtherRoleMoelController controller;
+        if (!controllerMaps.TryGetValue(roleVO.id, out controller))
+        {
+            Debug.LogError("OnOtherRoleStartMove No Controller");
+            return;
+        }
+        controller.StartMove(roleVO.posInfo.angle);
+    }
+
+    private void OnOtherRoleUpdateMoveDir(object obj)
+    {
+        var roleVO = obj as WorldRoleInfoVO;
+        OtherRoleMoelController controller;
+        if (!controllerMaps.TryGetValue(roleVO.id, out controller))
+        {
+            Debug.LogError("OnOtherRoleUpdateMoveDir No Controller");
+            return;
+        }
+        controller.UpdateMoveDir(roleVO.posInfo.angle);
+    }
+
+    private void OnOtherRoleEndMove(object obj)
+    {
+        var roleVO = obj as WorldRoleInfoVO;
+        OtherRoleMoelController controller;
+        if (!controllerMaps.TryGetValue(roleVO.id, out controller))
+        {
+            Debug.LogError("OnOtherRoleEndMove No Controller");
+            return;
+        }
         controller.EndMove();
     }
+    private void OnOtherRoleEnterScene(object obj)
+    {
+        AddRoleController(obj as WorldRoleInfoVO);
+    }
 
+    private void OnGetSceneRoleList(object obj)
+    {
+        var list = _proxy.otherPlayerList;
+        foreach (WorldRoleInfoVO vo in list)
+        {
+            AddRoleController(vo);
+        }
+    }
+
+    #endregion
+
+    #region self funcs 
+
+    private void AddRoleController(WorldRoleInfoVO vo)
+    {
+        OtherRoleMoelController controller = new OtherRoleMoelController();
+        controllerMaps.Add(vo.id, controller);
+        controller.LoadModelPrefab(MODEL_PATH);
+        controller.visible = true;
+        controller.Async(vo);
+    }
     #endregion
 }
