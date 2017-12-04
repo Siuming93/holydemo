@@ -2,15 +2,30 @@ package Monster.Protocol;
 
 message CsEnterScene 
 {
-	required int32 id				= 1;
+	required int64 id				= 1;
 	required string name			= 2;
 }
-
 
 message ScEnterScene
 {
 	required int32 id 				= 1;
 	required int32 result			= 2;
+}
+
+message ScOtherRoleEnterScene
+{
+	required int64 id 				= 1;
+	required PosInfo posInfo 		= 2;
+}
+
+message CsLeaveScene
+{
+	required int64 id 				= 1;
+}
+
+message ScLeaveScene
+{
+	required int64 id 				= 1;
 }
 
 message PosInfo
