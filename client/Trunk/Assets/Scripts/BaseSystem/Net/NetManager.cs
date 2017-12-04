@@ -159,6 +159,7 @@ namespace Monster.Net
                         bytes[5] = (byte)(proto.msgNo);
                         proto.stream.Read(bytes, 6, len);
 
+                        Debug.Log(string.Format("msg NO:{0} len{1}", proto.msgNo, len));
                         mStream.Write(bytes, 0, len + 2);
                     }
                 }

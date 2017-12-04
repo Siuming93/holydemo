@@ -106,6 +106,15 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnSkillBtn3Click()
     {
+        var pos = GetPlayerPosInfo();
+        float angle = _stick.Angle;
+        NetManager.Instance.SendMessage(new CsPlayerStartMove()
+        {
+            id = RoleProperty.ID,
+            time = GameConfig.Time,
+            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
+            speed = RoleProperty.RunSpeed,
+        });
         _proxy.UseSkill(_proxy.skill3VO);
     }
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
@@ -135,8 +144,8 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnStickMovement(VirtualStick arg1, Vector2 arg2)
     {
         float angle = arg1.Angle;
-        //if (Mathf.Abs(angle - _lastAngle) < 30)
-        //    return;
+        if (Mathf.Abs(angle - _lastAngle) < 5)
+            return;
         var pos = GetPlayerPosInfo();
         NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir()
         {
