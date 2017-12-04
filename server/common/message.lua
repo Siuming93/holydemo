@@ -20,5 +20,7 @@ message.SCPLAYERUSESKILL                                             	= 10410;
 message.CSPLAYERUPDATEMOVEDIR                                        	= 10411; 
 message.SCPLAYERUPDATEMOVEDIR                                        	= 10412; 
 message.SCOTHERROLEENTERSCENE                                        	= 10413; 
+message.CSLEAVESCENE                                                 	= 10490; 
+message.SCLEAVESCENE                                                 	= 10491; 
 
 return message
