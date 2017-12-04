@@ -10,7 +10,7 @@ public class TimeProxy : BaseProxy
     public TimeProxy(): base(NAME)
     {
         RegisterMessageHandler(MsgIDDefine.ScAsyncTime, OnAsyncServerTime);
-        netManager.SendMessage(new CsAsyncTime() { id = (int)PlayerProperty.ID });   
+        netManager.SendMessage(new CsAsyncTime() { id = (int)RoleProperty.ID });   
         UpdateProxy.Instance.UpdateEvent += AsyncTime;
     }
 
@@ -29,9 +29,9 @@ public class TimeProxy : BaseProxy
 
     private void AsyncTime()
     {
-        if (UnityEngine.Time.time - GameConfig.lastLocaleTime >= 10)
+        if (UnityEngine.Time.time - GameConfig.lastLocaleTime >= 60)
         {
-            netManager.SendMessage(new CsAsyncTime(){id = (int)PlayerProperty.ID});
+            netManager.SendMessage(new CsAsyncTime(){id = (int)RoleProperty.ID});
             GameConfig.lastLocaleTime = UnityEngine.Time.time; 
         }
     }
