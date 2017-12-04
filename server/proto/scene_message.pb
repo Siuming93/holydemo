@@ -1,14 +1,24 @@
 
-§
+°	
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
-id (
+id (
 name (	"*
 ScEnterScene
 
 id (
-result ("4
+result ("O
+ScOtherRoleEnterScene
+
+id (*
+posInfo (2.Monster.Protocol.PosInfo"
+CsLeaveScene
+
+id ("
+ScLeaveScene
+
+id ("4
 PosInfo
 posX (
 posY (

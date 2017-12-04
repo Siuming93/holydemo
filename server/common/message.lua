@@ -19,6 +19,6 @@ message.CSPLAYERUSESKILL                                             	= 10409;
 message.SCPLAYERUSESKILL                                             	= 10410; 
 message.CSPLAYERUPDATEMOVEDIR                                        	= 10411; 
 message.SCPLAYERUPDATEMOVEDIR                                        	= 10412; 
-message.SCPLAYERSTARTMOVE                                            	= 10413; 
+message.SCOTHERROLEENTERSCENE                                        	= 10413; 
 
 return message
