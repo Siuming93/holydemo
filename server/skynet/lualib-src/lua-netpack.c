@@ -334,6 +334,8 @@ pushstring(lua_State *L, const char * msg, int size) {
  */
 static int
 lfilter(lua_State *L) {
+	printf("lfilter");
+	
 	struct skynet_socket_message *message = lua_touserdata(L,2);
 	int size = luaL_checkinteger(L,3);
 	char * buffer = message->buffer;
@@ -400,6 +402,7 @@ lpop(lua_State *L) {
 	if (++q->head >= q->cap) {
 		q->head = 0;
 	}
+	printf("lpop");
 	lua_pushinteger(L, np->id);
 	lua_pushlightuserdata(L, np->buffer);
 	lua_pushinteger(L, np->size);
