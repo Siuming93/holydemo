@@ -15,25 +15,16 @@ CMD.dispatch = function (opcode, msg, agent, ...)
 	local id = agent.player_info.id;
 	local client_fd = agent.client_fd
     if opcode == message.CSENTERSCENE%10000 then
-		enterscene(id, agent)
-	end
-	if opcode == message.CSPLAYERMOVE%10000 then
-		updatePos(id, msg)
+		enterscene(id, agent, client_fd)
 	end
 	if opcode == message.CSPLAYERSTARTMOVE%10000 then
-		playerStartMove(id, client_fd)
+		playerStartMove(id, msg)
 	end
 	if opcode == message.CSPLAYERENDMOVE%10000 then
 		playerEndMove(id, msg, client_fd)
 	end
-	if opcode == message.CSPLAYERENDMOVEPOS%10000 then
-		playerEndMovePos(id, msg)
-	end
 	if opcode == message.CSPLAYERUPDATEMOVEDIR%10000 then
 		playerUpdateMoveDir(id, msg, client_fd)
-	end
-	if opcode == message.CSASYNCPLAYERPOS%10000 then
-		playerAsyncPosAndDir(id, msg)
 	end
 end
 
@@ -41,54 +32,71 @@ CMD.disconect = function (agent)
 	leaveScene(agent)
 end
 
-function enterscene(id, agent)
-	player_table[id] = initplayerposition()
+function enterscene(id, agent, client_fd)
+	local info = initplayerposition(id)
+	player_table[id] = info
 	player_table[id].agent = agent;
+	local selfTb = {}
+	selfTb.id = id
+	selfTb.result = true
+	local selfMsg = protobuf.encode("Monster.Protocol.ScEnterScene", selfTb)
+	local package = msgpack.pack(message.SCENTERSCENE, selfMsg)
+	
+	send_response(agent.client_fd, package)
+	local broadTb = {}
+	broadTb.id = id
+	broadTb.posInfo = info.posInfo
+	local broadMsg = protobuf.encode("Monster.Protocol.ScOtherRoleEnterScene", broadTb)
+	local package = msgpack.pack(message.SCOTHERROLEENTERSCENE, broadMsg)
+	sendAllOtherPosInfo(id, client_fd)
+	broadcastpackage(broadMsg, id)
 end
 
 function leaveScene(id)
 	player_table[id] = nil
 end
 
-function updatePos(id, data)
-
-	local tb = {}
-	tb.id = 2017
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerMove", data)
-	if msg then
-
-	local info = player_table[id]
-	info.dirX = msg.dirX;
-	info.dirY = msg.dirY;
+function playerStartMove(id, data)
+	local msg = protobuf.decode("Monster.Protocol.CsPlayerStartMove", data)
+	if not msg then 
+		print("decode failure data:" ..data)
+		return
 	end
-end
-
-function playerStartMove(id, client_fd)
 	local info = player_table[id]
 	info.isMove = true
-
+	info.posInfo.posX = msg.posInfo.posX
+	info.posInfo.posY = msg.posInfo.posY
+	info.posInfo.angle =  msg.posInfo.angle
 	local tb = {}
 	tb.id = id;
+	tb.time = skynet.time()
+	tb.posInfo = info.posInfo
 
 	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerStartMove", tb)
 	local package = msgpack.pack(message.SCPLAYERSTARTMOVE, msgbody)
-	send_response(client_fd, package)
+	print("ScPlayerStartMove")
+	broadcastpackage(package, id)
 end
 
 function playerEndMove(id, data, client_fd)
 	local msg = protobuf.decode("Monster.Protocol.CsPlayerEndMove", data)
-	local info = player_table[id]
+		if not msg then 
+		print("decode failure data:" ..data)
+		return
+	end
+ 	local info = player_table[id]
 	info.isMove = false;
-	info.dirX = 0
-	info.dirY = 0
+	info.posInfo.posX = msg.posInfo.posX
+	info.posInfo.posY = msg.posInfo.posY
+	info.posInfo.angle =  msg.posInfo.angle
 
 	local tb = {}
 	tb.id = id;
+	tb.posInfo = info.posInfo
 
 	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerEndMove", tb)
 	local package = msgpack.pack(message.SCPLAYERENDMOVE, msgbody)
-	send_response(client_fd, package)
-
+	broadcastpackage(package, id)
 end
 
 function playerEndMovePos(id, data)
@@ -102,18 +110,21 @@ end
 
 function playerUpdateMoveDir(id, data, client_fd)
 	local msg = protobuf.decode("Monster.Protocol.CsPlayerUpdateMoveDir", data)
-	-- msg will decode failure sometimes and i don't know why
+	if not msg then 
+		print("decode failure data:" ..data)
+		return
+	end
 	if msg then
 		local info = player_table[id]
-		info.dirX = msg.dirX
-		info.dirY = msg.dirY
+		info.posInfo = msg.posInfo
 
-		local scPlayerUpdateMoveDir = {}
-		scPlayerUpdateMoveDir.dirX = info.dirX;
-		scPlayerUpdateMoveDir.dirY = info.dirY;
-		local msgbody = protobuf.encode("Monster.Protocol.ScPlayerUpdateMoveDir", scPlayerUpdateMoveDir)
+		local tb = {}
+		tb.id = id;
+		tb.time = msg.time;
+		tb.posInfo = msg.posInfo
+		local msgbody = protobuf.encode("Monster.Protocol.ScPlayerUpdateMoveDir", tb)
 		local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
-		send_response(client_fd, package)
+		broadcastpackage(package, id)
 	end
 end
 
@@ -128,35 +139,41 @@ function playerAsyncPosAndDir(id, data)
 	end
 end
 
-function playerInfoMsg()
+function sendAllOtherPosInfo(id, client_fd)
 	local scAllPlayerInfo = {infos = {}}
 	local index = 1
 
 	for k,v in pairs(player_table) do
-		local playerPosInfo = {}
-		playerPosInfo.posInfo = {}
-		playerPosInfo.id = k;
-		playerPosInfo.posInfo.posX = v.posX;
-		playerPosInfo.posInfo.posY = v.posY;
-		playerPosInfo.posInfo.dirX = v.dirX;
-		playerPosInfo.posInfo.dirY = v.dirY;
-		playerPosInfo.isMove = v.isMove;
-		scAllPlayerInfo.infos[index] = playerPosInfo
+		if k ~= id then
+			local playerPosInfo = {}
+			playerPosInfo.posInfo = {}
+			playerPosInfo.id = k;
+			playerPosInfo.posInfo.posX = v.posX;
+			playerPosInfo.posInfo.posY = v.posY;
+			playerPosInfo.posInfo.dirX = v.dirX;
+			playerPosInfo.posInfo.dirY = v.dirY;
+			playerPosInfo.isMove = v.isMove;
+			scAllPlayerInfo.infos[index] = playerPosInfo
 		index = index + 1
+		end
 	end
 
 	local msgbody = protobuf.encode("Monster.Protocol.ScAllPlayerPosInfo", scAllPlayerInfo)
-
-    return msgpack.pack(message.SCALLPLAYERPOSINFO, msgbody)
+	local package = msgpack.pack(message.SCALLPLAYERPOSINFO, msgbody)
+	send_response(client_fd, package)
 end
 
-function initplayerposition()
+
+function initplayerposition(id)
 	local info = {}
-	info.posX = 0
-	info.posY = 0
-	info.dirX = 0
-	info.dirY = 0
+
+	info.id = id
+	info.posInfo = {}
+	info.posInfo.posX = 0
+	info.posInfo.posY = 0
+	info.posInfo.angle = 0
 	info.isMove = false
+
 	return info;
 end
 
@@ -164,22 +181,14 @@ function send_response(client_fd, package)
 	socket.write(client_fd, netpack.pack(package))
 end
 
-function broadcastpackage(package)
+function broadcastpackage(package, selfId)
 	for k,v in pairs(player_table) do
-		send_response(v.agent.client_fd, package)
+		if selfId ~= k then
+			send_response(v.agent.client_fd, package)
+		end
 	end
 end
 
-
-
-function fixedUpdate()
-	local i = 0
-	while (true)
-	do 
-		skynet.sleep(100)	
-		broadcastpackage(playerInfoMsg())
-	end
-end
 
 skynet.start(function(...)
 	skynet.dispatch("lua", function(_,_,cmd,...)
@@ -192,5 +201,5 @@ skynet.start(function(...)
 
 	skynet.register "leitaiservice"
 	
-	skynet.fork(fixedUpdate)
+	--skynet.fork(fixedUpdate)
 end)
