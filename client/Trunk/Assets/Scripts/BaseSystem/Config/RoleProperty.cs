@@ -1,6 +1,6 @@
 ﻿using UnityEngine;
 
-public static class PlayerProperty
+public static class RoleProperty
 {
     public static long ID;
 

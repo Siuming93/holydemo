@@ -15,9 +15,9 @@ namespace Monster.Protocol
   {
     public CsEnterScene() {}
     
-    private int _id;
+    private long _id;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public int id
+    public long id
     {
       get { return _id; }
       set { _id = value; }
@@ -52,6 +52,64 @@ namespace Monster.Protocol
     {
       get { return _result; }
       set { _result = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScOtherRoleEnterScene")]
+  public partial class ScOtherRoleEnterScene : global::ProtoBuf.IExtensible
+  {
+    public ScOtherRoleEnterScene() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private Monster.Protocol.PosInfo _posInfo;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posInfo", DataFormat = global::ProtoBuf.DataFormat.Default)]
+    public Monster.Protocol.PosInfo posInfo
+    {
+      get { return _posInfo; }
+      set { _posInfo = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"CsLeaveScene")]
+  public partial class CsLeaveScene : global::ProtoBuf.IExtensible
+  {
+    public CsLeaveScene() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
+    }
+    private global::ProtoBuf.IExtension extensionObject;
+    global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
+      { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
+  }
+  
+  [global::System.Serializable, global::ProtoBuf.ProtoContract(Name=@"ScLeaveScene")]
+  public partial class ScLeaveScene : global::ProtoBuf.IExtensible
+  {
+    public ScLeaveScene() {}
+    
+    private long _id;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"id", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public long id
+    {
+      get { return _id; }
+      set { _id = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
@@ -201,6 +259,13 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
+    private float _speed;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"speed", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
+    public float speed
+    {
+      get { return _speed; }
+      set { _speed = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -259,6 +324,13 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
+    private double _time;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public double time
+    {
+      get { return _time; }
+      set { _time = value; }
+    }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
       { return global::ProtoBuf.Extensible.GetExtensionObject(ref extensionObject, createIfMissing); }
@@ -282,6 +354,13 @@ namespace Monster.Protocol
     {
       get { return _posInfo; }
       set { _posInfo = value; }
+    }
+    private double _time;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public double time
+    {
+      get { return _time; }
+      set { _time = value; }
     }
     private global::ProtoBuf.IExtension extensionObject;
     global::ProtoBuf.IExtension global::ProtoBuf.IExtensible.GetExtensionObject(bool createIfMissing)
