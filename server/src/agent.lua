@@ -33,7 +33,6 @@ skynet.register_protocol {
 		print("msgno", data.msgno)
 		module = math.floor(data.msgno / 100)	
 		opcode = data.msgno%10000
-		print("msgno",data.msgno)
 		local ok, result
 		--login
 		if data.msgno == message.CSLOGIN then

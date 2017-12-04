@@ -41,7 +41,6 @@ end
 function OnAsyncTime(msg)
 	local tb = {}
 	tb.time = skynet.time()
-	print("-----------OnAsyncTime")
 	local msgbody = protobuf.encode("Monster.Protocol.ScAsyncTime", tb)
 	return msgpack.pack(message.SCASYNCTIME, msgbody)
 end
