@@ -20,7 +20,7 @@
 
 id ("
 PosInfo
-posX ("W
+posX ("W
 PlayerPosInfo
 
 id (*
