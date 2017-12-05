@@ -20,9 +20,9 @@
 
 id ("4
 PosInfo
-posX (
-posY (
-angle ("W
+posX (
+posY (
+angle ("W
 PlayerPosInfo
 
 id (*
@@ -35,13 +35,13 @@
 id (
 time (*
 posInfo (2.Monster.Protocol.PosInfo
-speed ("h
+speed ("h
 ScPlayerStartMove
 
 id (
 time (*
 posInfo (2.Monster.Protocol.PosInfo
-speed ("
+speed ("
 CsPlayerEndMove
 
 id ("I
