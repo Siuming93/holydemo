@@ -20,7 +20,7 @@
 
 id ("
 PosInfo
-posX ("W
+posX ("W
 PlayerPosInfo
 
 id (*
@@ -31,7 +31,7 @@
 CsPlayerStartMove
 
 id (*
-posInfo (2.Monster.Protocol.PosInfo"h
+posInfo (2.Monster.Protocol.PosInfo"h
 ScPlayerStartMove
 
 id (
