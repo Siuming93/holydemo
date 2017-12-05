@@ -73,9 +73,9 @@ namespace Monster.Protocol
   {
     public ScAsyncTime() {}
     
-    private double _time;
+    private long _time;
     [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public double time
+    public long time
     {
       get { return _time; }
       set { _time = value; }

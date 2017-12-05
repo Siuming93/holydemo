@@ -121,23 +121,23 @@ namespace Monster.Protocol
   {
     public PosInfo() {}
     
-    private float _posX;
-    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float posX
+    private int _posX;
+    [global::ProtoBuf.ProtoMember(1, IsRequired = true, Name=@"posX", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int posX
     {
       get { return _posX; }
       set { _posX = value; }
     }
-    private float _posY;
-    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float posY
+    private int _posY;
+    [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"posY", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int posY
     {
       get { return _posY; }
       set { _posY = value; }
     }
-    private float _angle;
-    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"angle", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float angle
+    private int _angle;
+    [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"angle", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int angle
     {
       get { return _angle; }
       set { _angle = value; }
@@ -207,9 +207,9 @@ namespace Monster.Protocol
       get { return _id; }
       set { _id = value; }
     }
-    private double _time;
+    private long _time;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public double time
+    public long time
     {
       get { return _time; }
       set { _time = value; }
@@ -221,9 +221,9 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
-    private float _speed;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"speed", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float speed
+    private int _speed;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"speed", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int speed
     {
       get { return _speed; }
       set { _speed = value; }
@@ -245,9 +245,9 @@ namespace Monster.Protocol
       get { return _id; }
       set { _id = value; }
     }
-    private double _time;
+    private long _time;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public double time
+    public long time
     {
       get { return _time; }
       set { _time = value; }
@@ -259,9 +259,9 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
-    private float _speed;
-    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"speed", DataFormat = global::ProtoBuf.DataFormat.FixedSize)]
-    public float speed
+    private int _speed;
+    [global::ProtoBuf.ProtoMember(4, IsRequired = true, Name=@"speed", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
+    public int speed
     {
       get { return _speed; }
       set { _speed = value; }
@@ -324,9 +324,9 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
-    private double _time;
+    private long _time;
     [global::ProtoBuf.ProtoMember(2, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public double time
+    public long time
     {
       get { return _time; }
       set { _time = value; }
@@ -355,9 +355,9 @@ namespace Monster.Protocol
       get { return _posInfo; }
       set { _posInfo = value; }
     }
-    private double _time;
+    private long _time;
     [global::ProtoBuf.ProtoMember(3, IsRequired = true, Name=@"time", DataFormat = global::ProtoBuf.DataFormat.TwosComplement)]
-    public double time
+    public long time
     {
       get { return _time; }
       set { _time = value; }
