@@ -11,7 +11,6 @@ CMD.dispatch = function(opcode, msg, fd)
 	if opcode == message.CSLOGIN % 10000 then
 		return OnCsLogin(msg, fd)
 	end
-	print ("code"..opcode)
 	if opcode == message.CSASYNCTIME % 10000 then
 		return OnAsyncTime(msg)
 	end

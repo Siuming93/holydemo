@@ -226,6 +226,7 @@ static int
 filter_data_(lua_State *L, int fd, uint8_t * buffer, int size) {
 	struct queue *q = lua_touserdata(L,1);
 	struct uncomplete * uc = find_uncomplete(q, fd);
+	printf("size%d", size);
 	if (uc) {
 		// fill uncomplete
 		if (uc->read < 0) {
@@ -334,8 +335,6 @@ pushstring(lua_State *L, const char * msg, int size) {
  */
 static int
 lfilter(lua_State *L) {
-	printf("lfilter");
-	
 	struct skynet_socket_message *message = lua_touserdata(L,2);
 	int size = luaL_checkinteger(L,3);
 	char * buffer = message->buffer;
@@ -352,21 +351,27 @@ lfilter(lua_State *L) {
 	case SKYNET_SOCKET_TYPE_DATA:
 		// ignore listen id (message->id)
 		assert(size == -1);	// never padding string
+		printf("SKYNET_SOCKET_TYPE_DATA\n");
 		return filter_data(L, message->id, (uint8_t *)buffer, message->ud);
 	case SKYNET_SOCKET_TYPE_CONNECT:
 		// ignore listen fd connect
+		printf("SKYNET_SOCKET_TYPE_CONNECT\n");
 		return 1;
 	case SKYNET_SOCKET_TYPE_CLOSE:
 		// no more data in fd (message->id)
 		close_uncomplete(L, message->id);
 		lua_pushvalue(L, lua_upvalueindex(TYPE_CLOSE));
 		lua_pushinteger(L, message->id);
+		printf("SKYNET_SOCKET_TYPE_CLOSE\n");
+		
 		return 3;
 	case SKYNET_SOCKET_TYPE_ACCEPT:
 		lua_pushvalue(L, lua_upvalueindex(TYPE_OPEN));
 		// ignore listen id (message->id);
 		lua_pushinteger(L, message->ud);
 		pushstring(L, buffer, size);
+		printf("SKYNET_SOCKET_TYPE_ACCEPT\n");
+		
 		return 4;
 	case SKYNET_SOCKET_TYPE_ERROR:
 		// no more data in fd (message->id)
@@ -374,11 +379,15 @@ lfilter(lua_State *L) {
 		lua_pushvalue(L, lua_upvalueindex(TYPE_ERROR));
 		lua_pushinteger(L, message->id);
 		pushstring(L, buffer, size);
+		printf("SKYNET_SOCKET_TYPE_ERROR\n");
+		
 		return 4;
 	case SKYNET_SOCKET_TYPE_WARNING:
 		lua_pushvalue(L, lua_upvalueindex(TYPE_WARNING));
 		lua_pushinteger(L, message->id);
 		lua_pushinteger(L, message->ud);
+		printf("SKYNET_SOCKET_TYPE_WARNING\n");
+		
 		return 4;
 	default:
 		// never get here
