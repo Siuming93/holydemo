@@ -226,7 +226,12 @@ static int
 filter_data_(lua_State *L, int fd, uint8_t * buffer, int size) {
 	struct queue *q = lua_touserdata(L,1);
 	struct uncomplete * uc = find_uncomplete(q, fd);
-	printf("size%d", size);
+	for(int i=0;i<size;i++)
+	{
+		printf("%d ", buffer[i]);
+	}
+	printf("\n");
+	
 	if (uc) {
 		// fill uncomplete
 		if (uc->read < 0) {
@@ -454,6 +459,14 @@ lpack(lua_State *L) {
 	uint8_t * buffer = skynet_malloc(len + 2);
 	write_size(buffer, len);
 	memcpy(buffer+2, ptr, len);
+
+	printf("lpack:\n");
+
+	for(int i=0;i<len+2;i++)
+	{
+		printf("%d ", buffer[i]);
+	}
+	printf("\n");
 
 	lua_pushlightuserdata(L, buffer);
 	lua_pushinteger(L, len + 2);
