@@ -30,9 +30,9 @@ message ScLeaveScene
 
 message PosInfo
 {
-	required float posX				= 1;
-	required float posY				= 2;
-	required float angle			= 3;
+	required int32 posX				= 1;
+	required int32 posY				= 2;
+	required int32 angle			= 3;
 }
 
 message PlayerPosInfo
@@ -50,22 +50,22 @@ message ScAllPlayerPosInfo
 message CsPlayerStartMove
 {
 	required int64 id 				= 1;
-	required double time 			= 2;
+	required int64 time 			= 2;
 	required PosInfo posInfo 		= 3;
-	required float speed  			= 4;
+	required int32 speed  			= 4;
 }
 
 message ScPlayerStartMove
 {
 	required int64 id 				= 1;
-	required double time 			= 2;
+	required int64 time 			= 2;
 	required PosInfo posInfo 		= 3;
-	required float speed  			= 4;
+	required int32 speed  			= 4;
 }
 
 message CsPlayerEndMove
 {
-	required int64 id 		 		= 1;
+	required PosInfo posInfo 		= 1;
 }
 
 message ScPlayerEndMove
@@ -77,14 +77,14 @@ message ScPlayerEndMove
 message CsPlayerUpdateMoveDir
 {
 	required PosInfo posInfo 		= 1;
-	required double time 			= 2;
+	required int64 time 			= 2;
 }
 
 message ScPlayerUpdateMoveDir
 {
 	required int64 id 				= 1;
 	required PosInfo posInfo 		= 2;
-	required double time 			= 3;
+	required int64 time 			= 3;
 }
 
 message CsPlayerEndMovePos
