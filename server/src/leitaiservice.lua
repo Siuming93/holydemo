@@ -12,6 +12,7 @@ local CMD = {}
 local player_table = {}
 
 CMD.dispatch = function (opcode, msg, agent, ...)
+	print("scene opcode", opcode)
 	local id = agent.player_info.id;
 	local client_fd = agent.client_fd
     if opcode == message.CSENTERSCENE%10000 then
@@ -59,7 +60,7 @@ end
 function playerStartMove(id, data)
 	local msg = protobuf.decode("Monster.Protocol.CsPlayerStartMove", data)
 	if not msg then 
-		print("decode failure data:" ..data)
+		print(" playerStartMove decode failure data:" ..data)
 		return
 	end
 	local info = player_table[id]
@@ -81,14 +82,14 @@ end
 function playerEndMove(id, data, client_fd)
 	local msg = protobuf.decode("Monster.Protocol.CsPlayerEndMove", data)
 		if not msg then 
-		print("decode failure data:" ..data)
+		print("playerEndMovedecode failure data len:".. string.len(data))
 		return
 	end
  	local info = player_table[id]
 	info.isMove = false;
-	info.posInfo.posX = msg.posInfo.posX
-	info.posInfo.posY = msg.posInfo.posY
-	info.posInfo.angle =  msg.posInfo.angle
+	--info.posInfo.posX = msg.posInfo.posX
+	--info.posInfo.posY = msg.posInfo.posY
+	--info.posInfo.angle =  msg.posInfo.angle
 
 	local tb = {}
 	tb.id = id;
@@ -97,15 +98,6 @@ function playerEndMove(id, data, client_fd)
 	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerEndMove", tb)
 	local package = msgpack.pack(message.SCPLAYERENDMOVE, msgbody)
 	broadcastpackage(package, id)
-end
-
-function playerEndMovePos(id, data)
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerEndMovePos", data)
-	local info = player_table[id]
-	info.posX = msg.posX
-	info.posY = msg.posY
-	info.dirX = msg.dirX
-	info.dirY = msg.dirY
 end
 
 function playerUpdateMoveDir(id, data, client_fd)

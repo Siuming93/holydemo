@@ -6,7 +6,7 @@ local db
 local CMD = {}
 
 function CMD.query(sql)
-	print("--- dbserver query:" .. sql)
+	--print("--- dbserver query:" .. sql)
 	return db:query(sql)
 end
 

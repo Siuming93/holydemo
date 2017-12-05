@@ -15,8 +15,8 @@ local player_info = {}
 local agentInterface ={}
 
 function send_response(package)
-	print("package",package)
-	print("client_fd",client_fd)
+	--print("package",package)
+	--print("client_fd",client_fd)
 	socket.write(client_fd, netpack.pack(package))
 end
 
@@ -30,7 +30,6 @@ skynet.register_protocol {
 		--print("------------client dispacth-----------")
 		
 		data = msgpack.unpack(msg)
-		print("msgno", data.msgno)
 		module = math.floor(data.msgno / 100)	
 		opcode = data.msgno%10000
 		local ok, result
@@ -40,7 +39,6 @@ skynet.register_protocol {
 			if ok then
 				player_info.id = playerId
 				send_response(result)
-				print("playerid:",player_info.id)
 				agentInterface.player_info = player_info
 				return
 			end
