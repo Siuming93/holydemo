@@ -33,7 +33,7 @@
 CsPlayerStartMove
 
 id (*
-posInfo (2.Monster.Protocol.PosInfo"h
+posInfod (2.Monster.Protocol.PosInfo"h
 ScPlayerStartMove
 
 id (
