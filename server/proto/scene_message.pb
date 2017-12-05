@@ -1,5 +1,5 @@
 
-»	
+ž	
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -18,11 +18,9 @@
 id ("
 ScLeaveScene
 
-id ("4
+id ("
 PosInfo
-posX (
-posY (
-angle ("W
+posX ("W
 PlayerPosInfo
 
 id (*
