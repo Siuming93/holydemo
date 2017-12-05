@@ -1,5 +1,5 @@
 
-Å	
+€	
 msg/proto/scene_message.protoMonster.Protocol"(
 CsEnterScene
 
@@ -18,41 +18,44 @@
 id ("
 ScLeaveScene
 
-id ("
+id ("4
 PosInfo
-posX ("W
+posX (
+posY (
+angle ("W
 PlayerPosInfo
 
 id (*
 posInfo (2.Monster.Protocol.PosInfo
 isMove ("D
 ScAllPlayerPosInfo.
-infos (2.Monster.Protocol.PlayerPosInfo"K
+infos (2.Monster.Protocol.PlayerPosInfo"h
 CsPlayerStartMove
 
-id (*
-posInfo (2.Monster.Protocol.PosInfo"h
+id (
+time (*
+posInfo (2.Monster.Protocol.PosInfo
+speed ("h
 ScPlayerStartMove
 
 id (
-time (*
+time (*
 posInfo (2.Monster.Protocol.PosInfo
-speed ("
-CsPlayerEndMove
-
-id ("I
+speed ("=
+CsPlayerEndMove*
+posInfo (2.Monster.Protocol.PosInfo"I
 ScPlayerEndMove
 
 id (*
 posInfo (2.Monster.Protocol.PosInfo"Q
 CsPlayerUpdateMoveDir*
 posInfo (2.Monster.Protocol.PosInfo
-time ("]
+time ("]
 ScPlayerUpdateMoveDir
 
 id (*
 posInfo (2.Monster.Protocol.PosInfo
-time ("@
+time ("@
 CsPlayerEndMovePos*
 posInfo (2.Monster.Protocol.PosInfo"L
 ScPlayerEndMovePos
