@@ -18,12 +18,12 @@ namespace Monster.BaseSystem
         /// <summary>
         /// milisceond
         /// </summary>
-        public static double Time
+        public static long Time
         {
-            get { return (UnityEngine.Time.time - lastLocaleTime) + lastServerTime; }
+            get { return (int)((UnityEngine.Time.time - lastLocaleTime)*1000) + lastServerTime; }
         }
 
         public static float lastLocaleTime;
-        public static double lastServerTime;
+        public static long lastServerTime;
     }
 }
