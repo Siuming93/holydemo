@@ -1,19 +1,35 @@
 import os
 import sys
+import shutil
 
-msg_dir = "./msg/proto"
 msgid_conf = "./msg/msgid.conf"
+msg_dir = "./thrift/"
 
-def compile_proto(proto_dir):
+def compile_proto(proto_dir,target_dir):
 	files = os.listdir(proto_dir)
 	for f in files:
-		print(f)
-		if f.endswith('.proto'):
-			target_file = f.replace(".proto",".pb")
-			os.system(".\\tools\\protoc.exe -o../server/proto/"+target_file+" ./msg/proto/"+f)
+		if not f.endswith('.thrift'):
+			continue
+		print("proto_dir " + proto_dir + f)
+		os.system(".\\thrift\\thrift.exe " + "--gen lua " + proto_dir + f)
 
-compile_proto(msg_dir)
+def  move_script(script_dir, target_dir):
+	files = os.listdir(script_dir)
+	for f in files:
+		if os.path.isdir(script_dir + f+"/"):
+			move_script(script_dir + f+"/", target_dir)
+			continue
+		if f.endswith(".lua"):
+			print(f)
+			shutil.move(script_dir + f, target_dir + f)
+		
+def get_targetDir():
+	curPath = os.getcwd()
+	return curPath.replace("tech","server/proto/")
 
+target_dir = get_targetDir()
+compile_proto(msg_dir, target_dir)
+move_script(os.getcwd() + "/", target_dir)
 def ParseMsgIDDefine(fs,msgidList):
 	fs.writelines("local message = {}");
 	fs.writelines("");

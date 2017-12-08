@@ -1,29 +1,35 @@
-# _*_ coding:utf-8 _*_
+import sys
+import os
+import shutil
+
+msg_dir = "./thrift/"
 msgid_conf = "./msg/msgid.conf"
+msg_namespace = "Monster.Protocol"
 
-def parse_msgfile(msgid_conf):
-	msg_info_list = []
-	msg_file = open(msgid_conf,"r")
-	for line in msg_file:
-		print(line)
 
+def compile_proto(proto_dir,target_dir):
+	files = os.listdir(proto_dir)
+	for f in files:
+		if not f.endswith('.thrift'):
+			continue
+		os.system(".\\thrift\\thrift.exe " + "--gen csharp " + proto_dir + f)
+
+
+
+def  move_script(script_dir, target_dir):
+	files = os.listdir(script_dir)
+
+	for f in files:
+		if os.path.isdir(script_dir + f+"/"):
+			move_script(script_dir + f+"/", target_dir)
+			continue
+		if f.endswith(".cs"):
+			shutil.move(script_dir + f, target_dir + f)
 		
-	return msg_info_list
-	
-class WrapFile:
-	fs = None
-	def __init__(self,real_file):
-		self.fs = real_file
-	def writelines(self,s):
-		self.fs.write(s + "\n")
-	def flush(self):
-		self.fs.flush()
-	def close(self):
-		self.fs.close()
-	
-l=parse_msgfile(msgid_conf)
+def get_targetDir():
+	curPath = os.getcwd()
+	return curPath.replace("tech","client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Protocol/")
 
-targetPath = "../server/common/message.lua";
-
-f = WrapFile(open(targetPath,'rb',encoding='UTF-8'))
-ParseMsgIDDefine(f,l)
+target_dir = get_targetDir()
+compile_proto(msg_dir, target_dir)
+move_script(msg_dir, target_dir)

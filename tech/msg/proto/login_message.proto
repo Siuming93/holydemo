@@ -1,4 +1,4 @@
-package Monster.Protocol;
+package RedDragon.Protocol;
 //MSG_ACCOUNT_LOGIN_REQUEST_C2S
 message CsLogin
 {

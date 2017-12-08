@@ -1,24 +1,35 @@
 import sys
 import os
+import shutil
 
-msg_dir = "./msg/proto/"
 msgid_conf = "./msg/msgid.conf"
-msg_namespace = "Monster.Protocol"
-
-target_dir = "../../../client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Protocol/"
-
+msg_dir = "./thrift/"
 
 def compile_proto(proto_dir,target_dir):
 	files = os.listdir(proto_dir)
 	for f in files:
-		if not f.endswith('.proto'):
+		if not f.endswith('.thrift'):
 			continue
-		target_file = f.replace(".proto",".cs")
-		os.system(".\\tools\\protogen.exe -w:" + proto_dir + " -i:" + f + " -o:" + target_dir + target_file)
-		print(target_file)
+		print("proto_dir " + proto_dir + f)
+		os.system(".\\thrift\\thrift.exe " + "--gen csharp " + proto_dir + f)
 
+def  move_script(script_dir, target_dir):
+	files = os.listdir(script_dir)
+	for f in files:
+		if os.path.isdir(script_dir + f+"/"):
+			move_script(script_dir + f+"/", target_dir)
+			continue
+		if f.endswith(".cs"):
+			print(f)
+			shutil.move(script_dir + f, target_dir + f)
+		
+def get_targetDir():
+	curPath = os.getcwd()
+	return curPath.replace("tech","client/Trunk/Assets/Scripts/BaseSystem/Net/Message/Protocol/")
 
+target_dir = get_targetDir()
 compile_proto(msg_dir, target_dir)
+move_script(os.getcwd() + "/", target_dir)
 
 class MsgInfo(object):
 	def __init__(self,msgid,msgname,comment):
@@ -34,22 +45,23 @@ def ParseMsgIDDefineDic(fs,msgidList):
 	fs.writelines("using System;");
 	fs.writelines("using System.Collections.Generic;");
 	fs.writelines("using System.Text;");
-	fs.writelines("using "+msg_namespace+";");
+	fs.writelines("using RedDragon.Protocol;");
+	fs.writelines("using Thrift.Protocol;");
 	fs.writelines("public class MsgIDDefineDic");
 	fs.writelines("{");
 
 	fs.writelines("\tprivate Dictionary<int, Type> id2msgMap = new Dictionary<int, Type>();");
 	fs.writelines("\tprivate Dictionary<Type, int> msg2idMap = new Dictionary<Type, int>();");
 	fs.writelines("\tprivate static MsgIDDefineDic instance;");
-	fs.writelines("\tpublic static MsgIDDefineDic Instance()");
+	fs.writelines("\tpublic static MsgIDDefineDic Instance");
 
 	fs.writelines("\t{");
-
-	fs.writelines("\t\tif (null == instance)");
+	fs.writelines("\t\tget");
 	fs.writelines("\t\t{");
-	fs.writelines("\t\t\tinstance = new MsgIDDefineDic();");
+	fs.writelines("\t\t\tif (null == instance)");
+	fs.writelines("\t\t\t\tinstance = new MsgIDDefineDic();");
+	fs.writelines("\t\t\treturn instance;");
 	fs.writelines("\t\t}");
-	fs.writelines("\t\treturn instance;");
 	fs.writelines("\t}");
 
 
@@ -78,16 +90,27 @@ def ParseMsgIDDefineDic(fs,msgidList):
 	fs.writelines("\t\tmsg2idMap.TryGetValue(type, out msgID);");
 	fs.writelines("\t\treturn msgID;");
 	fs.writelines("\t}");
+
+	fs.writelines("\tpublic TBase CreatMsg(int msgID)");
+	fs.writelines("\t{");
+	fs.writelines("\t\tTBase msg = null;");
+	fs.writelines("\t\tswitch (msgID)");
+	fs.writelines("\t\t{");
+	for _msgDef in msgidList:
+		tmpMsgName = _msgDef.msgname;
+		fs.writelines("\t\t\tcase %s:"% (_msgDef.msgid));
+		fs.writelines("\t\t\t\tmsg = new %s();"% tmpMsgName);
+		fs.writelines("\t\t\t\tbreak;");
+	fs.writelines("\t\t}");
+	fs.writelines("\t\treturn msg;");
+	fs.writelines("\t}");
+
 	fs.writelines("}");
 
 	fs.flush();
 	fs.close();
 
 def ParseMsgIDDefine(fs,msgidList):
-	fs.writelines("using System;");
-	fs.writelines("using System.Collections.Generic;");
-	fs.writelines("using System.Text;");
-	fs.writelines("using "+msg_namespace+";");
 	fs.writelines("public class MsgIDDefine");
 	fs.writelines("{");
 
