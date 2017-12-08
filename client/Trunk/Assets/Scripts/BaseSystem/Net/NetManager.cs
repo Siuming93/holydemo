@@ -5,7 +5,8 @@ using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
 using System.IO;
-using ProtoBuf;
+using Thrift.Protocol;
+using Thrift.Transport;
 
 namespace Monster.Net
 {
@@ -13,7 +14,7 @@ namespace Monster.Net
     internal class Protocol
     {
         public int msgNo;
-        public MemoryStream stream;
+        public byte[] buffer;
     }
 
     public enum ConnectState
@@ -127,9 +128,13 @@ namespace Monster.Net
 
             int msgNo = (curBytes[2] << 24) + (curBytes[3] << 16) + (curBytes[4] << 8) + (curBytes[5]);
 
-            MemoryStream stream = new MemoryStream();
-            stream.Write(curBytes, 6, needLen - 6);
-            Protocol proto = new Protocol() { msgNo = msgNo, stream = stream };
+            byte[] bytes = new byte[needLen - 6];
+            for (int i = 0; i < bytes.Length; i++)
+            {
+                bytes[i] = curBytes[i + 6];
+            }
+
+            Protocol proto = new Protocol() { msgNo = msgNo, buffer = bytes };
             mReceiveBuffer.Enqueue(proto);
 
             curLen = curLen - needLen;
@@ -148,7 +153,8 @@ namespace Monster.Net
                 if (mSendBuffer.Count > 0)
                 {
                     Protocol proto = mSendBuffer.Dequeue();
-                    int len = (int)proto.stream.Length + 4;
+                    int len = (int) proto.buffer.Length + 4;
+
                     if (len > 4)
                     {
                         bytes[0] = (byte)(len >> 8);
@@ -157,9 +163,13 @@ namespace Monster.Net
                         bytes[3] = (byte)(proto.msgNo >> 16);
                         bytes[4] = (byte)(proto.msgNo >> 8);
                         bytes[5] = (byte)(proto.msgNo);
-                        proto.stream.Read(bytes, 6, len);
 
-                        Debug.Log(string.Format("msg NO:{0} len{1}", proto.msgNo, len));
+                        for (int i = 0; i < len -4; i++)
+                        {
+                            bytes[6 + i] = proto.buffer[i];
+                        }
+
+                        //Debug.Log(string.Format("msg NO:{0} len{1} buffer:{2}", proto.msgNo, len - 4, str));
                         mStream.Write(bytes, 0, len + 2);
                     }
                 }
@@ -180,18 +190,16 @@ namespace Monster.Net
             return !(socket.Poll(1, SelectMode.SelectRead) && socket.Available == 0);
         }
         #endregion
-        public void SendMessage(global::ProtoBuf.IExtensible msg)
+        public void SendMessage(TBase msg)
         {
-            var no = MsgIDDefineDic.Instance().GetMsgID(msg.GetType());
+            var no = MsgIDDefineDic.Instance.GetMsgID(msg.GetType());
             //Debug.LogWarning("Send Message :" + msg.GetType());
-            var stream = new MemoryStream();
-            Serializer.NonGeneric.Serialize(stream, msg);
-            stream.Position = 0;
-
-            Serializer.NonGeneric.Deserialize(msg.GetType(), stream);
-            stream.Position = 0;
-
-            mSendBuffer.Enqueue(new Protocol { msgNo = no, stream = stream });
+            var protocol = new Protocol()
+            {
+                msgNo = no,
+                buffer =  TMemoryBuffer.Serialize(msg),
+            };
+            mSendBuffer.Enqueue(protocol);
         }
         public void RegisterMessageHandler(int msgNo, MessageHandler handler)
         {

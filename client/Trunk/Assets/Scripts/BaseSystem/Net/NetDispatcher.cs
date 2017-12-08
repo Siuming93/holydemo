@@ -1,7 +1,9 @@
 ﻿using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using ProtoBuf;
+using Thrift.Protocol;
+using Thrift.Transport;
+
 namespace Monster.Net
 {
     public delegate void MessageHandler(object data);
@@ -27,8 +29,8 @@ namespace Monster.Net
 
         public void Dispatch(Protocol proto)
         {
-            proto.stream.Position = 0;
-            object msg = Serializer.NonGeneric.Deserialize(MsgIDDefineDic.Instance().GetMsgType(proto.msgNo), proto.stream);
+            TBase msg = MsgIDDefineDic.Instance.CreatMsg(proto.msgNo);
+            msg.Read(new TBinaryProtocol(new TMemoryBuffer(proto.buffer)));
             //Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
 
             if (mHandlerMap.ContainsKey(proto.msgNo))
