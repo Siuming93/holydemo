@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 using Monster.BaseSystem;
-using Monster.Net;
-using Monster.Protocol;
 using UnityEngine;
 
 public class WorldPlayerBattleMediator : AbstractMediator
@@ -85,7 +83,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
             Debug.LogError("OnOtherRoleStartMove No Controller");
             return;
         }
-        controller.StartMove(roleVO.posInfo.angle);
+        controller.StartMove((float)roleVO.posInfo.angle);
     }
 
     private void OnOtherRoleUpdateMoveDir(object obj)
@@ -97,7 +95,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
             Debug.LogError("OnOtherRoleUpdateMoveDir No Controller");
             return;
         }
-        controller.UpdateMoveDir(roleVO.posInfo.angle);
+        controller.UpdateMoveDir((float)roleVO.posInfo.angle);
     }
 
     private void OnOtherRoleEndMove(object obj)

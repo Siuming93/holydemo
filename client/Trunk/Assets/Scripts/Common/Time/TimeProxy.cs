@@ -1,6 +1,6 @@
 ﻿
 using Monster.BaseSystem;
-using Monster.Protocol;
+using RedDragon.Protocol;
 
 public class TimeProxy : BaseProxy
 {
@@ -10,7 +10,7 @@ public class TimeProxy : BaseProxy
     public TimeProxy(): base(NAME)
     {
         RegisterMessageHandler(MsgIDDefine.ScAsyncTime, OnAsyncServerTime);
-        netManager.SendMessage(new CsAsyncTime() { id = (int)RoleProperty.ID });   
+        netManager.SendMessage(new CsAsyncTime() { });   
         UpdateProxy.Instance.UpdateEvent += AsyncTime;
     }
 
@@ -24,14 +24,14 @@ public class TimeProxy : BaseProxy
     private void OnAsyncServerTime(object data)
     {
         ScAsyncTime msg = data as ScAsyncTime;
-        GameConfig.lastServerTime = msg.time;
+        GameConfig.lastServerTime = msg.Time;
     }
 
     private void AsyncTime()
     {
         if (UnityEngine.Time.time - GameConfig.lastLocaleTime >= 60)
         {
-            netManager.SendMessage(new CsAsyncTime(){id = (int)RoleProperty.ID});
+            netManager.SendMessage(new CsAsyncTime(){});
             GameConfig.lastLocaleTime = UnityEngine.Time.time; 
         }
     }

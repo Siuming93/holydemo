@@ -1,5 +1,5 @@
 ﻿using Monster.Net;
-using Monster.Protocol;
+using RedDragon.Protocol;
 
 public class LoginProxy : BaseProxy
 {
@@ -13,7 +13,7 @@ public class LoginProxy : BaseProxy
     public void OnGetLoginResponse(object msg)
     {
         ScLogin loginMsg = msg as ScLogin;
-        if (loginMsg.result == 1)
-            SendNotification(NotificationConst.LOGIN_SUCCESS, loginMsg.accountid);
+        if (loginMsg.Result == 1)
+            SendNotification(NotificationConst.LOGIN_SUCCESS, loginMsg.Accountid);
     }
 }

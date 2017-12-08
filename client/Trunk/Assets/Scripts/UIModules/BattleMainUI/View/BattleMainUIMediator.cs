@@ -6,7 +6,7 @@ using DG.Tweening;
 using Monster.BaseSystem;
 using Monster.BaseSystem.ResourceManager;
 using Monster.Net;
-using Monster.Protocol;
+using RedDragon.Protocol;
 using UnityEngine.UI;
 
 public class BattleMainUIMediator : AbstractMediator
@@ -106,14 +106,17 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnSkillBtn3Click()
     {
-        var pos = GetPlayerPosInfo();
-        float angle = _stick.Angle;
         NetManager.Instance.SendMessage(new CsPlayerStartMove()
         {
-            id = RoleProperty.ID,
-            time = GameConfig.Time,
-            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
-            speed = RoleProperty.RunSpeed,
+           // time = 4294967295,
+            PosInfo = new PosInfo() { PosX = 255, PosY = 0, Angle = 0 },
+           // speed = 255,
+        });
+        NetManager.Instance.SendMessage(new CsPlayerStartMove()
+        {
+           // time = 0,
+            PosInfo = new PosInfo() { PosX = 0, PosY = 0, Angle = 0 },
+           // speed = 0,
         });
         _proxy.UseSkill(_proxy.skill3VO);
     }
@@ -123,10 +126,9 @@ public class BattleMainUIMediator : AbstractMediator
         float angle = arg1.Angle;
         NetManager.Instance.SendMessage(new CsPlayerStartMove()
         {
-            id = RoleProperty.ID,
-            time = GameConfig.Time,
-            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
-            speed = RoleProperty.RunSpeed,
+            Time = GameConfig.Time,
+            PosInfo = new PosInfo() { PosX = (int)pos.posX, PosY = (int)pos.posY, Angle = (int)angle },
+            Speed = (int)RoleProperty.RunSpeed,
         });
         _lastAngle = angle;
 
@@ -135,8 +137,8 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnStickMovementEnd(VirtualStick obj)
     {
         var pos = GetPlayerPosInfo();
-        NetManager.Instance.SendMessage(new CsPlayerEndMove() { posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = pos.angle } });
-
+        //NetManager.Instance.SendMessage(new CsPlayerEndMove() { posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = pos.angle } });
+        //NetManager.Instance.SendMessage(new CsPlayerEndMove() { id = RoleProperty.ID });
         SendNotification(NotificationConst.SELF_END_MOVE);
     }
 
@@ -149,8 +151,8 @@ public class BattleMainUIMediator : AbstractMediator
         var pos = GetPlayerPosInfo();
         NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir()
         {
-            posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = angle },
-            time = GameConfig.Time,
+            //posInfo = new PosInfo() { posX = pos.posX,/* posY = pos.posY, angle = angle*/ },
+            Time = GameConfig.Time,
         });
         _lastAngle = angle;
 

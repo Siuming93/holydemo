@@ -1,5 +1,5 @@
 ﻿using System.Collections.Generic;
-using Monster.Protocol;
+using RedDragon.Protocol;
 using UnityEngine;
 using UnityEngineInternal;
 
@@ -36,9 +36,9 @@ public class LeitaiCharcterProxy : BaseProxy
     private void OnOtherRoleEnterScene(object data)
     {
         ScOtherRoleEnterScene msg = data as ScOtherRoleEnterScene;
-        long roleId = msg.id;
+        long roleId = msg.Id;
         var vo = new WorldRoleInfoVO();
-        vo.Update(msg.posInfo);
+        vo.Update(msg.PosInfo);
         _roleMap.Add(roleId, vo);
         _roleList.Add(vo);
 
@@ -50,12 +50,12 @@ public class LeitaiCharcterProxy : BaseProxy
     {
         otherPlayerList.Clear();
         ScAllPlayerPosInfo allInfo = msg as ScAllPlayerPosInfo;
-        foreach (var info in allInfo.infos)
+        foreach (var info in allInfo.Infos)
         {
-            var id = info.id;
+            var id = info.Id;
             if (id == RoleProperty.ID)
             {
-                RoleProperty.Postion = new Vector2(info.posInfo.posX, info.posInfo.posY);
+                //RoleProperty.Postion = new Vector2((float)info.posInfo.posX, (float)info.posInfo.posY);
             }
             else
             {
@@ -77,24 +77,24 @@ public class LeitaiCharcterProxy : BaseProxy
     private void OnPlayerEndMove(object data)
     {
         var msg = data as ScPlayerEndMove;
-        var role = GetRoleVO(msg.id);
-        role.Update(msg.posInfo, false);
+        var role = GetRoleVO(msg.Id);
+        role.Update(msg.PosInfo, false);
         SendNotification(NotificationConst.OTHER_ROLE_END_MOVE, role);
     }
 
     private void OnPlayerStartMove(object data)
     {
         ScPlayerStartMove msg = data as ScPlayerStartMove;
-        var role = GetRoleVO(msg.id);
-        role.Update(msg.posInfo, true, msg.time);
+        var role = GetRoleVO(msg.Id);
+        role.Update(msg.PosInfo, true, msg.Time);
         SendNotification(NotificationConst.OTHER_ROLE_START_MOVE, role);
     }
 
     private void OnPlayerUpdateMoveDir(object data)
     {
         var msg = data as ScPlayerUpdateMoveDir;
-        var role = GetRoleVO(msg.id);
-        role.Update(msg.posInfo);
+        var role = GetRoleVO(msg.Id);
+        role.Update(msg.PosInfo);
         SendNotification(NotificationConst.OTHER_ROLE_UPDATE_MOVE_DIR, role);
     }
 

@@ -62,7 +62,7 @@ public class OtherRoleMoelController : BaseModelController
 
     public void Async(WorldRoleInfoVO vo)
     {
-        LookAt(vo.posInfo.angle);
-        MoveTo(new Vector3(vo.posInfo.posX, 0f, vo.posInfo.posY));
+        LookAt((float)vo.posInfo.angle);
+        MoveTo(new Vector3((float)vo.posInfo.posX, 0f, (float)vo.posInfo.posY));
     }
 }

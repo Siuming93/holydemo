@@ -1,5 +1,5 @@
 ﻿using Monster.BaseSystem;
-using Monster.Protocol;
+using RedDragon.Protocol;
 
 public class SkillProxy : BaseProxy
 {
@@ -22,7 +22,7 @@ public class SkillProxy : BaseProxy
     private void OnScPlayerUseSkill(object data)
     {
         ScPlayerUseSkill msg = data as ScPlayerUseSkill;;
-        var vo = GetSkillVO(msg.skillId);
+        var vo = GetSkillVO(msg.SkillId);
         //vo.lastUseMiliSceond = GameConfig.Time;
         isUseSkill = true;
         vp_Timer.In(vo.meta.duration, () => { isUseSkill = false; });
@@ -39,7 +39,7 @@ public class SkillProxy : BaseProxy
 
         netManager.SendMessage(new CsPlayerUseSkill()
         {
-            skillId = vo.meta.id,
+            SkillId = vo.meta.id,
         });
     }
 

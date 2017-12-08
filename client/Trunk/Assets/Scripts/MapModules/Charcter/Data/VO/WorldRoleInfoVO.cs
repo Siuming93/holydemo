@@ -1,4 +1,4 @@
-﻿using Monster.Protocol;
+﻿using RedDragon.Protocol;
 using UnityEngine;
 
 public class WorldRoleInfoVO
@@ -9,33 +9,33 @@ public class WorldRoleInfoVO
     public double time;
     public void Update(PlayerPosInfo info)
     {
-        this.id = info.id;
-        this.posInfo.posX = info.posInfo.posX;
-        this.posInfo.posY = info.posInfo.posY;
-        this.posInfo.angle = info.posInfo.angle;
-        this.isMove = info.isMove;
+        this.id = info.Id;
+        this.posInfo.posX = info.PosInfo.PosX;
+        //this.posInfo.posY = info.posInfo.posY;
+        //this.posInfo.angle = info.posInfo.angle;
+        this.isMove = info.IsMove;
     }
     public void Update(PosInfo pos)
     {
-        this.posInfo.posX = pos.posX;
-        this.posInfo.posY = pos.posY;
-        this.posInfo.angle = pos.angle;
+        this.posInfo.posX = pos.PosX;
+        //this.posInfo.posY = pos.posY;
+        //this.posInfo.angle = pos.angle;
     }
 
     public void Update(PosInfo pos, bool isMove, double time)
     {
-        this.posInfo.posX = pos.posX;
-        this.posInfo.posY = pos.posY;
-        this.posInfo.angle = pos.angle;
+        this.posInfo.posX = pos.PosX;
+        //this.posInfo.posY = pos.posY;
+        //this.posInfo.angle = pos.angle;
         this.isMove = isMove;
         this.time = time;
     }
 
     public void Update(PosInfo pos, bool isMove)
     {
-        this.posInfo.posX = pos.posX;
-        this.posInfo.posY = pos.posY;
-        this.posInfo.angle = pos.angle;
+        this.posInfo.posX = pos.PosX;
+        //this.posInfo.posY = pos.posY;
+        //this.posInfo.angle = pos.angle;
         this.isMove = isMove;
     }
 
@@ -54,7 +54,7 @@ public class WorldRoleInfoVO
 
 public class ModelPosVO
 {
-    public float posX;
-    public float posY;
-    public float angle;
+    public double posX;
+    public double posY;
+    public double angle;
 }

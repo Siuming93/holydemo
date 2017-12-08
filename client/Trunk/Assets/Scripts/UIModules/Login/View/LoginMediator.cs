@@ -1,9 +1,9 @@
 ﻿using System.Collections;
 using Monster.BaseSystem;
 using Monster.Net;
-using Monster.Protocol;
 using UnityEngine;
 using Monster.BaseSystem.SceneManager;
+using RedDragon.Protocol;
 
 public class LoginMediator : AbstractMediator
 {
@@ -60,7 +60,7 @@ public class LoginMediator : AbstractMediator
         var id = _skin.acountInputField.text;
         NetManager.Instance.Close();
         NetManager.Instance.TryConnect(ipAdress);
-        NetManager.Instance.SendMessage(new CsLogin() { account = id });
+        NetManager.Instance.SendMessage(new CsLogin() { Accountid = long.Parse(id) });
     }
     #endregion
     private IEnumerator ChcekState()
