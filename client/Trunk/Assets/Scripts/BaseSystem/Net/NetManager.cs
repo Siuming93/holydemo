@@ -194,6 +194,14 @@ namespace Monster.Net
         {
             var no = MsgIDDefineDic.Instance.GetMsgID(msg.GetType());
             //Debug.LogWarning("Send Message :" + msg.GetType());
+            var memoryBuffer = new TMemoryBuffer();
+            var jsonProtocol = new TJSONProtocol(memoryBuffer);
+            msg.Write(jsonProtocol);
+            var json = "";
+            foreach (var b in memoryBuffer.GetBuffer())
+            {
+                json += (char) b;
+            }
             var protocol = new Protocol()
             {
                 msgNo = no,
