@@ -1,7 +1,34 @@
 local skynet = require "skynet"
 local message = require "message"
 local msgpack = require "msgpack.core"
+--local msgUtil = require "msgutil"
+require "TBinaryProtocol"
+require "TMemoryBuffer"
+local thrift = require ('protocol_ttypes')
+require ('libluabpack')
 require "skynet.manager"
+
+
+
+function decode(msg, data)
+    local transport = TMemoryBuffer:new{}
+    local protocol = TBinaryProtocol:new {
+        trans = transport
+    }
+    transport:resetBuffer(data)
+
+    msg:read(protocol)
+    return msg;
+end
+
+function encode(msg)
+    local transport = TMemoryBuffer:new{}
+    local protocol = TBinaryProtocol:new {
+        trans = transport
+    }
+    msg.wirte(protocol)
+    return transport.getBuffer()
+end
 
 
 local CMD = {}
@@ -17,7 +44,8 @@ CMD.dispatch = function(opcode, msg, fd)
 end
 
 function OnCsLogin (msg, fd)
-	local data = protobuf.decode("Monster.Protocol.CsLogin", msg)
+	print("libluabpack" , libluabpack)
+	local data = decode(CsLogin:new{}, msg)
 	local accountId = data.account
 	
 	local sql = "select * from table tb_account where id = '"..accountId.."' "
@@ -28,19 +56,19 @@ function OnCsLogin (msg, fd)
 			createplayer(accountId)
 		end
 	end
-	
-	local tb = {}
+
+	local tb = thrift.ScLogin:new{}
 	tb.accountid = accountId
 	tb.result = 1
 
-	local msgbody =  protobuf.encode("Monster.Protocol.ScLogin", tb)
+	local msgbody =  encode(tb)
 	return msgpack.pack(message.SCLOGIN, msgbody), accountId
 end
 
 function OnAsyncTime(msg)
-	local tb = {}
+	local tb = thrift.ScAsyncTime:new{}
 	tb.time = skynet.time()
-	local msgbody = protobuf.encode("Monster.Protocol.ScAsyncTime", tb)
+	local msgbody = encode(tb)
 	return msgpack.pack(message.SCASYNCTIME, msgbody)
 end
 
@@ -60,10 +88,6 @@ skynet.start(function(...)
 		f = CMD[cmd]
 		skynet.ret(skynet.pack(f(...)))	
 	end)
-
-	protobuf = require "protobuf"
-	protobuf.register_file "../proto/login_message.pb"
-
 
 	skynet.register "loginservice"
 

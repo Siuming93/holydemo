@@ -1,4 +1,3 @@
-local protobuf = require "protobuf"
 local message = require "message"
 local skynet = require "skynet"
 local socket = require "socket"
@@ -66,11 +65,11 @@ function playerStartMove(id, data)
 	local info = player_table[id]
 	info.isMove = true
 	info.posInfo.posX = msg.posInfo.posX
-	info.posInfo.posY = msg.posInfo.posY
-	info.posInfo.angle =  msg.posInfo.angle
+	--info.posInfo.posY = msg.posInfo.posY
+	--info.posInfo.angle =  msg.posInfo.angle
 	local tb = {}
 	tb.id = id;
-	tb.time = skynet.time()
+	--tb.time = skynet.time()
 	tb.posInfo = info.posInfo
 
 	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerStartMove", tb)
@@ -187,11 +186,4 @@ skynet.start(function(...)
 		f = CMD[cmd]
 		skynet.ret(skynet.pack(f(...)))	
 	end)
-
-	protobuf = require "protobuf"
-	protobuf.register_file "../proto/scene_message.pb"
-
-	skynet.register "leitaiservice"
-	
-	--skynet.fork(fixedUpdate)
 end)
