@@ -260,7 +260,7 @@ filter_data_(lua_State *L, int fd, uint8_t * buffer, int size) {
 		if (size == 0) {
 			lua_pushvalue(L, lua_upvalueindex(TYPE_DATA));
 			lua_pushinteger(L, fd);
-			lua_pushlightuserdata(L, uc->pack.buffer);
+			lua_pushlstring(L, uc->pack.buffer, uc->size);
 			lua_pushinteger(L, uc->pack.size);
 			skynet_free(uc);
 			return 5;
