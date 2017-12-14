@@ -25,9 +25,10 @@ function encode(msg)
     local transport = TMemoryBuffer:new{}
     local protocol = TBinaryProtocol:new {
         trans = transport
-    }
-    msg.wirte(protocol)
-    return transport.getBuffer()
+	}
+	print("protocol:", protocol)
+    msg:write(protocol)
+    return transport:getBuffer()
 end
 
 
@@ -44,9 +45,9 @@ CMD.dispatch = function(opcode, msg, fd)
 end
 
 function OnCsLogin (msg, fd)
-	print("libluabpack" , libluabpack)
+	print("msg len" , string.len(msg))
 	local data = decode(CsLogin:new{}, msg)
-	local accountId = data.account
+	local accountId = tostring(data.accountid)
 	
 	local sql = "select * from table tb_account where id = '"..accountId.."' "
 	local ok, result = pcall(skynet.call, "dbservice", "lua", "query", sql)	
@@ -57,7 +58,7 @@ function OnCsLogin (msg, fd)
 		end
 	end
 
-	local tb = thrift.ScLogin:new{}
+	local tb = ScLogin:new{}
 	tb.accountid = accountId
 	tb.result = 1
 
