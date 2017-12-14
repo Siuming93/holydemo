@@ -17,10 +17,15 @@ static int _unpack(lua_State *L)
 	uint8_t * buffer= (uint8_t *)malloc(4);
 
 	data = luaL_checklstring(L, 1, &size);
-	
+
 	
 	memcpy(buffer, data, 4);
 	msg = data+4;
+	for(int i=0; i< size - 4;i++)
+	{
+		printf("%d ", msg[i]);
+	}
+	printf("\n");
 
 	msgno = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
 	
@@ -31,7 +36,7 @@ static int _unpack(lua_State *L)
 	lua_settable(L, -3);
 	
 	lua_pushstring(L, "msg");
-	lua_pushstring(L, msg);
+	lua_pushlstring(L, (const char*)msg, size -4);
 	lua_settable(L, -3);
 	return 1;
 }
