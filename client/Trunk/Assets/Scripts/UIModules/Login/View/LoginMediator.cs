@@ -42,6 +42,7 @@ public class LoginMediator : AbstractMediator
     #region noti handler
     private void OnLoginSuccess(object obj)
     {
+        Debug.Log("LoginSuccess");
         PlayerPrefs.SetString("last_id", _skin.acountInputField.text);
         PlayerPrefs.SetString("last_ip", _skin.ipAddressInputField.text);
         PlayerPrefs.Save();

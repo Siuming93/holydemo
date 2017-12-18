@@ -9,7 +9,7 @@ using UnityEngine;
 public class MessageUIManger : MonoBehaviour
 {
 
-#if DEVELOPMENT_BUILD ||UNITY_EDITOR
+#if DEVELOPMENT_BUILD
     public static MessageUIManger Instance { get; private set; }
 
 

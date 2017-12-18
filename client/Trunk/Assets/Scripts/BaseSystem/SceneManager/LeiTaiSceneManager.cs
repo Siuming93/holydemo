@@ -2,7 +2,9 @@
 using System.Collections.Generic;
 using System.Collections;
 using Monster.BaseSystem;
+using Monster.Net;
 using PureMVC.Interfaces;
+using RedDragon.Protocol;
 using UnityEngine;
 
 namespace Monster.BaseSystem.SceneManager
@@ -32,6 +34,7 @@ namespace Monster.BaseSystem.SceneManager
 
         public override IEnumerator OnEnterScene(object data)
         {
+            NetManager.Instance.SendMessage(new CsEnterScene("leitai"));
             _proxyList = new List<IProxy>()
             {
                 new LeitaiCharcterProxy(),

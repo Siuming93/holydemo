@@ -106,18 +106,6 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnSkillBtn3Click()
     {
-        NetManager.Instance.SendMessage(new CsPlayerStartMove()
-        {
-           // time = 4294967295,
-            PosInfo = new PosInfo() { PosX = 255, PosY = 0, Angle = 0 },
-           // speed = 255,
-        });
-        NetManager.Instance.SendMessage(new CsPlayerStartMove()
-        {
-           // time = 0,
-            PosInfo = new PosInfo() { PosX = 0, PosY = 0, Angle = 0 },
-           // speed = 0,
-        });
         _proxy.UseSkill(_proxy.skill3VO);
     }
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
@@ -137,23 +125,18 @@ public class BattleMainUIMediator : AbstractMediator
     private void OnStickMovementEnd(VirtualStick obj)
     {
         var pos = GetPlayerPosInfo();
-        //NetManager.Instance.SendMessage(new CsPlayerEndMove() { posInfo = new PosInfo() { posX = pos.posX, posY = pos.posY, angle = pos.angle } });
-        //NetManager.Instance.SendMessage(new CsPlayerEndMove() { id = RoleProperty.ID });
+        NetManager.Instance.SendMessage(new CsPlayerEndMove() { PosInfo = new PosInfo((int)pos.posX, (int)pos.posY, (int)pos.angle) });
         SendNotification(NotificationConst.SELF_END_MOVE);
     }
 
     private float _lastAngle;
-    private void OnStickMovement(VirtualStick arg1, Vector2 arg2)
+    private void OnStickMovement(VirtualStick stick, Vector2 dir)
     {
-        float angle = arg1.Angle;
-        if (Mathf.Abs(angle - _lastAngle) < 5)
+        float angle = stick.Angle;
+        if (Mathf.Abs(_lastAngle - angle )<20)
             return;
         var pos = GetPlayerPosInfo();
-        NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir()
-        {
-            //posInfo = new PosInfo() { posX = pos.posX,/* posY = pos.posY, angle = angle*/ },
-            Time = GameConfig.Time,
-        });
+        NetManager.Instance.SendMessage(new CsPlayerUpdateMoveDir(new PosInfo((int)pos.posX, (int)pos.posY, (int)pos.angle), GameConfig.Time));
         _lastAngle = angle;
 
         SendNotification(NotificationConst.SELF_UPDATE_MOVE_DIR, angle);

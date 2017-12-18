@@ -61,7 +61,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private void OnSelfUpdateMoveDir(object obj)
     {
-        _playerController.StartMove((float)obj);
+        _playerController.UpdateMoveDir((float)obj);
     }
 
     private void OnSelfEndMove(object obj)
@@ -71,7 +71,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private void OnSelfStartMove(object obj)
     {
-        _playerController.UpdateMoveDir((float)obj);
+        _playerController.StartMove((float)obj);
     }
 
     private void OnOtherRoleStartMove(object obj)

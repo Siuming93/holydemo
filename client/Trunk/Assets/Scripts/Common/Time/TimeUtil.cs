@@ -14,20 +14,20 @@ public static class TimeUtil
     /// </summary>
     /// <param name="time"></param>
     /// <returns></returns>
-    public static string ToLongTimeString(double seconds)
+    public static string ToLongTimeString(long milliseconds)
     {
-        DateTime now = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified).AddMilliseconds(seconds * 1000).ToLocalTime();
-        return now.ToLongTimeString();
-        //return string.Format("{0:yy-MM-dd hh:mm:ss zz}", now);
+        DateTime now = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified).AddMilliseconds(milliseconds).ToLocalTime();
+        //return now.ToLongTimeString();
+        return string.Format("{0:yy-MM-dd HH:mm:ss}", now);
     }
 
-    public static string ToShortTimeString(double seconds)
+    public static string ToShortTimeString(long milliseconds)
     {
-        DateTime now = new DateTime(1970, 1, 1).AddMilliseconds(seconds * 1000);
+        DateTime now = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Unspecified).AddMilliseconds(milliseconds).ToLocalTime();
         return now.ToShortTimeString();
     }
 
-    public static string ToTimeString(double seconds, TimeStyle style = TimeStyle.HHMMSS)
+    public static string ToTimeString(long milliseconds, TimeStyle style = TimeStyle.HHMMSS)
     {
         return "";
     }
