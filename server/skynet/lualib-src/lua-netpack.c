@@ -226,11 +226,11 @@ static int
 filter_data_(lua_State *L, int fd, uint8_t * buffer, int size) {
 	struct queue *q = lua_touserdata(L,1);
 	struct uncomplete * uc = find_uncomplete(q, fd);
-	for(int i=0;i<size;i++)
-	{
-		printf("%d ", buffer[i]);
-	}
-	printf("\n");
+	// for(int i=0;i<size;i++)
+	// {
+	// 	printf("%d ", buffer[i]);
+	// }
+	// printf("\n");
 	
 	if (uc) {
 		// fill uncomplete
@@ -356,18 +356,15 @@ lfilter(lua_State *L) {
 	case SKYNET_SOCKET_TYPE_DATA:
 		// ignore listen id (message->id)
 		assert(size == -1);	// never padding string
-		printf("SKYNET_SOCKET_TYPE_DATA\n");
 		return filter_data(L, message->id, (uint8_t *)buffer, message->ud);
 	case SKYNET_SOCKET_TYPE_CONNECT:
 		// ignore listen fd connect
-		printf("SKYNET_SOCKET_TYPE_CONNECT\n");
 		return 1;
 	case SKYNET_SOCKET_TYPE_CLOSE:
 		// no more data in fd (message->id)
 		close_uncomplete(L, message->id);
 		lua_pushvalue(L, lua_upvalueindex(TYPE_CLOSE));
 		lua_pushinteger(L, message->id);
-		printf("SKYNET_SOCKET_TYPE_CLOSE\n");
 		
 		return 3;
 	case SKYNET_SOCKET_TYPE_ACCEPT:
@@ -375,7 +372,6 @@ lfilter(lua_State *L) {
 		// ignore listen id (message->id);
 		lua_pushinteger(L, message->ud);
 		pushstring(L, buffer, size);
-		printf("SKYNET_SOCKET_TYPE_ACCEPT\n");
 		
 		return 4;
 	case SKYNET_SOCKET_TYPE_ERROR:
@@ -384,14 +380,12 @@ lfilter(lua_State *L) {
 		lua_pushvalue(L, lua_upvalueindex(TYPE_ERROR));
 		lua_pushinteger(L, message->id);
 		pushstring(L, buffer, size);
-		printf("SKYNET_SOCKET_TYPE_ERROR\n");
 		
 		return 4;
 	case SKYNET_SOCKET_TYPE_WARNING:
 		lua_pushvalue(L, lua_upvalueindex(TYPE_WARNING));
 		lua_pushinteger(L, message->id);
 		lua_pushinteger(L, message->ud);
-		printf("SKYNET_SOCKET_TYPE_WARNING\n");
 		
 		return 4;
 	default:
@@ -416,7 +410,6 @@ lpop(lua_State *L) {
 	if (++q->head >= q->cap) {
 		q->head = 0;
 	}
-	printf("lpop");
 	lua_pushinteger(L, np->id);
 	lua_pushlightuserdata(L, np->buffer);
 	lua_pushinteger(L, np->size);
@@ -460,13 +453,13 @@ lpack(lua_State *L) {
 	write_size(buffer, len);
 	memcpy(buffer+2, ptr, len);
 
-	printf("lpack:\n");
+	// printf("lpack:\n");
 
-	for(int i=0;i<len+2;i++)
-	{
-		printf("%d ", buffer[i]);
-	}
-	printf("\n");
+	// for(int i=0;i<len+2;i++)
+	// {
+	// 	printf("%d ", buffer[i]);
+	// }
+	// printf("\n");
 
 	lua_pushlightuserdata(L, buffer);
 	lua_pushinteger(L, len + 2);

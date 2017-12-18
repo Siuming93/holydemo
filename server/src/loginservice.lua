@@ -1,35 +1,11 @@
 local skynet = require "skynet"
 local message = require "message"
 local msgpack = require "msgpack.core"
---local msgUtil = require "msgutil"
-require "TBinaryProtocol"
-require "TMemoryBuffer"
-local thrift = require ('protocol_ttypes')
-require ('libluabpack')
+require "msgUtil"
+require ('protocol_ttypes')
 require "skynet.manager"
 
 
-
-function decode(msg, data)
-    local transport = TMemoryBuffer:new{}
-    local protocol = TBinaryProtocol:new {
-        trans = transport
-    }
-    transport:resetBuffer(data)
-
-    msg:read(protocol)
-    return msg;
-end
-
-function encode(msg)
-    local transport = TMemoryBuffer:new{}
-    local protocol = TBinaryProtocol:new {
-        trans = transport
-	}
-	print("protocol:", protocol)
-    msg:write(protocol)
-    return transport:getBuffer()
-end
 
 
 local CMD = {}
@@ -45,7 +21,6 @@ CMD.dispatch = function(opcode, msg, fd)
 end
 
 function OnCsLogin (msg, fd)
-	print("msg len" , string.len(msg))
 	local data = decode(CsLogin:new{}, msg)
 	local accountId = tostring(data.accountid)
 	
@@ -67,8 +42,8 @@ function OnCsLogin (msg, fd)
 end
 
 function OnAsyncTime(msg)
-	local tb = thrift.ScAsyncTime:new{}
-	tb.time = skynet.time()
+	local tb = ScAsyncTime:new{}
+	tb.time = skynet.time() * 1000
 	local msgbody = encode(tb)
 	return msgpack.pack(message.SCASYNCTIME, msgbody)
 end

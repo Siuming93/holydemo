@@ -1,7 +1,5 @@
-
---require "TBinaryProtocol"
---require "TMemoryBuffer"
-
+require "TBinaryProtocol"
+require "TMemoryBuffer"
 
 function decode(msg, data)
     local transport = TMemoryBuffer:new{}
@@ -18,7 +16,8 @@ function encode(msg)
     local transport = TMemoryBuffer:new{}
     local protocol = TBinaryProtocol:new {
         trans = transport
-    }
-    msg.wirte(protocol)
-    return transport.getBuffer()
+	}
+    print("encode",msg.write)
+    msg:write(protocol)
+    return transport:getBuffer()
 end

@@ -44,7 +44,6 @@ function TMemoryBuffer:resetBuffer(buf)
   if buf then
     self.buffer = buf
     self.bufferSize = string.len(buf)
-    print("resetBuffer",string.len(buf))
   else
     self.buffer = ''
     self.bufferSize = 1024

@@ -1,8 +1,11 @@
-local message = require "message"
 local skynet = require "skynet"
+local message = require "message"
+local msgpack = require "msgpack.core"
 local socket = require "socket"
 local netpack = require "netpack"
-local msgpack = require "msgpack.core"
+require "msgUtil"
+require "protocol_ttypes"
+require "skynet.manager"
 
 require "skynet.manager"
 
@@ -11,7 +14,6 @@ local CMD = {}
 local player_table = {}
 
 CMD.dispatch = function (opcode, msg, agent, ...)
-	print("scene opcode", opcode)
 	local id = agent.player_info.id;
 	local client_fd = agent.client_fd
     if opcode == message.CSENTERSCENE%10000 then
@@ -33,20 +35,21 @@ CMD.disconect = function (agent)
 end
 
 function enterscene(id, agent, client_fd)
+	print("enterscene")
 	local info = initplayerposition(id)
 	player_table[id] = info
 	player_table[id].agent = agent;
-	local selfTb = {}
+	local selfTb = ScEnterScene:new{};
 	selfTb.id = id
 	selfTb.result = true
-	local selfMsg = protobuf.encode("Monster.Protocol.ScEnterScene", selfTb)
+	local selfMsg = encode(selfTb)
 	local package = msgpack.pack(message.SCENTERSCENE, selfMsg)
 	
 	send_response(agent.client_fd, package)
-	local broadTb = {}
+	local broadTb = ScOtherRoleEnterScene:new{}
 	broadTb.id = id
-	broadTb.posInfo = info.posInfo
-	local broadMsg = protobuf.encode("Monster.Protocol.ScOtherRoleEnterScene", broadTb)
+	broadTb.posInfo = getRolePosMsg(id)
+	local broadMsg = encode(broadTb)
 	local package = msgpack.pack(message.SCOTHERROLEENTERSCENE, broadMsg)
 	sendAllOtherPosInfo(id, client_fd)
 	broadcastpackage(broadMsg, id)
@@ -57,70 +60,66 @@ function leaveScene(id)
 end
 
 function playerStartMove(id, data)
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerStartMove", data)
-	if not msg then 
-		print(" playerStartMove decode failure data:" ..data)
-		return
-	end
+	local msg = decode(CsPlayerStartMove:new{}, data)
 	local info = player_table[id]
 	info.isMove = true
 	info.posInfo.posX = msg.posInfo.posX
-	--info.posInfo.posY = msg.posInfo.posY
-	--info.posInfo.angle =  msg.posInfo.angle
-	local tb = {}
+	info.posInfo.posY = msg.posInfo.posY
+	info.posInfo.angle =  msg.posInfo.angle
+	local tb = CsPlayerStartMove:new{}
 	tb.id = id;
-	--tb.time = skynet.time()
-	tb.posInfo = info.posInfo
-
-	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerStartMove", tb)
+	tb.time = tonumber(tostring(msg.time))
+	tb.posInfo = getRolePosMsg(id)
+	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERSTARTMOVE, msgbody)
-	print("ScPlayerStartMove")
 	broadcastpackage(package, id)
 end
 
 function playerEndMove(id, data, client_fd)
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerEndMove", data)
-		if not msg then 
-		print("playerEndMovedecode failure data len:".. string.len(data))
-		return
-	end
+	local msg = decode(CsPlayerEndMove:new{}, data)
+
  	local info = player_table[id]
 	info.isMove = false;
-	--info.posInfo.posX = msg.posInfo.posX
-	--info.posInfo.posY = msg.posInfo.posY
-	--info.posInfo.angle =  msg.posInfo.angle
+	info.posInfo.posX = msg.posInfo.posX
+	info.posInfo.posY = msg.posInfo.posY
+	info.posInfo.angle =  msg.posInfo.angle
 
-	local tb = {}
+	local tb = ScPlayerEndMove:new{}
 	tb.id = id;
-	tb.posInfo = info.posInfo
+	tb.posInfo = getRolePosMsg(id)
 
-	local msgbody = protobuf.encode("Monster.Protocol.ScPlayerEndMove", tb)
+	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERENDMOVE, msgbody)
 	broadcastpackage(package, id)
 end
 
 function playerUpdateMoveDir(id, data, client_fd)
-	local msg = protobuf.decode("Monster.Protocol.CsPlayerUpdateMoveDir", data)
-	if not msg then 
-		print("decode failure data:" ..data)
-		return
-	end
-	if msg then
-		local info = player_table[id]
-		info.posInfo = msg.posInfo
+	local msg = decode(CsPlayerUpdateMoveDir:new{}, data)
 
-		local tb = {}
-		tb.id = id;
-		tb.time = msg.time;
-		tb.posInfo = msg.posInfo
-		local msgbody = protobuf.encode("Monster.Protocol.ScPlayerUpdateMoveDir", tb)
-		local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
-		broadcastpackage(package, id)
-	end
+	local info = player_table[id]
+	info.posInfo = msg.posInfo
+
+	local tb = ScPlayerUpdateMoveDir:new{}
+	tb.id = id;
+	tb.time = tonumber(msg.time);
+	tb.posInfo =getRolePosMsg(id)
+	local msgbody = encode(tb)
+	local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
+	broadcastpackage(package, id)
+end
+
+function getRolePosMsg(id)
+	local info = player_table[id]
+	local msg = PosInfo:new{}
+	msg.posX = info.posInfo.posX
+	msg.posY = info.posInfo.posY
+	msg.angle = info.posInfo.angle
+	return msg
+	
 end
 
 function playerAsyncPosAndDir(id, data)
-	local msg = protobuf.decode("Monster.Protocol.CsAsyncPlayerPos", data)
+	local msg = decode(CsPlayerAsyncPosAndDir:new{}, data)
 	if msg then
 		local info = player_table[id]
 		info.dirX = msg.posInfo.dirX;
@@ -131,25 +130,23 @@ function playerAsyncPosAndDir(id, data)
 end
 
 function sendAllOtherPosInfo(id, client_fd)
-	local scAllPlayerInfo = {infos = {}}
+	local scAllPlayerInfo = ScAllPlayerPosInfo:new{}
+	scAllPlayerInfo.infos = {}
 	local index = 1
 
 	for k,v in pairs(player_table) do
 		if k ~= id then
-			local playerPosInfo = {}
+			local playerPosInfo = PlayerPosInfo:new{}
 			playerPosInfo.posInfo = {}
 			playerPosInfo.id = k;
-			playerPosInfo.posInfo.posX = v.posX;
-			playerPosInfo.posInfo.posY = v.posY;
-			playerPosInfo.posInfo.dirX = v.dirX;
-			playerPosInfo.posInfo.dirY = v.dirY;
+			playerPosInfo.posInfo = getRolePosMsg(k)
 			playerPosInfo.isMove = v.isMove;
 			scAllPlayerInfo.infos[index] = playerPosInfo
 		index = index + 1
 		end
 	end
 
-	local msgbody = protobuf.encode("Monster.Protocol.ScAllPlayerPosInfo", scAllPlayerInfo)
+	local msgbody = encode(scAllPlayerInfo)
 	local package = msgpack.pack(message.SCALLPLAYERPOSINFO, msgbody)
 	send_response(client_fd, package)
 end
@@ -186,4 +183,6 @@ skynet.start(function(...)
 		f = CMD[cmd]
 		skynet.ret(skynet.pack(f(...)))	
 	end)
+
+	skynet.register "leitaiservice"
 end)
