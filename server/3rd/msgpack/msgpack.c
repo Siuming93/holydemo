@@ -21,11 +21,11 @@ static int _unpack(lua_State *L)
 	
 	memcpy(buffer, data, 4);
 	msg = data+4;
-	for(int i=0; i< size - 4;i++)
-	{
-		printf("%d ", msg[i]);
-	}
-	printf("\n");
+	// for(int i=0; i< size - 4;i++)
+	// {
+	// 	printf("%d ", msg[i]);
+	// }
+	// printf("\n");
 
 	msgno = (buffer[0] << 24) | (buffer[1] << 16) | (buffer[2] << 8) | buffer[3];
 	

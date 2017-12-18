@@ -15,7 +15,7 @@ local player_info = {}
 local agentInterface ={}
 
 function send_response(package)
-	--print("package",package)
+	print("package",package)
 	--print("client_fd",client_fd)
 	socket.write(client_fd, netpack.pack(package))
 end
@@ -26,13 +26,12 @@ skynet.register_protocol {
 	unpack = function (msg, sz)
 		return skynet.tostring(msg,sz)
 	end,
-	dispatch = function(_, _, msg)
-		--print("------------client dispacth-----------")
-		
+	dispatch = function(_, _, msg)		
 		data = msgpack.unpack(msg)
-		module = math.floor(data.msgno / 100)	
+		module = msgId[math.floor(data.msgno / 100)]	
 		opcode = data.msgno%10000
 		local ok, result
+		print("msgno = ", data.msgno)
 		--login
 		if data.msgno == message.CSLOGIN then
 			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg)
@@ -50,14 +49,10 @@ skynet.register_protocol {
 			return
 		end
 
-		if msgId[module] == "leitaiservice" then
-			pcall(skynet.call, "leitaiservice", "lua", "dispatch", opcode, data.msg, agentInterface)
-			return
-		end
-
-		if msgId[module] then
-			ok, result = pcall(skynet.call, msgId[module], "lua", "dispatch", opcode, data.msg, agentInterface)
-			if ok then
+		if module then
+			print(module)
+			ok, result = pcall(skynet.call, module, "lua", "dispatch", opcode, data.msg, agentInterface)
+			if ok and result then
 				send_response(result)
 			else
 				print("role error")
