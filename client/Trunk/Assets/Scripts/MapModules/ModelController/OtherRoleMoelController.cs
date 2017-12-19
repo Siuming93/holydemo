@@ -37,6 +37,7 @@ public class OtherRoleMoelController : BaseModelController
     public void UpdateMoveDir(float angle)
     {
         moveDir = MathUtil.GetCoordinate(angle);
+        Debug.Log("angle:" + angle);
         LookAt(angle);
     }
     protected void Update()

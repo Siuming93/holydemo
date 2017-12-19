@@ -11,22 +11,22 @@ public class WorldRoleInfoVO
     {
         this.id = info.Id;
         this.posInfo.posX = info.PosInfo.PosX;
-        //this.posInfo.posY = info.posInfo.posY;
-        //this.posInfo.angle = info.posInfo.angle;
+        this.posInfo.posY = info.PosInfo.PosY;
+        this.posInfo.angle = info.PosInfo.Angle;
         this.isMove = info.IsMove;
     }
     public void Update(PosInfo pos)
     {
         this.posInfo.posX = pos.PosX;
-        //this.posInfo.posY = pos.posY;
-        //this.posInfo.angle = pos.angle;
+        this.posInfo.posY = pos.PosY;
+        this.posInfo.angle = pos.Angle;
     }
 
     public void Update(PosInfo pos, bool isMove, double time)
     {
         this.posInfo.posX = pos.PosX;
-        //this.posInfo.posY = pos.posY;
-        //this.posInfo.angle = pos.angle;
+        this.posInfo.posY = pos.PosY;
+        this.posInfo.angle = pos.Angle;
         this.isMove = isMove;
         this.time = time;
     }
@@ -34,8 +34,8 @@ public class WorldRoleInfoVO
     public void Update(PosInfo pos, bool isMove)
     {
         this.posInfo.posX = pos.PosX;
-        //this.posInfo.posY = pos.posY;
-        //this.posInfo.angle = pos.angle;
+        this.posInfo.posY = pos.PosY;
+        this.posInfo.angle = pos.Angle;
         this.isMove = isMove;
     }
 

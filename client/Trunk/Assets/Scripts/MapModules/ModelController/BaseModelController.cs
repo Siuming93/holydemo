@@ -89,13 +89,13 @@ public abstract class BaseModelController
     {
         if (model != null)
         {
-            //if (_rotateTweener != null)
-            //{
-            //    _rotateTweener.Kill();
-            //}
-            //float duration = (model.transform.localEulerAngles.y + (angle - 90))/360*0.5f;
-            //_rotateTweener = model.transform.DOLocalRotate(new Vector3(0, -(angle - 90), 0), duration);
-            model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
+            if (_rotateTweener != null)
+            {
+                _rotateTweener.Kill();
+            }
+            float duration = (model.transform.localEulerAngles.y + (angle - 90)) / 360 * 0.5f;
+            _rotateTweener = model.transform.DOLocalRotate(new Vector3(0, -(angle - 90), 0), duration);
+            //model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
         }
     }
 

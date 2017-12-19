@@ -37,12 +37,20 @@ public class LeitaiCharcterProxy : BaseProxy
     {
         ScOtherRoleEnterScene msg = data as ScOtherRoleEnterScene;
         long roleId = msg.Id;
-        var vo = new WorldRoleInfoVO();
-        vo.Update(msg.PosInfo);
-        _roleMap.Add(roleId, vo);
-        _roleList.Add(vo);
+        WorldRoleInfoVO vo;
+        if (!_roleMap.TryGetValue(roleId, out vo))
+        {
+            vo = new WorldRoleInfoVO();
+            _roleMap.Add(roleId, vo);
+            _roleList.Add(vo);
+            vo.Update(msg.PosInfo);
 
-        SendNotification(NotificationConst.OTHER_ROLE_ENTER_SCENE, vo);
+            SendNotification(NotificationConst.OTHER_ROLE_ENTER_SCENE, vo);
+        }
+        else
+        {
+            vo.Update(msg.PosInfo);
+        }
     }
 
 

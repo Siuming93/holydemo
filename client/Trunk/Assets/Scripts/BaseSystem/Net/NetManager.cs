@@ -127,7 +127,6 @@ namespace Monster.Net
                 return;
 
             int msgNo = (curBytes[2] << 24) + (curBytes[3] << 16) + (curBytes[4] << 8) + (curBytes[5]);
-            Debug.Log("Receive Msg:" + msgNo);
 
             byte[] bytes = new byte[needLen - 6];
             for (int i = 0; i < bytes.Length; i++)

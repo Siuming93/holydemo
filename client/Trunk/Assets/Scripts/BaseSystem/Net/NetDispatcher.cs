@@ -30,6 +30,14 @@ namespace Monster.Net
         public void Dispatch(Protocol proto)
         {
             TBase msg = MsgIDDefineDic.Instance.CreatMsg(proto.msgNo);
+
+            Debug.Log("Receive Msg:" + MsgIDDefineDic.Instance.GetMsgType(proto.msgNo));
+            //var str = "";
+            //foreach (var b in proto.buffer)
+            //{
+            //    str += " " + b.ToString();
+            //}
+            //Debug.Log(str);
             msg.Read(new TBinaryProtocol(new TMemoryBuffer(proto.buffer)));
             //Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
 
