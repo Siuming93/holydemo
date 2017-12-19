@@ -453,13 +453,13 @@ lpack(lua_State *L) {
 	write_size(buffer, len);
 	memcpy(buffer+2, ptr, len);
 
-	// printf("lpack:\n");
+	printf("lpack:\n");
 
-	// for(int i=0;i<len+2;i++)
-	// {
-	// 	printf("%d ", buffer[i]);
-	// }
-	// printf("\n");
+	for(int i=0;i<len+2;i++)
+	{
+		printf("%d ", buffer[i]);
+	}
+	printf("\n");
 
 	lua_pushlightuserdata(L, buffer);
 	lua_pushinteger(L, len + 2);

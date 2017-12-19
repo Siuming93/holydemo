@@ -3,10 +3,10 @@ local message = require "message"
 local msgpack = require "msgpack.core"
 local socket = require "socket"
 local netpack = require "netpack"
+local long = require "liblualongnumber"
 require "msgUtil"
 require "protocol_ttypes"
 require "skynet.manager"
-
 require "skynet.manager"
 
 local CMD = {}
@@ -50,9 +50,14 @@ function enterscene(id, agent, client_fd)
 	broadTb.id = id
 	broadTb.posInfo = getRolePosMsg(id)
 	local broadMsg = encode(broadTb)
+
+	local msg2 = decode(ScOtherRoleEnterScene:new{}, broadMsg)
+	print("id",msg2.id)
+	print("posInfo",msg2.posInfo)
+
 	local package = msgpack.pack(message.SCOTHERROLEENTERSCENE, broadMsg)
 	sendAllOtherPosInfo(id, client_fd)
-	broadcastpackage(broadMsg, id)
+	broadcastpackage(package, id)
 end
 
 function leaveScene(id)
@@ -66,10 +71,11 @@ function playerStartMove(id, data)
 	info.posInfo.posX = msg.posInfo.posX
 	info.posInfo.posY = msg.posInfo.posY
 	info.posInfo.angle =  msg.posInfo.angle
-	local tb = CsPlayerStartMove:new{}
-	tb.id = id;
-	tb.time = tonumber(tostring(msg.time))
+	local tb = ScPlayerStartMove:new{}
+	tb.id = id
+	tb.time = msg.time
 	tb.posInfo = getRolePosMsg(id)
+	tb.speed = msg.speed
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERSTARTMOVE, msgbody)
 	broadcastpackage(package, id)
@@ -97,12 +103,14 @@ function playerUpdateMoveDir(id, data, client_fd)
 	local msg = decode(CsPlayerUpdateMoveDir:new{}, data)
 
 	local info = player_table[id]
-	info.posInfo = msg.posInfo
+	setRolePosMsg(id, msg.posInfo)
 
 	local tb = ScPlayerUpdateMoveDir:new{}
 	tb.id = id;
-	tb.time = tonumber(msg.time);
-	tb.posInfo =getRolePosMsg(id)
+	tb.time = msg.time;
+	tb.posInfo = msg.posInfo
+	print("angle ",msg.posInfo.angle)
+	
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
 	broadcastpackage(package, id)
@@ -115,7 +123,13 @@ function getRolePosMsg(id)
 	msg.posY = info.posInfo.posY
 	msg.angle = info.posInfo.angle
 	return msg
-	
+end
+
+function setRolePosMsg(id, posInfo)
+	local info = player_table[id]
+	info.posInfo.posX = posInfo.posX 
+	info.posInfo.posY = posInfo.posY
+	info.posInfo.angle = posInfo.angle
 end
 
 function playerAsyncPosAndDir(id, data)

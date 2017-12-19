@@ -17,7 +17,6 @@ function encode(msg)
     local protocol = TBinaryProtocol:new {
         trans = transport
 	}
-    print("encode",msg.write)
     msg:write(protocol)
     return transport:getBuffer()
 end

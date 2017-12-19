@@ -15,7 +15,7 @@ local player_info = {}
 local agentInterface ={}
 
 function send_response(package)
-	print("package",package)
+	--print("package",package)
 	--print("client_fd",client_fd)
 	socket.write(client_fd, netpack.pack(package))
 end
@@ -50,10 +50,11 @@ skynet.register_protocol {
 		end
 
 		if module then
-			print(module)
 			ok, result = pcall(skynet.call, module, "lua", "dispatch", opcode, data.msg, agentInterface)
-			if ok and result then
-				send_response(result)
+			if ok then
+				if result then
+					send_response(result)
+				end
 			else
 				print("role error")
 			end

@@ -2,8 +2,9 @@ local skynet = require "skynet"
 local message = require "message"
 local msgpack = require "msgpack.core"
 require "msgUtil"
-require ('protocol_ttypes')
+require "protocol_ttypes"
 require "skynet.manager"
+require "liblualongnumber"
 
 
 
@@ -22,9 +23,9 @@ end
 
 function OnCsLogin (msg, fd)
 	local data = decode(CsLogin:new{}, msg)
-	local accountId = tostring(data.accountid)
+	local accountId = data.accountid
 	
-	local sql = "select * from table tb_account where id = '"..accountId.."' "
+	local sql = "select * from table tb_account where id = '"..tostring(accountId).."' "
 	local ok, result = pcall(skynet.call, "dbservice", "lua", "query", sql)	
 
 	if ok then
@@ -38,7 +39,7 @@ function OnCsLogin (msg, fd)
 	tb.result = 1
 
 	local msgbody =  encode(tb)
-	return msgpack.pack(message.SCLOGIN, msgbody), accountId
+	return msgpack.pack(message.SCLOGIN, msgbody), tostring(accountId)
 end
 
 function OnAsyncTime(msg)
