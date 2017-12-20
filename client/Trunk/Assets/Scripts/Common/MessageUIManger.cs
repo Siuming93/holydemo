@@ -2,14 +2,14 @@
 using System.Collections.Generic;
 using System.Text;
 using UnityEngine;
- 
+
 /// <summary>
 /// 通知信息的UI管理器
 /// </summary>
 public class MessageUIManger : MonoBehaviour
 {
 
-#if DEVELOPMENT_BUILD
+#if DEVELOPMENT_BUILD ||UNITY_EDITOR
     public static MessageUIManger Instance { get; private set; }
 
 
@@ -19,40 +19,70 @@ public class MessageUIManger : MonoBehaviour
         Application.logMessageReceived += OnLogReceived;
     }
 
+    void Start()
+    {
+        scrollPos = new Vector2(Screen.width / 4, Screen.height);
+        _contentBuilder = new StringBuilder();
+    }
+
     private void OnLogReceived(string condition, string stacktrace, LogType type)
     {
-        var sber = new StringBuilder();
-        sber.AppendLine(condition);
-        sber.Append(stacktrace);
-        _printList.Add(new KeyValuePair<float, string>(Time.realtimeSinceStartup, sber.ToString()));
+        _logInfos.Add(new KeyValuePair<float, string>(Time.realtimeSinceStartup, condition));
+        _stacktraceInfos.Add(new KeyValuePair<float, string>(Time.realtimeSinceStartup, stacktrace));
     }
 
-    void FixedUpdate()
+    private List<KeyValuePair<float, string>> _logInfos = new List<KeyValuePair<float, string>>();
+    private List<KeyValuePair<float, string>> _stacktraceInfos = new List<KeyValuePair<float, string>>();
+    private bool _showStack = false;
+    private bool _showLog = false;
+    private int _fontSize = 24;
+    private Vector2 scrollPos;
+    private StringBuilder _contentBuilder;
+
+    void OnGUI()
     {
-        var curTime = Time.realtimeSinceStartup;
-        for (int i = 0; i < _printList.Count; i++)
+        GUILayout.Label(" \n");
+        GUILayout.BeginHorizontal(GUILayout.MaxWidth(400));
+        GUI.skin.label.fontSize = _fontSize;
+        GUI.skin.button.fontSize = _fontSize;
+        if (GUILayout.Button(" Log "))
         {
-            var cur = _printList[i];
-            if (curTime - cur.Key >= 20)
-            {
-                _printList.Remove(cur);
-            }
+            _showLog = !_showLog;
         }
-    }
-
-    private List<KeyValuePair<float, string>> _printList = new List<KeyValuePair<float, string>>();
-
-
-     void OnGUI()
-    {
-        GUILayout.BeginScrollView(new Vector2(Screen.width / 4, Screen.height));
-        GUILayout.BeginVertical();
-        for (int i = 0; i < _printList.Count; i++)
+        if (GUILayout.Button("Stacktrace"))
         {
-            GUILayout.Label(_printList[i].Value);
+            _showStack = !_showStack;
+        }
+        if (GUILayout.Button(" + "))
+        {
+            _fontSize++;
+        }
+        if (GUILayout.Button(" - "))
+        {
+            _fontSize--;
+        }
+        if (GUILayout.Button(" Clear "))
+        {
+            _logInfos.Clear();
+            _stacktraceInfos.Clear();
+        }
+        GUILayout.EndHorizontal();
+        if (!_showLog)
+            return;
+        scrollPos = GUILayout.BeginScrollView(scrollPos);
+        GUILayout.BeginVertical();
+        for (int i = 0; i < _logInfos.Count; i++)
+        {
+            var content = _contentBuilder.AppendLine(_logInfos[i].Value);
+            if (_showStack)
+                content.Append(_stacktraceInfos[i].Value);
+            GUILayout.Label(content.ToString(), GUILayout.MaxWidth(1000));
+            _contentBuilder.Remove(0, _contentBuilder.Length);
         }
         GUILayout.EndVertical();
         GUILayout.EndScrollView();
+
+
     }
 #else
 
