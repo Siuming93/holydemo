@@ -1,10 +1,8 @@
 ﻿using System;
 using UnityEngine;
-using System.Collections;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using System.IO;
 using Thrift.Protocol;
 using Thrift.Transport;
 
@@ -103,26 +101,33 @@ namespace Monster.Net
                 if (len == 0)
                     continue;
 
-                UnPackage(bytes, len);
+                WriteBuffer(bytes, len);
             }
 
             Debug.LogError("接收  结  结束了~~");
         }
 
-        private int curLen = 0;
-        private byte[] curBytes = new byte[BUFFER_SIZE * 2];
-        private void UnPackage(byte[] newBytes, int len)
+        private void WriteBuffer(byte[] newBytes, int len)
         {
-            for (int i = 0; i < len; i++)
+            Debug.Log("Start Receive Msg len "+ len);
+
+             for (int i = 0; i < len; i++)
             {
                 curBytes[curLen] = newBytes[i];
                 curLen++;
             }
-
+            UnPackage();
+        }
+        private int curLen = 0;
+        private string curtime = "";
+        private byte[] curBytes = new byte[BUFFER_SIZE * 2];
+        private void UnPackage()
+        {
             if (curLen < 6)
                 return;
 
             int needLen = (curBytes[0] << 8) + (curBytes[1]) + 2;
+
             if (curLen < needLen)
                 return;
 
@@ -142,6 +147,8 @@ namespace Monster.Net
             {
                 curBytes[i] = curBytes[i + needLen];
             }
+
+            UnPackage();
         }
 
         private void SendFunc()
@@ -193,7 +200,7 @@ namespace Monster.Net
         public void SendMessage(TBase msg)
         {
             var no = MsgIDDefineDic.Instance.GetMsgID(msg.GetType());
-            //Debug.LogWarning("Send Message :" + msg.GetType());
+            Debug.LogWarning("Send Message :" + msg.GetType() + "\n" + msg.ToString());
             var protocol = new Protocol()
             {
                 msgNo = no,
