@@ -26,6 +26,10 @@ public abstract class BaseModelController
 
     protected Animator animator { set; get; }
 
+    protected int angle;
+    protected int posX;
+    protected int posY;
+
 
     #region public funcs
     #region load
@@ -77,15 +81,15 @@ public abstract class BaseModelController
         {
             return new ModelPosVO()
             {
-                posX = model.transform.localPosition.x,
-                posY = model.transform.localPosition.z,
-                angle =  -(model.transform.localEulerAngles.y - 90),
+                posX = (int)model.transform.localPosition.x,
+                posY = (int)model.transform.localPosition.z,
+                angle = angle,
             };
         }
     }
 
     protected Tweener _rotateTweener;
-    public void LookAt(float angle)
+    public void LookAt(int angle)
     {
         if (model != null)
         {
@@ -93,6 +97,7 @@ public abstract class BaseModelController
             {
                 _rotateTweener.Kill();
             }
+            this.angle = angle;
             float duration = (model.transform.localEulerAngles.y + (angle - 90)) / 360 * 0.5f;
             _rotateTweener = model.transform.DOLocalRotate(new Vector3(0, -(angle - 90), 0), duration);
             //model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);

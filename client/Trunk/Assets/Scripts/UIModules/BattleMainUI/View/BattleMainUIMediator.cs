@@ -106,19 +106,21 @@ public class BattleMainUIMediator : AbstractMediator
     }
     private void OnSkillBtn3Click()
     {
+        NetManager.Instance.SendMessage(new CsAsyncTime() { });
         _proxy.UseSkill(_proxy.skill3VO);
     }
     private void OnStickMovementStart(VirtualStick arg1, Vector2 arg2)
     {
         var pos = GetPlayerPosInfo();
-        float angle = arg1.Angle;
+        int angle = arg1.Angle;
         NetManager.Instance.SendMessage(new CsPlayerStartMove()
         {
             Time = GameConfig.Time,
-            PosInfo = new PosInfo() { PosX = (int)pos.posX, PosY = (int)pos.posY, Angle = (int)angle },
+            PosInfo = new PosInfo() { PosX = pos.posX, PosY = pos.posY, Angle = (int)angle },
             Speed = (int)RoleProperty.RunSpeed,
         });
         _lastAngle = angle;
+        Debug.Log(new PosInfo() { PosX = pos.posX, PosY = pos.posY, Angle = (int)angle });
 
         SendNotification(NotificationConst.SELF_START_MOVE, angle);
     }
@@ -132,7 +134,7 @@ public class BattleMainUIMediator : AbstractMediator
     private float _lastAngle;
     private void OnStickMovement(VirtualStick stick, Vector2 dir)
     {
-        float angle = stick.Angle;
+        int angle = stick.Angle;
         if (Mathf.Abs(_lastAngle - angle )<20)
             return;
         var pos = GetPlayerPosInfo();

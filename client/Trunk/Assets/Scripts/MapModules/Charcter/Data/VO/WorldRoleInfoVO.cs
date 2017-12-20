@@ -39,14 +39,14 @@ public class WorldRoleInfoVO
         this.isMove = isMove;
     }
 
-    public void Update(float posX, float posY, float angle)
+    public void Update(int posX, int posY, int angle)
     {
         this.posInfo.posX = posX;
         this.posInfo.posY = posY;
         this.posInfo.angle = angle;
     }
 
-    public void UpdateDir(float angle)
+    public void UpdateDir(int angle)
     {
         this.posInfo.angle = angle;
     }
@@ -54,7 +54,7 @@ public class WorldRoleInfoVO
 
 public class ModelPosVO
 {
-    public double posX;
-    public double posY;
-    public double angle;
+    public int posX;
+    public int posY;
+    public int angle;
 }

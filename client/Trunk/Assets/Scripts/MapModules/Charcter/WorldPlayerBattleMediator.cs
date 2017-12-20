@@ -61,7 +61,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private void OnSelfUpdateMoveDir(object obj)
     {
-        _playerController.UpdateMoveDir((float)obj);
+        _playerController.UpdateMoveDir((int)obj);
     }
 
     private void OnSelfEndMove(object obj)
@@ -71,7 +71,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private void OnSelfStartMove(object obj)
     {
-        _playerController.StartMove((float)obj);
+        _playerController.StartMove((int)obj);
     }
 
     private void OnOtherRoleStartMove(object obj)
@@ -83,7 +83,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
             Debug.LogError("OnOtherRoleStartMove No Controller");
             return;
         }
-        controller.StartMove((float)roleVO.posInfo.angle);
+        controller.StartMove(roleVO.posInfo.angle);
     }
 
     private void OnOtherRoleUpdateMoveDir(object obj)
@@ -95,7 +95,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
             Debug.LogError("OnOtherRoleUpdateMoveDir No Controller");
             return;
         }
-        controller.UpdateMoveDir((float)roleVO.posInfo.angle);
+        controller.UpdateMoveDir(roleVO.posInfo.angle);
     }
 
     private void OnOtherRoleEndMove(object obj)
@@ -107,7 +107,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
             Debug.LogError("OnOtherRoleEndMove No Controller");
             return;
         }
-        controller.EndMove();
+        controller.EndMove(roleVO);
     }
     private void OnOtherRoleEnterScene(object obj)
     {

@@ -10,7 +10,7 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
     public float radius = 40.0f;
     public bool isPressed { get; private set; }
 
-    public float Angle = 0f;
+    public int Angle;
 
     public event Action<VirtualStick, Vector2> OnStickMovementStart;
     public event Action<VirtualStick, Vector2> OnJoystickMovement;
@@ -54,20 +54,20 @@ public class VirtualStick : MonoBehaviour, IPointerDownHandler, IDragHandler, IP
         var handleOffset = GetJoystickOffset(eventData);
         this.stickHandlerRectTransform.anchoredPosition = handleOffset;
         this.Coordinates = handleOffset.normalized;
+        Angle = Mathf.RoundToInt(Mathf.Atan2(Coordinates.y, Coordinates.x) * (180 / Mathf.PI));
 
-        if (handleOffset.sqrMagnitude >= 0.1f && !_notifyStart)
+        if (handleOffset.sqrMagnitude >= 0.2f && !_notifyStart)
         {
             if (OnStickMovementStart != null)
                 OnStickMovementStart(this, Coordinates);
             _notifyStart = true;
             return;
         }
+
         if (!_notifyStart)
         {
             return;
         }
-
-        Angle = Mathf.Atan2(Coordinates.y, Coordinates.x) * 180 / Mathf.PI;
 
         if (OnJoystickMovement != null)
         {

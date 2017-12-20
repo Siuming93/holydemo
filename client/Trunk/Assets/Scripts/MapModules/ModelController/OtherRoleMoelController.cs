@@ -11,7 +11,7 @@ public class OtherRoleMoelController : BaseModelController
         Async(roleInfo);
     }
 
-    public void StartMove(float angle)
+    public void StartMove(int angle)
     {
         isMove = true;
         moveDir = MathUtil.GetCoordinate(angle);
@@ -24,7 +24,7 @@ public class OtherRoleMoelController : BaseModelController
         }
     }
 
-    public void EndMove()
+    public void EndMove(WorldRoleInfoVO roleInfo)
     {
         isMove = false;
         if (addListener)
@@ -32,9 +32,12 @@ public class OtherRoleMoelController : BaseModelController
             UpdateProxy.Instance.UpdateEvent -= Update;
             addListener = false;
         }
+        MoveTo(new Vector3(roleInfo.posInfo.posX,0f, roleInfo.posInfo.posY));
+        LookAt(roleInfo.posInfo.angle);
         PlayMoveAnimation(false);
     }
-    public void UpdateMoveDir(float angle)
+
+    public void UpdateMoveDir(int angle)
     {
         moveDir = MathUtil.GetCoordinate(angle);
         Debug.Log("angle:" + angle);
@@ -63,7 +66,7 @@ public class OtherRoleMoelController : BaseModelController
 
     public void Async(WorldRoleInfoVO vo)
     {
-        LookAt((float)vo.posInfo.angle);
+        LookAt(vo.posInfo.angle);
         MoveTo(new Vector3((float)vo.posInfo.posX, 0f, (float)vo.posInfo.posY));
     }
 }

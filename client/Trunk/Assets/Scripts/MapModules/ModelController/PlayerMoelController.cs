@@ -21,7 +21,7 @@ public class PlayerMoelController : BaseModelController
     }
 
     protected bool addListener = false;
-    public void StartMove(float angle)
+    public void StartMove(int angle)
     {
         isMove = true;
         moveDir = MathUtil.GetCoordinate(angle);
@@ -44,7 +44,7 @@ public class PlayerMoelController : BaseModelController
         PlayMoveAnimation(false);
     }
 
-    public void UpdateMoveDir(float angle)
+    public void UpdateMoveDir(int angle)
     {
         moveDir = MathUtil.GetCoordinate(angle);
         LookAt(angle);
