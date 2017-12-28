@@ -33,11 +33,11 @@ function CsPing:write(oprot)
   oprot:writeStructEnd()
 end
 
-CsPong = __TObject:new{
+ScPong = __TObject:new{
 
 }
 
-function CsPong:read(iprot)
+function ScPong:read(iprot)
   iprot:readStructBegin()
   while true do
     local fname, ftype, fid = iprot:readFieldBegin()
@@ -51,8 +51,8 @@ function CsPong:read(iprot)
   iprot:readStructEnd()
 end
 
-function CsPong:write(oprot)
-  oprot:writeStructBegin('CsPong')
+function ScPong:write(oprot)
+  oprot:writeStructBegin('ScPong')
   oprot:writeFieldStop()
   oprot:writeStructEnd()
 end
