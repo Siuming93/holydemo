@@ -20,10 +20,11 @@ namespace Monster.BaseSystem
         /// </summary>
         public static long Time
         {
-            get { return (int)((UnityEngine.Time.time - lastLocaleTime)*1000) + lastServerTime; }
+            get { return lastServerTime; }
         }
 
-        public static float lastLocaleTime;
+        public static float Rtt { set; get; }
+
         public static long lastServerTime;
     }
 }

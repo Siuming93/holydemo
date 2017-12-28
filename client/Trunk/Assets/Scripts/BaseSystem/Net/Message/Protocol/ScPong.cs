@@ -21,10 +21,10 @@ namespace RedDragon.Protocol
   #if !SILVERLIGHT
   [Serializable]
   #endif
-  public partial class CsPong : TBase
+  public partial class ScPong : TBase
   {
 
-    public CsPong() {
+    public ScPong() {
     }
 
     public void Read (TProtocol iprot)
@@ -60,7 +60,7 @@ namespace RedDragon.Protocol
       oprot.IncrementRecursionDepth();
       try
       {
-        TStruct struc = new TStruct("CsPong");
+        TStruct struc = new TStruct("ScPong");
         oprot.WriteStructBegin(struc);
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();
@@ -72,7 +72,7 @@ namespace RedDragon.Protocol
     }
 
     public override string ToString() {
-      StringBuilder __sb = new StringBuilder("CsPong(");
+      StringBuilder __sb = new StringBuilder("ScPong(");
       __sb.Append(")");
       return __sb.ToString();
     }
