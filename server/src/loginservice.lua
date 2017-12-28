@@ -10,8 +10,6 @@ require "liblualongnumber"
 
 
 local CMD = {}
-local protobuf = {}
-
 CMD.dispatch = function(opcode, msg, fd)
 	if opcode == message.CSLOGIN % 10000 then
 		return OnCsLogin(msg, fd)

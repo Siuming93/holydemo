@@ -96,6 +96,7 @@ function playerEndMove(id, data, client_fd)
 
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERENDMOVE, msgbody)
+	print("get endmove msg")
 	broadcastpackage(package, id)
 end
 
@@ -186,6 +187,7 @@ end
 function broadcastpackage(package, selfId)
 	for k,v in pairs(player_table) do
 		if selfId ~= k then
+			print("broad cast msg to",k)
 			send_response(v.agent.client_fd, package)
 		end
 	end

@@ -2,7 +2,7 @@
 local msgid = {
 	[100] = "loginservice",
 	[101] = "roleservice",
-	[102] = "helloworldservice",
+	[102] = "pingservice",
 	[104] = "leitaiservice"
 }
 
