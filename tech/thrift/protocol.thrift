@@ -5,7 +5,7 @@ struct CsPing
 	
 }
 
-struct CsPong
+struct ScPong
 {
 	
 }
