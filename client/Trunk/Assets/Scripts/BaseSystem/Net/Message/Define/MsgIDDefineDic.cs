@@ -27,6 +27,10 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(CsAsyncTime), 10003);
 		id2msgMap.Add(10004, typeof(ScAsyncTime));
 		msg2idMap.Add(typeof(ScAsyncTime), 10004);
+		id2msgMap.Add(10201, typeof(CsPing));
+		msg2idMap.Add(typeof(CsPing), 10201);
+		id2msgMap.Add(10202, typeof(ScPong));
+		msg2idMap.Add(typeof(ScPong), 10202);
 		id2msgMap.Add(10401, typeof(CsEnterScene));
 		msg2idMap.Add(typeof(CsEnterScene), 10401);
 		id2msgMap.Add(10402, typeof(ScEnterScene));
@@ -51,6 +55,8 @@ public class MsgIDDefineDic
 		msg2idMap.Add(typeof(ScPlayerUpdateMoveDir), 10412);
 		id2msgMap.Add(10413, typeof(ScOtherRoleEnterScene));
 		msg2idMap.Add(typeof(ScOtherRoleEnterScene), 10413);
+		id2msgMap.Add(10414, typeof(ScPlayerCheckFailured));
+		msg2idMap.Add(typeof(ScPlayerCheckFailured), 10414);
 		id2msgMap.Add(10490, typeof(CsLeaveScene));
 		msg2idMap.Add(typeof(CsLeaveScene), 10490);
 		id2msgMap.Add(10491, typeof(ScLeaveScene));
@@ -89,6 +95,12 @@ public class MsgIDDefineDic
 			case 10004:
 				msg = new ScAsyncTime();
 				break;
+			case 10201:
+				msg = new CsPing();
+				break;
+			case 10202:
+				msg = new ScPong();
+				break;
 			case 10401:
 				msg = new CsEnterScene();
 				break;
@@ -124,6 +136,9 @@ public class MsgIDDefineDic
 				break;
 			case 10413:
 				msg = new ScOtherRoleEnterScene();
+				break;
+			case 10414:
+				msg = new ScPlayerCheckFailured();
 				break;
 			case 10490:
 				msg = new CsLeaveScene();
