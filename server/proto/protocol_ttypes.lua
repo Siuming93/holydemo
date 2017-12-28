@@ -9,6 +9,54 @@
 require 'Thrift'
 require 'protocol_constants'
 
+CsPing = __TObject:new{
+
+}
+
+function CsPing:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function CsPing:write(oprot)
+  oprot:writeStructBegin('CsPing')
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+CsPong = __TObject:new{
+
+}
+
+function CsPong:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function CsPong:write(oprot)
+  oprot:writeStructBegin('CsPong')
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
 CsLogin = __TObject:new{
   accountid
 }
@@ -976,6 +1024,42 @@ function ScPlayerUseSkill:write(oprot)
   if self.skillId ~= nil then
     oprot:writeFieldBegin('skillId', TType.I32, 2)
     oprot:writeI32(self.skillId)
+    oprot:writeFieldEnd()
+  end
+  oprot:writeFieldStop()
+  oprot:writeStructEnd()
+end
+
+ScPlayerCheckFailured = __TObject:new{
+  posInfo
+}
+
+function ScPlayerCheckFailured:read(iprot)
+  iprot:readStructBegin()
+  while true do
+    local fname, ftype, fid = iprot:readFieldBegin()
+    if ftype == TType.STOP then
+      break
+    elseif fid == 1 then
+      if ftype == TType.STRUCT then
+        self.posInfo = PosInfo:new{}
+        self.posInfo:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    else
+      iprot:skip(ftype)
+    end
+    iprot:readFieldEnd()
+  end
+  iprot:readStructEnd()
+end
+
+function ScPlayerCheckFailured:write(oprot)
+  oprot:writeStructBegin('ScPlayerCheckFailured')
+  if self.posInfo ~= nil then
+    oprot:writeFieldBegin('posInfo', TType.STRUCT, 1)
+    self.posInfo:write(oprot)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
