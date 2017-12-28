@@ -1,5 +1,15 @@
 namespace csharp RedDragon.Protocol
 
+struct CsPing
+{
+	
+}
+
+struct CsPong
+{
+	
+}
+
 struct CsLogin
 {
 	1:required i64 accountid;
@@ -123,4 +133,9 @@ struct ScPlayerUseSkill
 {
 	1:required i64 id;
 	2:required i32 skillId;
+}
+
+struct ScPlayerCheckFailured
+{
+	1:required PosInfo posInfo;
 }
