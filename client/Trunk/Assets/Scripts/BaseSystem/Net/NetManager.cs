@@ -109,7 +109,7 @@ namespace Monster.Net
 
         private void WriteBuffer(byte[] newBytes, int len)
         {
-            Debug.Log("Start Receive Msg len "+ len);
+            //Debug.Log("Start Receive Msg len "+ len);
 
              for (int i = 0; i < len; i++)
             {

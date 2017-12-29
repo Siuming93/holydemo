@@ -31,7 +31,7 @@ namespace Monster.Net
         {
             TBase msg = MsgIDDefineDic.Instance.CreatMsg(proto.msgNo);
 
-            Debug.Log("Receive Msg:" + MsgIDDefineDic.Instance.GetMsgType(proto.msgNo));
+            //Debug.Log("Receive Msg:" + MsgIDDefineDic.Instance.GetMsgType(proto.msgNo));
             //var str = "";
             //foreach (var b in proto.buffer)
             //{
