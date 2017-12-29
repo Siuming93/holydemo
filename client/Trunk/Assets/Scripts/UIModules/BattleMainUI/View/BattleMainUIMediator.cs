@@ -120,7 +120,6 @@ public class BattleMainUIMediator : AbstractMediator
             Speed = (int)RoleProperty.RunSpeed,
         });
         _lastAngle = angle;
-        Debug.Log(new PosInfo() { PosX = pos.posX, PosY = pos.posY, Angle = (int)angle });
 
         SendNotification(NotificationConst.SELF_START_MOVE, angle);
     }
@@ -134,7 +133,7 @@ public class BattleMainUIMediator : AbstractMediator
     private float _lastAngle;
     private void OnStickMovement(VirtualStick stick, Vector2 dir)
     {
-        int angle = stick.Angle;
+        int angle = (int)(stick.Angle -22.5)/45*45;
         if (Mathf.Abs(_lastAngle - angle )<20)
             return;
         var pos = GetPlayerPosInfo();
@@ -199,11 +198,10 @@ public class BattleMainUIMediator : AbstractMediator
     private double _lastTime;
     private void UpdateTime()
     {
-        double time = GameConfig.Time;
-        if (time - _lastTime > 1)
+        if (GameConfig.Time - _lastTime > 1)
         {
-            _skin.timeText.text = TimeUtil.ToLongTimeString(GameConfig.Time);
-            _lastTime = time;
+            _skin.timeText.text = TimeUtil.ToLongTimeString(GameConfig.Time) + string.Format("  Ping:{0:0}",GameConfig.Rtt);
+            _lastTime = GameConfig.Time;
         }
     }
     #endregion

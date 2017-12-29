@@ -22,8 +22,9 @@ public class LeitaiCharcterProxy : BaseProxy
         RegisterMessageHandler(MsgIDDefine.ScPlayerUpdateMoveDir, OnPlayerUpdateMoveDir);
         RegisterMessageHandler(MsgIDDefine.ScPlayerStartMove, OnPlayerStartMove);
         RegisterMessageHandler(MsgIDDefine.ScOtherRoleEnterScene, OnOtherRoleEnterScene);
+        RegisterMessageHandler(MsgIDDefine.ScPlayerCheckFailured, OnMoveFailured);
+        selfPosInfo = new WorldRoleInfoVO();
     }
-
     public override void OnRemove()
     {
         UnRegisterMessageHandler(MsgIDDefine.ScAllPlayerPosInfo);
@@ -88,6 +89,7 @@ public class LeitaiCharcterProxy : BaseProxy
         var role = GetRoleVO(msg.Id);
         role.Update(msg.PosInfo, false);
         SendNotification(NotificationConst.OTHER_ROLE_END_MOVE, role);
+        Debug.Log(msg);
     }
 
     private void OnPlayerStartMove(object data)
@@ -96,6 +98,7 @@ public class LeitaiCharcterProxy : BaseProxy
         var role = GetRoleVO(msg.Id);
         role.Update(msg.PosInfo, true, msg.Time);
         SendNotification(NotificationConst.OTHER_ROLE_START_MOVE, role);
+        Debug.Log(msg);
     }
 
     private void OnPlayerUpdateMoveDir(object data)
@@ -104,7 +107,18 @@ public class LeitaiCharcterProxy : BaseProxy
         var role = GetRoleVO(msg.Id);
         role.Update(msg.PosInfo);
         SendNotification(NotificationConst.OTHER_ROLE_UPDATE_MOVE_DIR, role);
+        Debug.Log(msg);
+
     }
+
+    private WorldRoleInfoVO selfPosInfo;
+    private void OnMoveFailured(object data)
+    {
+        ScPlayerCheckFailured msg = data as ScPlayerCheckFailured;
+        selfPosInfo.Update(msg.PosInfo);
+        SendNotification(NotificationConst.ASYNC_SELF_POS, selfPosInfo);
+    }
+
 
     #region self funcs 
 

@@ -24,16 +24,16 @@ namespace RedDragon.Protocol
   public partial class PosInfo : TBase
   {
 
-    public double PosX { get; set; }
+    public int PosX { get; set; }
 
-    public double PosY { get; set; }
+    public int PosY { get; set; }
 
     public int Angle { get; set; }
 
     public PosInfo() {
     }
 
-    public PosInfo(double posX, double posY, int angle) : this() {
+    public PosInfo(int posX, int posY, int angle) : this() {
       this.PosX = posX;
       this.PosY = posY;
       this.Angle = angle;
@@ -58,16 +58,16 @@ namespace RedDragon.Protocol
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.Double) {
-                PosX = iprot.ReadDouble();
+              if (field.Type == TType.I32) {
+                PosX = iprot.ReadI32();
                 isset_posX = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
             case 2:
-              if (field.Type == TType.Double) {
-                PosY = iprot.ReadDouble();
+              if (field.Type == TType.I32) {
+                PosY = iprot.ReadI32();
                 isset_posY = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
@@ -109,16 +109,16 @@ namespace RedDragon.Protocol
         oprot.WriteStructBegin(struc);
         TField field = new TField();
         field.Name = "posX";
-        field.Type = TType.Double;
+        field.Type = TType.I32;
         field.ID = 1;
         oprot.WriteFieldBegin(field);
-        oprot.WriteDouble(PosX);
+        oprot.WriteI32(PosX);
         oprot.WriteFieldEnd();
         field.Name = "posY";
-        field.Type = TType.Double;
+        field.Type = TType.I32;
         field.ID = 2;
         oprot.WriteFieldBegin(field);
-        oprot.WriteDouble(PosY);
+        oprot.WriteI32(PosY);
         oprot.WriteFieldEnd();
         field.Name = "angle";
         field.Type = TType.I32;

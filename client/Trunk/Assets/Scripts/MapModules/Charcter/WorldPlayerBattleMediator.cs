@@ -35,6 +35,8 @@ public class WorldPlayerBattleMediator : AbstractMediator
         RegisterNotificationHandler(NotificationConst.SELF_START_MOVE, OnSelfStartMove);
         RegisterNotificationHandler(NotificationConst.SELF_END_MOVE, OnSelfEndMove);
         RegisterNotificationHandler(NotificationConst.SELF_UPDATE_MOVE_DIR, OnSelfUpdateMoveDir);
+        RegisterNotificationHandler(NotificationConst.ASYNC_SELF_POS, OnAsyncSelfPos);
+
 
         RegisterNotificationHandler(NotificationConst.OTHER_ROLE_START_MOVE, OnOtherRoleStartMove);
         RegisterNotificationHandler(NotificationConst.OTHER_ROLE_END_MOVE, OnOtherRoleEndMove);
@@ -44,6 +46,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
         _proxy = ApplicationFacade.Instance.RetrieveProxy(LeitaiCharcterProxy.NAME) as LeitaiCharcterProxy; ;
     }
+
 
     public override void OnRemove()
     {
@@ -62,6 +65,11 @@ public class WorldPlayerBattleMediator : AbstractMediator
     private void OnSelfUpdateMoveDir(object obj)
     {
         _playerController.UpdateMoveDir((int)obj);
+    }
+
+    private void OnAsyncSelfPos(object obj)
+    {
+        _playerController.ForceAsync(obj as WorldRoleInfoVO);
     }
 
     private void OnSelfEndMove(object obj)

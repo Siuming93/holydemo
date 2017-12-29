@@ -32,7 +32,7 @@ public class OtherRoleMoelController : BaseModelController
             UpdateProxy.Instance.UpdateEvent -= Update;
             addListener = false;
         }
-        MoveTo(new Vector3(roleInfo.posInfo.posX,0f, roleInfo.posInfo.posY));
+        MoveTo(new Vector3((float)roleInfo.posInfo.posX,0f, (float)roleInfo.posInfo.posY));
         LookAt(roleInfo.posInfo.angle);
         PlayMoveAnimation(false);
     }

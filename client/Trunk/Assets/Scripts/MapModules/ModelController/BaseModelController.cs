@@ -81,14 +81,17 @@ public abstract class BaseModelController
         {
             return new ModelPosVO()
             {
-                posX = (int)model.transform.localPosition.x,
-                posY = (int)model.transform.localPosition.z,
+                posX = Mathf.RoundToInt(model.transform.localPosition.x),
+                posY = Mathf.RoundToInt(model.transform.localPosition.z),
                 angle = angle,
             };
         }
     }
 
+    protected float cos;
+    protected float sin;
     protected Tweener _rotateTweener;
+    protected const float PI_DIV_180 = Mathf.PI / 180f;
     public void LookAt(int angle)
     {
         if (model != null)
@@ -101,6 +104,9 @@ public abstract class BaseModelController
             float duration = (model.transform.localEulerAngles.y + (angle - 90)) / 360 * 0.5f;
             _rotateTweener = model.transform.DOLocalRotate(new Vector3(0, -(angle - 90), 0), duration);
             //model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
+            cos = Mathf.Cos(angle * PI_DIV_180);
+            sin = Mathf.Sin(angle * PI_DIV_180);
+            //Debug.Log("angle " + angle + " cos " + cos + "sin " + sin);
         }
     }
 

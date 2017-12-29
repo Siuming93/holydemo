@@ -52,13 +52,17 @@ public class PlayerMoelController : BaseModelController
 
     protected bool isMove;
     protected Vector2 moveDir;
+    private float _lastTickTime;
     protected void Update()
     {
         if (model != null)
         {
             if (isMove)
             {
-                Vector3 delta = new Vector3(moveDir.x, 0f, moveDir.y) * RoleProperty.RunSpeed * Time.deltaTime;
+                float distance = RoleProperty.RunSpeed*Time.deltaTime;
+                float dx = distance*cos;
+                float dz = distance*sin;
+                Vector3 delta = new Vector3(dx, 0f, dz);
                 Vector3 endPos = model.transform.localPosition + delta;
                 model.transform.localPosition = endPos;
             }
@@ -66,16 +70,18 @@ public class PlayerMoelController : BaseModelController
     }
 
     protected Tweener moveTweener;
-    public void MoveTo(Vector3 pos)
+    public void MoveTo(int x, int y)
     {
         if (model != null)
         {
-            float distance = (pos - model.transform.localPosition).magnitude;
-            Debug.Log(distance);
-            if (moveTweener != null && moveTweener.IsPlaying())
-                moveTweener.Kill();
-            moveTweener = model.transform.DOLocalMove(pos, distance / RoleProperty.RunSpeed).SetEase(Ease.Linear);
+            Debug.Log("model Pos:" + model.transform.localPosition + " async Pos:" + new Vector3((float)x, 0, (float)y));
+            model.transform.position = new Vector3(x, model.transform.position.y, y);
         }
+    }
+
+    public void ForceAsync(WorldRoleInfoVO vo)
+    {
+        MoveTo(vo.posInfo.posX, vo.posInfo.posY);
     }
     #endregion
 }

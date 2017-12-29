@@ -9,6 +9,7 @@
     public const string SELF_START_MOVE = "SELFStartMove";
     public const string SELF_END_MOVE = "SELFEndMove";
     public const string SELF_UPDATE_MOVE_DIR = "SELFUpdateMoveDir";
+    public const string ASYNC_SELF_POS = "AsyncSelfPos";
 
     public const string OTHER_ROLE_ENTER_SCENE = "OtherRoleEnterScene";
     public const string OTHER_ROLE_START_MOVE = "OtherRoleStartMove";

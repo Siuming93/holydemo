@@ -10,6 +10,7 @@ public class TimeProxy : BaseProxy
     public TimeProxy(): base(NAME)
     {
         RegisterMessageHandler(MsgIDDefine.ScAsyncTime, OnAsyncServerTime);
+        RegisterMessageHandler(MsgIDDefine.ScPong, OnScPong);
         netManager.SendMessage(new CsAsyncTime() { });   
         UpdateProxy.Instance.UpdateEvent += AsyncTime;
     }
@@ -20,12 +21,17 @@ public class TimeProxy : BaseProxy
         base.OnRemove();
     }
 
+    private void OnScPong(object data)
+    {
+        GameConfig.Rtt = (UnityEngine.Time.time - _lastPingSendTime) * 1000;
+    }
 
     private void OnAsyncServerTime(object data)
     {
         ScAsyncTime msg = data as ScAsyncTime;
         GameConfig.lastServerTime = msg.Time;
     }
+    private float _lastPingSendTime;
 
     private void AsyncTime()
     {
@@ -33,6 +39,12 @@ public class TimeProxy : BaseProxy
         {
             netManager.SendMessage(new CsAsyncTime(){});
             GameConfig.lastLocaleTime = UnityEngine.Time.time; 
+        }
+
+        if (UnityEngine.Time.time - _lastPingSendTime >= 1)
+        {
+            netManager.SendMessage(new CsPing());
+            _lastPingSendTime = UnityEngine.Time.time; 
         }
     }
 }
