@@ -281,14 +281,14 @@ function PosInfo:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.DOUBLE then
-        self.posX = iprot:readDouble()
+      if ftype == TType.I32 then
+        self.posX = iprot:readI32()
       else
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.DOUBLE then
-        self.posY = iprot:readDouble()
+      if ftype == TType.I32 then
+        self.posY = iprot:readI32()
       else
         iprot:skip(ftype)
       end
@@ -309,13 +309,13 @@ end
 function PosInfo:write(oprot)
   oprot:writeStructBegin('PosInfo')
   if self.posX ~= nil then
-    oprot:writeFieldBegin('posX', TType.DOUBLE, 1)
-    oprot:writeDouble(self.posX)
+    oprot:writeFieldBegin('posX', TType.I32, 1)
+    oprot:writeI32(self.posX)
     oprot:writeFieldEnd()
   end
   if self.posY ~= nil then
-    oprot:writeFieldBegin('posY', TType.DOUBLE, 2)
-    oprot:writeDouble(self.posY)
+    oprot:writeFieldBegin('posY', TType.I32, 2)
+    oprot:writeI32(self.posY)
     oprot:writeFieldEnd()
   end
   if self.angle ~= nil then
