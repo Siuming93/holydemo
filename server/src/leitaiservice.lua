@@ -20,7 +20,7 @@ CMD.dispatch = function (opcode, msg, agent, ...)
 		enterscene(id, agent, client_fd)
 	end
 	if opcode == message.CSPLAYERSTARTMOVE%10000 then
-		playerStartMove(id, msg)
+		playerStartMove(id, msg, client_fd)
 	end
 	if opcode == message.CSPLAYERENDMOVE%10000 then
 		playerEndMove(id, msg, client_fd)
@@ -64,30 +64,59 @@ function leaveScene(id)
 	player_table[id] = nil
 end
 
-function playerStartMove(id, data)
+function playerStartMove(id, data, client_fd)
 	local msg = decode(CsPlayerStartMove:new{}, data)
+	print("startMove")
+	--local ok,curX,curY= verifyPos(id, msg.posInfo);
+	local info = player_table[id]
+	info.lastSendTime = skynet.time()
+	--if not ok then 
+	--	local ftb = ScPlayerCheckFailured:new{}
+	--	ftb.posInfo = msg.posInfo
+	--	ftb.posInfo.posX = curX;
+	--	ftb.posInfo.posY = curY;
+	--	local fmsgbody = encode(ftb)
+	--	local package = msgpack.pack(message.SCPLAYERCHECKFAILURED, fmsgbody)
+	--	send_response(client_fd, package)
+	--	return
+	--end
+
 	local info = player_table[id]
 	info.isMove = true
 	info.posInfo.posX = msg.posInfo.posX
 	info.posInfo.posY = msg.posInfo.posY
 	info.posInfo.angle =  msg.posInfo.angle
+	info.speed = msg.speed
 	local tb = ScPlayerStartMove:new{}
 	tb.id = id
-	tb.time = msg.time
+	tb.time = tostring(msg.time)
 	tb.posInfo = getRolePosMsg(id)
 	tb.speed = msg.speed
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERSTARTMOVE, msgbody)
+	print("broadcast startMove")
+	
 	broadcastpackage(package, id)
 end
 
 function playerEndMove(id, data, client_fd)
 	local msg = decode(CsPlayerEndMove:new{}, data)
 
- 	local info = player_table[id]
+	local info = player_table[id]
+	local ok,curX,curY= verifyPos(id, msg.posInfo);
+	if not ok then 
+		local ftb = ScPlayerCheckFailured:new{}
+		ftb.posInfo = msg.posInfo
+		ftb.posInfo.posX = curX;
+		ftb.posInfo.posY = curY;
+		local fmsgbody = encode(ftb)
+		local package = msgpack.pack(message.SCPLAYERCHECKFAILURED, fmsgbody)
+		send_response(client_fd, package)
+	end
+	 
 	info.isMove = false;
-	info.posInfo.posX = msg.posInfo.posX
-	info.posInfo.posY = msg.posInfo.posY
+	info.posInfo.posX = curX
+	info.posInfo.posY = curY
 	info.posInfo.angle =  msg.posInfo.angle
 
 	local tb = ScPlayerEndMove:new{}
@@ -102,15 +131,30 @@ end
 
 function playerUpdateMoveDir(id, data, client_fd)
 	local msg = decode(CsPlayerUpdateMoveDir:new{}, data)
-
+	print("playerUpdateMoveDir")
+	
+	local ok,curX,curY= verifyPos(id, msg.posInfo);
 	local info = player_table[id]
+	info.lastSendTime = skynet.time()
+	if not ok then 
+		local ftb = ScPlayerCheckFailured:new{}
+		ftb.posInfo = msg.posInfo
+		ftb.posInfo.posX = curX;
+		ftb.posInfo.posY = curY;
+		info.posInfo = ftb.posInfo
+		local fmsgbody = encode(ftb)
+		local package = msgpack.pack(message.SCPLAYERCHECKFAILURED, fmsgbody)
+		send_response(client_fd, package)
+		
+		return
+	end
 	setRolePosMsg(id, msg.posInfo)
 
 	local tb = ScPlayerUpdateMoveDir:new{}
 	tb.id = id;
 	tb.time = msg.time;
 	tb.posInfo = msg.posInfo
-	print("angle ",msg.posInfo.angle)
+	print(" broadcast playerUpdateMoveDir")
 	
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
@@ -176,8 +220,29 @@ function initplayerposition(id)
 	info.posInfo.posY = 0
 	info.posInfo.angle = 0
 	info.isMove = false
+	info.speed = 0
+	info.lastSendTime = 0
 
 	return info;
+end
+
+function verifyPos(id, posInfo)
+	local info = player_table[id]
+	local distance = (skynet.time() - info.lastSendTime) * info.speed;
+	local angle = info.posInfo.angle * math.pi/180;
+	local dx = distance * math.cos(angle);
+	local dy = distance * math.sin(angle);
+	local curX = info.posInfo.posX + dx;
+	local curY = info.posInfo.posY + dy;
+
+	if  math.abs(curX- posInfo.posX) > 2 or  math.abs(curY- posInfo.posY) > 2 then
+		print("dx",dx,"dy",dy,"time","angle",angle,"cos",math.cos(angle),"sin",math.sin(angle))
+		print("posX",posInfo.posX,"posY",posInfo.posY,"angle",posInfo.angle,"curAngle",info.posInfo.angle)
+		print("curX",curX,"curY",curY,"time",skynet.time() - info.lastSendTime, "speed", info.speed)
+		return false, math.floor(curX), math.floor(curY);
+	end
+
+	return true, math.floor(curX), math.floor(curY);
 end
 
 function send_response(client_fd, package)

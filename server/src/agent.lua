@@ -31,7 +31,7 @@ skynet.register_protocol {
 		module = msgId[math.floor(data.msgno / 100)]	
 		opcode = data.msgno%10000
 		local ok, result
-		print("msgno = ", data.msgno)
+		--print("msgno = ", data.msgno)
 		--login
 		if data.msgno == message.CSLOGIN then
 			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg)
@@ -39,6 +39,7 @@ skynet.register_protocol {
 				player_info.id = playerId
 				send_response(result)
 				agentInterface.player_info = player_info
+				print("player_info",agentInterface.player_info)				
 				return
 			end
 			return
@@ -56,7 +57,7 @@ skynet.register_protocol {
 					send_response(result)
 				end
 			else
-				print("role error")
+				print("role error", data.msgno,module)
 			end
 		else
 			print("server receive error msg")
