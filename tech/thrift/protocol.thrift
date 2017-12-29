@@ -42,8 +42,8 @@ struct ScEnterScene
 
 struct PosInfo
 {
-	1:required double posX;
-	2:required double posY;
+	1:required i32 posX;
+	2:required i32 posY;
 	3:required i32 angle;
 }
 
