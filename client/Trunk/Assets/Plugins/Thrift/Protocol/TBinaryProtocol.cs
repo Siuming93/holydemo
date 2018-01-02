@@ -197,6 +197,9 @@ namespace Thrift.Protocol
 
         public override void WriteDouble(double d)
         {
+            //modified by siuming 18.1.2
+            trans.Write(BitConverter.GetBytes(d), 0, 8);
+            return;
 #if !SILVERLIGHT
             WriteI64(BitConverter.DoubleToInt64Bits(d));
 #else
@@ -362,6 +365,10 @@ namespace Thrift.Protocol
 
         public override double ReadDouble()
         {
+            //modified by siuming 18.1.2
+            byte[] buf = new byte[8];
+            trans.ReadAll(buf, 0, 8);
+            return BitConverter.ToDouble(buf, 0);
 #if !SILVERLIGHT
             return BitConverter.Int64BitsToDouble(ReadI64());
 #else
