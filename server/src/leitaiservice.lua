@@ -66,20 +66,9 @@ end
 
 function playerStartMove(id, data, client_fd)
 	local msg = decode(CsPlayerStartMove:new{}, data)
-	print("startMove")
-	--local ok,curX,curY= verifyPos(id, msg.posInfo);
 	local info = player_table[id]
-	info.lastSendTime = skynet.time()
-	--if not ok then 
-	--	local ftb = ScPlayerCheckFailured:new{}
-	--	ftb.posInfo = msg.posInfo
-	--	ftb.posInfo.posX = curX;
-	--	ftb.posInfo.posY = curY;
-	--	local fmsgbody = encode(ftb)
-	--	local package = msgpack.pack(message.SCPLAYERCHECKFAILURED, fmsgbody)
-	--	send_response(client_fd, package)
-	--	return
-	--end
+	info.lastSendTime = msg.time
+	setRolePosMsg(id, msg.posInfo)
 
 	local info = player_table[id]
 	info.isMove = true
@@ -89,12 +78,11 @@ function playerStartMove(id, data, client_fd)
 	info.speed = msg.speed
 	local tb = ScPlayerStartMove:new{}
 	tb.id = id
-	tb.time = tostring(msg.time)
+	tb.time = msg.time
 	tb.posInfo = getRolePosMsg(id)
 	tb.speed = msg.speed
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERSTARTMOVE, msgbody)
-	print("broadcast startMove")
 	
 	broadcastpackage(package, id)
 end
@@ -103,7 +91,7 @@ function playerEndMove(id, data, client_fd)
 	local msg = decode(CsPlayerEndMove:new{}, data)
 
 	local info = player_table[id]
-	local ok,curX,curY= verifyPos(id, msg.posInfo);
+	local ok,curX,curY= verifyPos(id, msg.posInfo, msg.time);
 	if not ok then 
 		local ftb = ScPlayerCheckFailured:new{}
 		ftb.posInfo = msg.posInfo
@@ -125,17 +113,15 @@ function playerEndMove(id, data, client_fd)
 
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERENDMOVE, msgbody)
-	print("get endmove msg")
 	broadcastpackage(package, id)
 end
 
 function playerUpdateMoveDir(id, data, client_fd)
 	local msg = decode(CsPlayerUpdateMoveDir:new{}, data)
-	print("playerUpdateMoveDir")
-	
-	local ok,curX,curY= verifyPos(id, msg.posInfo);
+	local ok,curX,curY= verifyPos(id, msg.posInfo, msg.time);
 	local info = player_table[id]
-	info.lastSendTime = skynet.time()
+	info.lastSendTime = msg.time	
+
 	if not ok then 
 		local ftb = ScPlayerCheckFailured:new{}
 		ftb.posInfo = msg.posInfo
@@ -148,13 +134,13 @@ function playerUpdateMoveDir(id, data, client_fd)
 		
 		return
 	end
+	info.ismove = true;
 	setRolePosMsg(id, msg.posInfo)
 
 	local tb = ScPlayerUpdateMoveDir:new{}
 	tb.id = id;
 	tb.time = msg.time;
 	tb.posInfo = msg.posInfo
-	print(" broadcast playerUpdateMoveDir")
 	
 	local msgbody = encode(tb)
 	local package = msgpack.pack(message.SCPLAYERUPDATEMOVEDIR, msgbody)
@@ -226,19 +212,19 @@ function initplayerposition(id)
 	return info;
 end
 
-function verifyPos(id, posInfo)
+function verifyPos(id, posInfo, time)
 	local info = player_table[id]
-	local distance = (skynet.time() - info.lastSendTime) * info.speed;
-	local angle = info.posInfo.angle * math.pi/180;
+	local distance = (time - info.lastSendTime) * info.speed;
+	local angle = info.posInfo.angle * math.pi/180.0;
 	local dx = distance * math.cos(angle);
 	local dy = distance * math.sin(angle);
 	local curX = info.posInfo.posX + dx;
 	local curY = info.posInfo.posY + dy;
-
+--	print("time",info.lastSendTime)
 	if  math.abs(curX- posInfo.posX) > 2 or  math.abs(curY- posInfo.posY) > 2 then
-		print("dx",dx,"dy",dy,"time","angle",angle,"cos",math.cos(angle),"sin",math.sin(angle))
-		print("posX",posInfo.posX,"posY",posInfo.posY,"angle",posInfo.angle,"curAngle",info.posInfo.angle)
-		print("curX",curX,"curY",curY,"time",skynet.time() - info.lastSendTime, "speed", info.speed)
+--		print("dx",dx,"dy",dy,"angle",angle,"cos",math.cos(angle),"sin",math.sin(angle))
+--		print("posX",posInfo.posX,"posY",posInfo.posY,"angle",posInfo.angle,"curAngle",info.posInfo.angle)
+--		print("curX",curX,"curY",curY,"time",time - info.lastSendTime, "speed", info.speed)
 		return false, math.floor(curX), math.floor(curY);
 	end
 

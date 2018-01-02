@@ -42,7 +42,8 @@ end
 
 function OnAsyncTime(msg)
 	local tb = ScAsyncTime:new{}
-	tb.time = skynet.time() * 1000
+	tb.time = tostring(skynet.time())
+	print("time",skynet.time())
 	local msgbody = encode(tb)
 	return msgpack.pack(message.SCASYNCTIME, msgbody)
 end

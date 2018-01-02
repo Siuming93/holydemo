@@ -19,7 +19,7 @@ function send_response(package)
 	--print("client_fd",client_fd)
 	socket.write(client_fd, netpack.pack(package))
 end
-
+local count = 0
 skynet.register_protocol {
 	name = "client",
 	id = skynet.PTYPE_CLIENT,
@@ -31,7 +31,8 @@ skynet.register_protocol {
 		module = msgId[math.floor(data.msgno / 100)]	
 		opcode = data.msgno%10000
 		local ok, result
-		--print("msgno = ", data.msgno)
+		count = count +1
+		print("count",count," msgno = ", data.msgno)
 		--login
 		if data.msgno == message.CSLOGIN then
 			ok, result, playerId = pcall(skynet.call, "loginservice", "lua", "dispatch", opcode, data.msg)
