@@ -673,7 +673,8 @@ function ScPlayerStartMove:write(oprot)
 end
 
 CsPlayerEndMove = __TObject:new{
-  posInfo
+  posInfo,
+  time
 }
 
 function CsPlayerEndMove:read(iprot)
@@ -686,6 +687,12 @@ function CsPlayerEndMove:read(iprot)
       if ftype == TType.STRUCT then
         self.posInfo = PosInfo:new{}
         self.posInfo:read(iprot)
+      else
+        iprot:skip(ftype)
+      end
+    elseif fid == 2 then
+      if ftype == TType.I64 then
+        self.time = iprot:readI64()
       else
         iprot:skip(ftype)
       end
@@ -702,6 +709,11 @@ function CsPlayerEndMove:write(oprot)
   if self.posInfo ~= nil then
     oprot:writeFieldBegin('posInfo', TType.STRUCT, 1)
     self.posInfo:write(oprot)
+    oprot:writeFieldEnd()
+  end
+  if self.time ~= nil then
+    oprot:writeFieldBegin('time', TType.I64, 2)
+    oprot:writeI64(self.time)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
