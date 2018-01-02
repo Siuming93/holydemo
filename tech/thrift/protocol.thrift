@@ -27,7 +27,7 @@ struct CsAsyncTime
 
 struct ScAsyncTime
 {
-	1:required i64 time;
+	1:required double time;
 }
 
 struct CsEnterScene 
@@ -76,7 +76,7 @@ struct ScAllPlayerPosInfo
 
 struct CsPlayerStartMove
 {
-	1:required i64 time;
+	1:required double time;
 	2:required PosInfo posInfo;
 	3:required i32 speed;
 }
@@ -84,7 +84,7 @@ struct CsPlayerStartMove
 struct ScPlayerStartMove
 {
 	1:required i64 id;
-	2:required i64 time;
+	2:required double time;
 	3:required PosInfo posInfo;
 	4:required i32 speed;
 }
@@ -92,7 +92,7 @@ struct ScPlayerStartMove
 struct CsPlayerEndMove
 {
 	1:required PosInfo posInfo;
-	2:required i64 time;
+	2:required double time;
 }
 
 struct ScPlayerEndMove
@@ -104,14 +104,14 @@ struct ScPlayerEndMove
 struct CsPlayerUpdateMoveDir
 {
 	1:required PosInfo posInfo;
-	2:required i64 time;
+	2:required double time;
 }
 
 struct ScPlayerUpdateMoveDir
 {
 	1:required i64 id;
 	2:required PosInfo posInfo;
-	3:required i64 time;
+	3:required double time;
 }
 
 struct CsPlayerEndMovePos
