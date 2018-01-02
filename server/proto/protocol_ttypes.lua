@@ -174,8 +174,8 @@ function ScAsyncTime:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -190,8 +190,8 @@ end
 function ScAsyncTime:write(oprot)
   oprot:writeStructBegin('ScAsyncTime')
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 1)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 1)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -553,8 +553,8 @@ function CsPlayerStartMove:read(iprot)
     if ftype == TType.STOP then
       break
     elseif fid == 1 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -582,8 +582,8 @@ end
 function CsPlayerStartMove:write(oprot)
   oprot:writeStructBegin('CsPlayerStartMove')
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 1)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 1)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   if self.posInfo ~= nil then
@@ -620,8 +620,8 @@ function ScPlayerStartMove:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -654,8 +654,8 @@ function ScPlayerStartMove:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 2)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 2)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   if self.posInfo ~= nil then
@@ -691,8 +691,8 @@ function CsPlayerEndMove:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -712,8 +712,8 @@ function CsPlayerEndMove:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 2)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 2)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -787,8 +787,8 @@ function CsPlayerUpdateMoveDir:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 2 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -808,8 +808,8 @@ function CsPlayerUpdateMoveDir:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 2)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 2)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
@@ -842,8 +842,8 @@ function ScPlayerUpdateMoveDir:read(iprot)
         iprot:skip(ftype)
       end
     elseif fid == 3 then
-      if ftype == TType.I64 then
-        self.time = iprot:readI64()
+      if ftype == TType.DOUBLE then
+        self.time = iprot:readDouble()
       else
         iprot:skip(ftype)
       end
@@ -868,8 +868,8 @@ function ScPlayerUpdateMoveDir:write(oprot)
     oprot:writeFieldEnd()
   end
   if self.time ~= nil then
-    oprot:writeFieldBegin('time', TType.I64, 3)
-    oprot:writeI64(self.time)
+    oprot:writeFieldBegin('time', TType.DOUBLE, 3)
+    oprot:writeDouble(self.time)
     oprot:writeFieldEnd()
   end
   oprot:writeFieldStop()
