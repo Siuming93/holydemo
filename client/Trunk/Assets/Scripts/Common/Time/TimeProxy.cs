@@ -30,15 +30,17 @@ public class TimeProxy : BaseProxy
     {
         ScAsyncTime msg = data as ScAsyncTime;
         GameConfig.lastServerTime = msg.Time;
+        GameConfig.lastLocaleTime = UnityEngine.Time.time; 
     }
     private float _lastPingSendTime;
+    private float _lastAsyncSendTime;
 
     private void AsyncTime()
     {
-        if (UnityEngine.Time.time - GameConfig.lastLocaleTime >= 60)
+        if (UnityEngine.Time.time - _lastAsyncSendTime >= 60)
         {
             netManager.SendMessage(new CsAsyncTime(){});
-            GameConfig.lastLocaleTime = UnityEngine.Time.time; 
+            _lastAsyncSendTime = UnityEngine.Time.time;
         }
 
         if (UnityEngine.Time.time - _lastPingSendTime >= 1)

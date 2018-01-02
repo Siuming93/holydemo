@@ -79,7 +79,7 @@ public class WorldPlayerBattleMediator : AbstractMediator
 
     private void OnSelfStartMove(object obj)
     {
-        _playerController.StartMove((int)obj);
+        _playerController.StartMove();
     }
 
     private void OnOtherRoleStartMove(object obj)

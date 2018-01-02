@@ -18,7 +18,7 @@ public abstract class BaseModelController
             }
         }
     }
-    protected GameObject model { set; get; }
+    public GameObject model { set; get; }
 
     protected Transform root { set; get; }
 
@@ -81,12 +81,13 @@ public abstract class BaseModelController
         {
             return new ModelPosVO()
             {
-                posX = Mathf.RoundToInt(model.transform.localPosition.x),
-                posY = Mathf.RoundToInt(model.transform.localPosition.z),
+                posX = model.transform.position.x,
+                posY = model.transform.position.z,
                 angle = angle,
             };
         }
     }
+
 
     protected float cos;
     protected float sin;
@@ -101,9 +102,7 @@ public abstract class BaseModelController
                 _rotateTweener.Kill();
             }
             this.angle = angle;
-            float duration = (model.transform.localEulerAngles.y + (angle - 90)) / 360 * 0.5f;
-            _rotateTweener = model.transform.DOLocalRotate(new Vector3(0, -(angle - 90), 0), duration);
-            //model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
+            model.transform.localEulerAngles = new Vector3(0, -(angle - 90), 0);
             cos = Mathf.Cos(angle * PI_DIV_180);
             sin = Mathf.Sin(angle * PI_DIV_180);
             //Debug.Log("angle " + angle + " cos " + cos + "sin " + sin);

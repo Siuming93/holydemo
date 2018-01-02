@@ -3,6 +3,7 @@ using DG.Tweening;
 using Monster.Net;
 using UnityEngine;
 using System.Collections.Generic;
+using Monster.BaseSystem;
 
 public class PlayerMoelController : BaseModelController
 {
@@ -21,11 +22,9 @@ public class PlayerMoelController : BaseModelController
     }
 
     protected bool addListener = false;
-    public void StartMove(int angle)
+    public void StartMove()
     {
         isMove = true;
-        moveDir = MathUtil.GetCoordinate(angle);
-        LookAt(angle);
         PlayMoveAnimation(true);
         if (!addListener)
         {
@@ -59,7 +58,7 @@ public class PlayerMoelController : BaseModelController
         {
             if (isMove)
             {
-                float distance = RoleProperty.RunSpeed*Time.deltaTime;
+                float distance = RoleProperty.RunSpeed * (Time.deltaTime);
                 float dx = distance*cos;
                 float dz = distance*sin;
                 Vector3 delta = new Vector3(dx, 0f, dz);
@@ -70,12 +69,12 @@ public class PlayerMoelController : BaseModelController
     }
 
     protected Tweener moveTweener;
-    public void MoveTo(int x, int y)
+    public void MoveTo(double x, double y)
     {
         if (model != null)
         {
-            Debug.Log("model Pos:" + model.transform.localPosition + " async Pos:" + new Vector3((float)x, 0, (float)y));
-            model.transform.position = new Vector3(x, model.transform.position.y, y);
+            //Debug.Log("model Pos:" + model.transform.localPosition + " async Pos:" + new Vector3((float)x, 0, (float)y));
+            model.transform.position = new Vector3((float)x, model.transform.position.y, (float)y);
         }
     }
 

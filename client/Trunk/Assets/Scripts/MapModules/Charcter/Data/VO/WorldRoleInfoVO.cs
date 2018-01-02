@@ -54,7 +54,7 @@ public class WorldRoleInfoVO
 
 public class ModelPosVO
 {
-    public int posX;
-    public int posY;
+    public double posX;
+    public double posY;
     public int angle;
 }
