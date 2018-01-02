@@ -148,6 +148,13 @@ namespace Monster.Net
                 curBytes[i] = curBytes[i + needLen];
             }
 
+            //string str = "";
+            //foreach (var b in bytes)
+            //{
+            //    str +=" "+ b;
+            //}
+            //Debug.LogWarning(str);
+
             UnPackage();
         }
 
@@ -197,10 +204,13 @@ namespace Monster.Net
             return !(socket.Poll(1, SelectMode.SelectRead) && socket.Available == 0);
         }
         #endregion
+
+        private int count = 0;
         public void SendMessage(TBase msg)
         {
+            count ++;
             var no = MsgIDDefineDic.Instance.GetMsgID(msg.GetType());
-            Debug.LogWarning("Send Message :" + msg.GetType() + "\n" + msg.ToString());
+            Debug.LogWarning(count+" Send Message :" + msg.GetType() + "\n" + msg.ToString());
             var protocol = new Protocol()
             {
                 msgNo = no,

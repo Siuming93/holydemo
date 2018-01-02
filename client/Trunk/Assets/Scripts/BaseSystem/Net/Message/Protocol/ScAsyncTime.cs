@@ -24,12 +24,12 @@ namespace RedDragon.Protocol
   public partial class ScAsyncTime : TBase
   {
 
-    public long Time { get; set; }
+    public double Time { get; set; }
 
     public ScAsyncTime() {
     }
 
-    public ScAsyncTime(long time) : this() {
+    public ScAsyncTime(double time) : this() {
       this.Time = time;
     }
 
@@ -50,8 +50,8 @@ namespace RedDragon.Protocol
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.I64) {
-                Time = iprot.ReadI64();
+              if (field.Type == TType.Double) {
+                Time = iprot.ReadDouble();
                 isset_time = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
@@ -81,10 +81,10 @@ namespace RedDragon.Protocol
         oprot.WriteStructBegin(struc);
         TField field = new TField();
         field.Name = "time";
-        field.Type = TType.I64;
+        field.Type = TType.Double;
         field.ID = 1;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI64(Time);
+        oprot.WriteDouble(Time);
         oprot.WriteFieldEnd();
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();

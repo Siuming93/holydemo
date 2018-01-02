@@ -26,11 +26,14 @@ namespace RedDragon.Protocol
 
     public PosInfo PosInfo { get; set; }
 
+    public double Time { get; set; }
+
     public CsPlayerEndMove() {
     }
 
-    public CsPlayerEndMove(PosInfo posInfo) : this() {
+    public CsPlayerEndMove(PosInfo posInfo, double time) : this() {
       this.PosInfo = posInfo;
+      this.Time = time;
     }
 
     public void Read (TProtocol iprot)
@@ -39,6 +42,7 @@ namespace RedDragon.Protocol
       try
       {
         bool isset_posInfo = false;
+        bool isset_time = false;
         TField field;
         iprot.ReadStructBegin();
         while (true)
@@ -58,6 +62,14 @@ namespace RedDragon.Protocol
                 TProtocolUtil.Skip(iprot, field.Type);
               }
               break;
+            case 2:
+              if (field.Type == TType.Double) {
+                Time = iprot.ReadDouble();
+                isset_time = true;
+              } else { 
+                TProtocolUtil.Skip(iprot, field.Type);
+              }
+              break;
             default: 
               TProtocolUtil.Skip(iprot, field.Type);
               break;
@@ -66,6 +78,8 @@ namespace RedDragon.Protocol
         }
         iprot.ReadStructEnd();
         if (!isset_posInfo)
+          throw new TProtocolException(TProtocolException.INVALID_DATA);
+        if (!isset_time)
           throw new TProtocolException(TProtocolException.INVALID_DATA);
       }
       finally
@@ -87,6 +101,12 @@ namespace RedDragon.Protocol
         oprot.WriteFieldBegin(field);
         PosInfo.Write(oprot);
         oprot.WriteFieldEnd();
+        field.Name = "time";
+        field.Type = TType.Double;
+        field.ID = 2;
+        oprot.WriteFieldBegin(field);
+        oprot.WriteDouble(Time);
+        oprot.WriteFieldEnd();
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();
       }
@@ -100,6 +120,8 @@ namespace RedDragon.Protocol
       StringBuilder __sb = new StringBuilder("CsPlayerEndMove(");
       __sb.Append(", PosInfo: ");
       __sb.Append(PosInfo== null ? "<null>" : PosInfo.ToString());
+      __sb.Append(", Time: ");
+      __sb.Append(Time);
       __sb.Append(")");
       return __sb.ToString();
     }

@@ -26,7 +26,7 @@ namespace RedDragon.Protocol
 
     public long Id { get; set; }
 
-    public long Time { get; set; }
+    public double Time { get; set; }
 
     public PosInfo PosInfo { get; set; }
 
@@ -35,7 +35,7 @@ namespace RedDragon.Protocol
     public ScPlayerStartMove() {
     }
 
-    public ScPlayerStartMove(long id, long time, PosInfo posInfo, int speed) : this() {
+    public ScPlayerStartMove(long id, double time, PosInfo posInfo, int speed) : this() {
       this.Id = id;
       this.Time = time;
       this.PosInfo = posInfo;
@@ -70,8 +70,8 @@ namespace RedDragon.Protocol
               }
               break;
             case 2:
-              if (field.Type == TType.I64) {
-                Time = iprot.ReadI64();
+              if (field.Type == TType.Double) {
+                Time = iprot.ReadDouble();
                 isset_time = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
@@ -130,10 +130,10 @@ namespace RedDragon.Protocol
         oprot.WriteI64(Id);
         oprot.WriteFieldEnd();
         field.Name = "time";
-        field.Type = TType.I64;
+        field.Type = TType.Double;
         field.ID = 2;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI64(Time);
+        oprot.WriteDouble(Time);
         oprot.WriteFieldEnd();
         field.Name = "posInfo";
         field.Type = TType.Struct;

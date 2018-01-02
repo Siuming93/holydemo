@@ -24,7 +24,7 @@ namespace RedDragon.Protocol
   public partial class CsPlayerStartMove : TBase
   {
 
-    public long Time { get; set; }
+    public double Time { get; set; }
 
     public PosInfo PosInfo { get; set; }
 
@@ -33,7 +33,7 @@ namespace RedDragon.Protocol
     public CsPlayerStartMove() {
     }
 
-    public CsPlayerStartMove(long time, PosInfo posInfo, int speed) : this() {
+    public CsPlayerStartMove(double time, PosInfo posInfo, int speed) : this() {
       this.Time = time;
       this.PosInfo = posInfo;
       this.Speed = speed;
@@ -58,8 +58,8 @@ namespace RedDragon.Protocol
           switch (field.ID)
           {
             case 1:
-              if (field.Type == TType.I64) {
-                Time = iprot.ReadI64();
+              if (field.Type == TType.Double) {
+                Time = iprot.ReadDouble();
                 isset_time = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
@@ -110,10 +110,10 @@ namespace RedDragon.Protocol
         oprot.WriteStructBegin(struc);
         TField field = new TField();
         field.Name = "time";
-        field.Type = TType.I64;
+        field.Type = TType.Double;
         field.ID = 1;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI64(Time);
+        oprot.WriteDouble(Time);
         oprot.WriteFieldEnd();
         field.Name = "posInfo";
         field.Type = TType.Struct;

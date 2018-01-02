@@ -28,12 +28,12 @@ namespace RedDragon.Protocol
 
     public PosInfo PosInfo { get; set; }
 
-    public long Time { get; set; }
+    public double Time { get; set; }
 
     public ScPlayerUpdateMoveDir() {
     }
 
-    public ScPlayerUpdateMoveDir(long id, PosInfo posInfo, long time) : this() {
+    public ScPlayerUpdateMoveDir(long id, PosInfo posInfo, double time) : this() {
       this.Id = id;
       this.PosInfo = posInfo;
       this.Time = time;
@@ -75,8 +75,8 @@ namespace RedDragon.Protocol
               }
               break;
             case 3:
-              if (field.Type == TType.I64) {
-                Time = iprot.ReadI64();
+              if (field.Type == TType.Double) {
+                Time = iprot.ReadDouble();
                 isset_time = true;
               } else { 
                 TProtocolUtil.Skip(iprot, field.Type);
@@ -122,10 +122,10 @@ namespace RedDragon.Protocol
         PosInfo.Write(oprot);
         oprot.WriteFieldEnd();
         field.Name = "time";
-        field.Type = TType.I64;
+        field.Type = TType.Double;
         field.ID = 3;
         oprot.WriteFieldBegin(field);
-        oprot.WriteI64(Time);
+        oprot.WriteDouble(Time);
         oprot.WriteFieldEnd();
         oprot.WriteFieldStop();
         oprot.WriteStructEnd();
