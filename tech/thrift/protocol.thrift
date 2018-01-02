@@ -92,6 +92,7 @@ struct ScPlayerStartMove
 struct CsPlayerEndMove
 {
 	1:required PosInfo posInfo;
+	2:required i64 time;
 }
 
 struct ScPlayerEndMove
