@@ -31,21 +31,81 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Assembly-CSharp">
+      <HintPath>..\Trunk\Library\ScriptAssemblies\Assembly-CSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Xml" />
     <Reference Include="UnityEngine">
       <HintPath>..\Trunk\Library\UnityAssemblies\UnityEngine.dll</HintPath>
-       <Private>False</Private>
+      <Private>False</Private>
     </Reference>
     <Reference Include="UnityEngine.UI">
       <HintPath>..\Trunk\Library\UnityAssemblies\UnityEngine.UI.dll</HintPath>
-       <Private>False</Private>
+      <Private>False</Private>
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="GameLogic.cs" />
+    <Compile Include="3rd\PureMVC\Core\Controller.cs" />
+    <Compile Include="3rd\PureMVC\Core\Model.cs" />
+    <Compile Include="3rd\PureMVC\Core\View.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\ICommand.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IController.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IFacade.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IMediator.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IModel.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\INotification.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\INotifier.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IObserver.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IProxy.cs" />
+    <Compile Include="3rd\PureMVC\Interfaces\IView.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Command\MacroCommand.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Command\SimpleCommand.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Facade\Facade.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Mediator\Mediator.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Observer\Notification.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Observer\Notifier.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Observer\Observer.cs" />
+    <Compile Include="3rd\PureMVC\Patterns\Proxy\Proxy.cs" />
+    <Compile Include="GameFrame\Common\ApplicationFacde.cs" />
+    <Compile Include="GameFrame\Common\TickProxy.cs" />
+    <Compile Include="GameBridge\GameLogic.cs" />
+    <Compile Include="GameFrame\Preload\CoroutineTask\AssetLoadTask.cs" />
+    <Compile Include="GameFrame\Preload\CoroutineTask\BaseCoroutineTask.cs" />
+    <Compile Include="GameFrame\Preload\CoroutineTask\ICoroutineResult.cs" />
+    <Compile Include="GameFrame\Preload\CoroutineTask\PreLoadTask.cs" />
+    <Compile Include="GameFrame\Preload\PreloadManager.cs" />
+    <Compile Include="GameFrame\ResourceManager\AsyncOperationRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\AsyncResourceRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\BaseResourceManager.cs" />
+    <Compile Include="GameFrame\ResourceManager\BundleResourceManager.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\AssetBundleConfig.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\AssetBundleHint.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\AsyncAssetRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\AsyncBundleCreateMainRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\AsyncBundleCreateRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\Bundle\BundleTool.cs" />
+    <Compile Include="GameFrame\ResourceManager\EditorResourceManager.cs" />
+    <Compile Include="GameFrame\ResourceManager\Interface\IAsyncResourceRequest.cs" />
+    <Compile Include="GameFrame\ResourceManager\Interface\IResourceManager.cs" />
+    <Compile Include="GameFrame\ResourceManager\ResoucesFacade.cs" />
+    <Compile Include="GameFrame\ResourceManager\ResourceAsyncCallBack.cs" />
+    <Compile Include="GameFrame\SceneManager\CitySceneManager.cs" />
+    <Compile Include="GameFrame\SceneManager\LeiTaiSceneManager.cs" />
+    <Compile Include="GameFrame\SceneManager\LoginSceneManager.cs" />
+    <Compile Include="GameFrame\SceneManager\PreloadSceneManager.cs" />
+    <Compile Include="GameFrame\SceneManager\BaseSceneManager.cs" />
+    <Compile Include="GameFrame\SceneManager\SceneSwitcher.cs" />
+    <Compile Include="GameFrame\UIManager\UIManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="3rd\PureMVC\PureMVC.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Business\" />
+    <Folder Include="GameFrame\NetWork\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
