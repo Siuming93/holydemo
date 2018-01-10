@@ -1,24 +1,22 @@
 ﻿
 using Monster.BaseSystem;
-using RedDragon.Protocol;
 
-public class TimeProxy : BaseProxy
+public class TimeProxy
 {
     public new const string NAME = "TimeProxy";
 
 
-    public TimeProxy(): base(NAME)
+    public TimeProxy()
     {
-        RegisterMessageHandler(MsgIDDefine.ScAsyncTime, OnAsyncServerTime);
-        RegisterMessageHandler(MsgIDDefine.ScPong, OnScPong);
-        netManager.SendMessage(new CsAsyncTime() { });   
+        //RegisterMessageHandler(MsgIDDefine.ScAsyncTime, OnAsyncServerTime);
+        //RegisterMessageHandler(MsgIDDefine.ScPong, OnScPong);
+        //netManager.SendMessage(new CsAsyncTime() { });   
         UpdateProxy.Instance.UpdateEvent += AsyncTime;
     }
 
-    public override void OnRemove()
+    public void OnRemove()
     {
         UpdateProxy.Instance.UpdateEvent -= AsyncTime;
-        base.OnRemove();
     }
 
     private void OnScPong(object data)
@@ -28,8 +26,8 @@ public class TimeProxy : BaseProxy
 
     private void OnAsyncServerTime(object data)
     {
-        ScAsyncTime msg = data as ScAsyncTime;
-        GameConfig.lastServerTime = msg.Time;
+        //ScAsyncTime msg = data as ScAsyncTime;
+        //GameConfig.lastServerTime = msg.Time;
         GameConfig.lastLocaleTime = UnityEngine.Time.time; 
     }
     private float _lastPingSendTime;
@@ -39,13 +37,13 @@ public class TimeProxy : BaseProxy
     {
         if (UnityEngine.Time.time - _lastAsyncSendTime >= 60)
         {
-            netManager.SendMessage(new CsAsyncTime(){});
+            //netManager.SendMessage(new CsAsyncTime(){});
             _lastAsyncSendTime = UnityEngine.Time.time;
         }
 
         if (UnityEngine.Time.time - _lastPingSendTime >= 1)
         {
-            netManager.SendMessage(new CsPing());
+            //netManager.SendMessage(new CsPing());
             _lastPingSendTime = UnityEngine.Time.time; 
         }
     }
