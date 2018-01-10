@@ -61,7 +61,7 @@ public class TestHotFix : MonoBehaviour {
 
     void InitializeILRuntime()
     {
-        //这里做一些ILRuntime的注册，比如委托的适配器
+        //这里做一些ILRuntime的注册，比如委托转换器
         appdomain.DelegateManager.RegisterDelegateConvertor<UnityEngine.Events.UnityAction<float>>((action) =>
         {
             return new UnityEngine.Events.UnityAction<float>((a) =>
@@ -77,11 +77,16 @@ public class TestHotFix : MonoBehaviour {
             });
         });
 
+        //委托适配器
+        appdomain.DelegateManager.RegisterMethodDelegate<ILRuntime.Runtime.Intepreter.ILTypeInstance>();
+        appdomain.DelegateManager.RegisterMethodDelegate<Monster.Net.Protocol>();
+        appdomain.DelegateManager.RegisterMethodDelegate<System.Object>();
+
         //跨域继承，所以需要写CrossBindAdapter
         appdomain.RegisterCrossBindingAdaptor(new MonoBehaviourAdapter());
         //使用Couroutine时，C#编译器会自动生成一个实现了IEnumerator，IEnumerator<object>，IDisposable接口的类
         appdomain.RegisterCrossBindingAdaptor(new CoroutineAdapter());
-    }
+    }
 
     private void OnHotFixLoaded()
     {
