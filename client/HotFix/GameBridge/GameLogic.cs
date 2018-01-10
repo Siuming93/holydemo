@@ -1,7 +1,6 @@
 ﻿using System.Collections;
 using HotFix.GameFrame.Common;
 using HotFix.GameFrame.PreLoad;
-using HotFix.GameFrame.ResourceManager;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
