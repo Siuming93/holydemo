@@ -10,5 +10,4 @@ public static class RoleProperty
 
     public static Vector3 Rotation;
 
-    public static PlayerMoelController ModelController;
 }

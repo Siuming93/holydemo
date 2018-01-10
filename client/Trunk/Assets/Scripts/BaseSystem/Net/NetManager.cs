@@ -3,13 +3,10 @@ using UnityEngine;
 using System.Collections.Generic;
 using System.Net.Sockets;
 using System.Threading;
-using Thrift.Protocol;
-using Thrift.Transport;
 
 namespace Monster.Net
 {
-
-    internal class Protocol
+    public class Protocol
     {
         public int msgNo;
         public byte[] buffer;
@@ -206,23 +203,15 @@ namespace Monster.Net
         #endregion
 
         private int count = 0;
-        public void SendMessage(TBase msg)
+        public void SendMessage(Protocol protocol)
         {
-            count ++;
-            var no = MsgIDDefineDic.Instance.GetMsgID(msg.GetType());
-            Debug.LogWarning(count+" Send Message :" + msg.GetType() + "\n" + msg.ToString());
-            var protocol = new Protocol()
-            {
-                msgNo = no,
-                buffer =  TMemoryBuffer.Serialize(msg),
-            };
             mSendBuffer.Enqueue(protocol);
         }
-        public void RegisterMessageHandler(int msgNo, MessageHandler handler)
+        public void RegisterMessageHandler(int msgNo, Action<Protocol> handler)
         {
             mDispatcher.RegisterMessageHandler(msgNo, handler);
         }
-        public void UnRegistreMessageHandler(int msgNo)
+        public void UnRegisterMessageHandler(int msgNo)
         {
             mDispatcher.UnRegisterMessageHandler(msgNo);
         }

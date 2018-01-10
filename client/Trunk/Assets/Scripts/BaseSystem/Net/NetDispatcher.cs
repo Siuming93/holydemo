@@ -1,8 +1,5 @@
-﻿using UnityEngine;
-using System.Collections;
+﻿using System;
 using System.Collections.Generic;
-using Thrift.Protocol;
-using Thrift.Transport;
 
 namespace Monster.Net
 {
@@ -10,8 +7,8 @@ namespace Monster.Net
 
     internal class NetDispatcher
     {
-        private Dictionary<int, MessageHandler> mHandlerMap = new Dictionary<int, MessageHandler>();
-        public void RegisterMessageHandler(int msgNo, MessageHandler handler)
+        private Dictionary<int, Action<Protocol>> mHandlerMap = new Dictionary<int, Action<Protocol>>();
+        public void RegisterMessageHandler(int msgNo, Action<Protocol> handler)
         {
             if(!mHandlerMap.ContainsKey(msgNo))
             {
@@ -29,21 +26,9 @@ namespace Monster.Net
 
         public void Dispatch(Protocol proto)
         {
-            TBase msg = MsgIDDefineDic.Instance.CreatMsg(proto.msgNo);
-
-            //Debug.Log("Receive Msg:" + MsgIDDefineDic.Instance.GetMsgType(proto.msgNo));
-            //var str = "";
-            //foreach (var b in proto.buffer)
-            //{
-            //    str += " " + b.ToString();
-            //}
-            //Debug.Log(str);
-            msg.Read(new TBinaryProtocol(new TMemoryBuffer(proto.buffer)));
-            //Debug.LogWarning(string.Format("Reci msg:{0}",msg.GetType().Name));
-
             if (mHandlerMap.ContainsKey(proto.msgNo))
             {
-                mHandlerMap[proto.msgNo](msg);
+                mHandlerMap[proto.msgNo](proto);
             }
         }
     }
