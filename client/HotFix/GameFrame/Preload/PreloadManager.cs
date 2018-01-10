@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using HotFix.GameFrame.Common;
-using HotFix.GameFrame.ResourceManager;
-using HotFix.GameFrame.SceneManager;
+using HotFix.GameFrame.SceneController;
 using LitJson;
+using Monster.BaseSystem;
+using Monster.BaseSystem.ResourceManager;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -21,11 +22,8 @@ namespace HotFix.GameFrame.PreLoad
 
         private PreloadManager() { }
 
-        private PreLoadTask m_Task;
-
         public void Init()
         {
-            m_Task = new PreLoadTask();
             TickProxy.Instance.StartCoroutine(PreLoad());
         }
 
@@ -76,9 +74,9 @@ namespace HotFix.GameFrame.PreLoad
             GameObject preloadView = ResourcesFacade.Instance.LoadPrefab("Prefab/UI/Preload/PreloadPanel");
             UIManager.Intance.AddChild(preloadView.transform);
             yield return null;
-            yield return SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
+            SceneSwitcher.Instance.LoadScene(LoginSceneManager.SCENE_NAME);
             Debug.Log("load Scene done");
-            //ResourcesFacade.Instance.UnLoadAsset(preloadView);
+            ResourcesFacade.Instance.UnLoadAsset(preloadView);
             yield return null;
         }
 

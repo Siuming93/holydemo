@@ -1,6 +1,4 @@
-﻿using System;
-using UnityEngine;
-using System.Collections;
+﻿using UnityEngine;
 
 public class UIManager
 {
@@ -8,10 +6,6 @@ public class UIManager
     public static UIManager Intance {
         get
         {
-            if (mInstance == null)
-            {
-               throw new Exception("找不到UIRoot,请先创建一个实例");
-            }
             return mInstance;
         }
     }
